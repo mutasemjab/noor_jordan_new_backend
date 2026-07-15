@@ -14,7 +14,7 @@ class Student extends Authenticatable
     protected $guard = 'student';
 
     protected $fillable = [
-        'name', 'email', 'phone', 'national_id', 'fcm_token', 'deviceId', 'password', 'avatar',
+        'name', 'email', 'phone', 'national_id', 'fcm_token', 'password', 'avatar',
         'date_of_birth', 'nationality', 'gender',
         'class_id', 'is_active',
     ];
@@ -37,18 +37,13 @@ class Student extends Authenticatable
         return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
-    public function enrollments()
-    {
-        return $this->hasMany(Enrollment::class);
-    }
-
-    public function courses()
-    {
-        return $this->belongsToMany(Course::class, 'enrollments');
-    }
-
     public function examAttempts()
     {
         return $this->hasMany(ExamAttempt::class);
+    }
+
+    public function contract()
+    {
+        return $this->hasOne(StudentContract::class);
     }
 }

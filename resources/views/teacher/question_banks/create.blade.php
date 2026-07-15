@@ -30,21 +30,13 @@
                             <label class="form-label">{{ __('messages.title_en_short') }}</label>
                             <input type="text" name="title_en" class="form-control" value="{{ old('title_en') }}">
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">{{ __('messages.tag_ar') }}</label>
-                            <input type="text" name="tag_ar" class="form-control" value="{{ old('tag_ar') }}" dir="rtl">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">{{ __('messages.tag_en') }}</label>
-                            <input type="text" name="tag_en" class="form-control" value="{{ old('tag_en') }}">
-                        </div>
                         <div class="col-12">
                             <label class="form-label">{{ __('messages.subject') }}</label>
                             <select name="subject_id" class="form-control">
                                 <option value="">— {{ __('messages.select_subject') }} —</option>
                                 @foreach($subjects as $subject)
                                     <option value="{{ $subject->id }}" {{ old('subject_id') == $subject->id ? 'selected' : '' }}>
-                                        {{ $subject->full_path }}
+                                        {{ $subject->name_ar }}
                                     </option>
                                 @endforeach
                             </select>

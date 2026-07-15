@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Course, Exam, Question, Subject};
+use App\Models\{Exam, Question, Subject};
 use App\Services\ExamService;
 use Illuminate\Http\Request;
 
@@ -16,39 +16,30 @@ class ExamController extends Controller
         return auth()->guard('teacher')->user();
     }
 
-    public function index(Request $request)
-    {
-        $filters               = $request->only(['search', 'course_id', 'exam_type', 'is_published']);
-        $filters['teacher_id'] = $this->teacher()->id;
-
-        $exams   = $this->exams->list($filters);
-        $courses = Course::where('teacher_id', $this->teacher()->id)->get();
-
-        return view('teacher.exams.index', compact('exams', 'courses'));
-    }
-
     private function teacherSubjects(): \Illuminate\Support\Collection
     {
-        return $this->teacher()
-            ->subjects()
-            ->with(['category.parent.parent'])
-            ->get()
-            ->sortBy(fn($s) => $s->full_path)
-            ->values();
+        return $this->teacher()->subjects()->orderBy('name_ar')->get();
+    }
+
+    public function index(Request $request)
+    {
+        $filters  = $request->only(['search', 'exam_type', 'is_published']);
+        $exams    = $this->exams->list($filters);
+        $subjects = $this->teacherSubjects();
+
+        return view('teacher.exams.index', compact('exams', 'subjects'));
     }
 
     public function create()
     {
-        $courses  = Course::where('teacher_id', $this->teacher()->id)->get();
         $subjects = $this->teacherSubjects();
 
-        return view('teacher.exams.create', compact('courses', 'subjects'));
+        return view('teacher.exams.create', compact('subjects'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'course_id'               => 'nullable|exists:courses,id',
             'subject_id'              => 'nullable|exists:subjects,id',
             'title_ar'                => 'required|string|max:255',
             'title_en'                => 'required|string|max:255',
@@ -64,11 +55,6 @@ class ExamController extends Controller
             'shuffle_options'         => 'boolean',
             'show_result_immediately' => 'boolean',
         ]);
-
-        if (! empty($data['course_id'])) {
-            $course = Course::findOrFail($data['course_id']);
-            abort_if($course->teacher_id !== $this->teacher()->id, 403);
-        }
 
         if (! empty($data['subject_id'])) {
             abort_unless($this->teacher()->subjects()->where('subjects.id', $data['subject_id'])->exists(), 403);
@@ -89,37 +75,22 @@ class ExamController extends Controller
     {
         $exam = $this->exams->find($id);
 
-        if ($exam->course_id) {
-            abort_if($exam->course->teacher_id !== $this->teacher()->id, 403);
-        }
-
         return view('teacher.exams.show', compact('exam'));
     }
 
     public function edit(int $id)
     {
-        $exam = Exam::findOrFail($id);
-
-        if ($exam->course_id) {
-            abort_if($exam->course->teacher_id !== $this->teacher()->id, 403);
-        }
-
-        $courses  = Course::where('teacher_id', $this->teacher()->id)->get();
+        $exam     = Exam::findOrFail($id);
         $subjects = $this->teacherSubjects();
 
-        return view('teacher.exams.edit', compact('exam', 'courses', 'subjects'));
+        return view('teacher.exams.edit', compact('exam', 'subjects'));
     }
 
     public function update(Request $request, int $id)
     {
         $exam = Exam::findOrFail($id);
 
-        if ($exam->course_id) {
-            abort_if($exam->course->teacher_id !== $this->teacher()->id, 403);
-        }
-
         $data = $request->validate([
-            'course_id'               => 'nullable|exists:courses,id',
             'subject_id'              => 'nullable|exists:subjects,id',
             'title_ar'                => 'required|string|max:255',
             'title_en'                => 'required|string|max:255',
@@ -153,13 +124,7 @@ class ExamController extends Controller
 
     public function destroy(int $id)
     {
-        $exam = Exam::findOrFail($id);
-
-        if ($exam->course_id) {
-            abort_if($exam->course->teacher_id !== $this->teacher()->id, 403);
-        }
-
-        $this->exams->delete($exam);
+        $this->exams->delete(Exam::findOrFail($id));
 
         return redirect()->route('teacher.exams.index')
             ->with('success', 'Exam deleted.');

@@ -65,7 +65,6 @@ class WorksheetController extends Controller
             'title'     => app()->getLocale() === 'ar' ? $item->title_ar : ($item->title_en ?? $item->title_ar),
             'title_ar'  => $item->title_ar,
             'title_en'  => $item->title_en,
-            'tag'       => app()->getLocale() === 'ar' ? $item->tag_ar : ($item->tag_en ?? $item->tag_ar),
             'year'      => $item->year,
             'pages'     => $item->pages,
             'file_size' => $item->file_size,

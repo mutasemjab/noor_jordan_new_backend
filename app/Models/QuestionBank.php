@@ -14,8 +14,6 @@ class QuestionBank extends Model
         'subject_id',
         'title_ar',
         'title_en',
-        'tag_ar',
-        'tag_en',
         'pdf_file',
         'pages',
         'file_size',
@@ -23,10 +21,7 @@ class QuestionBank extends Model
         'status',
     ];
 
-    protected $appends = [
-        'title',
-        'tag'
-    ];
+    protected $appends = ['title'];
 
     public function teacher()
     {
@@ -44,12 +39,4 @@ class QuestionBank extends Model
             ? $this->title_ar
             : $this->title_en;
     }
-
-    public function getTagAttribute()
-    {
-        return app()->getLocale() == 'ar'
-            ? $this->tag_ar
-            : $this->tag_en;
-    }
-
 }

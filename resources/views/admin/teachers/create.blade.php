@@ -44,7 +44,7 @@
                         <label class="form-label">{{ __('messages.phone_label') }}</label>
                         <input type="text" name="phone" value="{{ old('phone') }}" class="form-control">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <label class="form-label">{{ __('messages.gender_label') }}</label>
                         <select name="gender" class="form-select">
                             <option value="">{{ __('messages.select_option') }}</option>
@@ -52,33 +52,9 @@
                             <option value="female" @selected(old('gender') === 'female')>{{ __('messages.female') }}</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">{{ __('messages.experience_years') }}</label>
-                        <input type="number" name="years_of_experience" value="{{ old('years_of_experience', 0) }}" min="0" class="form-control">
-                    </div>
                     <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.specialization_ar') }}</label>
-                        <input type="text" name="specialization_ar" value="{{ old('specialization_ar') }}" class="form-control" dir="rtl">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.specialization_en') }}</label>
-                        <input type="text" name="specialization_en" value="{{ old('specialization_en') }}" class="form-control">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.qualification_ar') }}</label>
-                        <input type="text" name="qualification_ar" value="{{ old('qualification_ar') }}" class="form-control" dir="rtl">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.qualification_en') }}</label>
-                        <input type="text" name="qualification_en" value="{{ old('qualification_en') }}" class="form-control">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.bio_ar') }}</label>
-                        <textarea name="bio_ar" rows="3" class="form-control" dir="rtl">{{ old('bio_ar') }}</textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.bio_en') }}</label>
-                        <textarea name="bio_en" rows="3" class="form-control">{{ old('bio_en') }}</textarea>
+                        <label class="form-label">{{ __('messages.nationality') }}</label>
+                        <input type="text" name="nationality" value="{{ old('nationality') }}" class="form-control">
                     </div>
                 </div>
             </div>
@@ -89,12 +65,6 @@
         <div class="panel-card mb-3">
             <div class="panel-card-header"><h2 class="panel-card-title">{{ __('messages.settings') }}</h2></div>
             <div class="panel-card-body">
-                <div class="form-check form-switch mb-2">
-                    <input class="form-check-input" type="checkbox" name="is_verified" value="1" id="is_verified" {{ old('is_verified') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="is_verified">{{ __('messages.verified_teacher') }}</label>
-                </div>
-             
-                <hr>
                 <label class="form-label">{{ __('messages.profile_photo') }}</label>
                 <input type="file" name="avatar" accept="image/*" class="form-control mb-3">
                 <button type="submit" class="btn-primary-sm w-100 justify-content-center">

@@ -18,9 +18,6 @@ return new class extends Migration
             $table->string('title_ar');
             $table->string('title_en');
 
-            $table->string('tag_ar')->nullable();
-            $table->string('tag_en')->nullable();
-
             $table->string('pdf_file');
 
             $table->integer('pages')->default(0);

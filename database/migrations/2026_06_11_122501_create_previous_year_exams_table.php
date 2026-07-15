@@ -18,8 +18,6 @@ return new class extends Migration
             $table->integer('year');
             $table->string('title_ar');
             $table->string('title_en');
-            $table->string('tag_ar')->nullable();
-            $table->string('tag_en')->nullable();
             $table->string('pdf_file');
             $table->integer('pages')->default(0);
             $table->decimal('file_size', 8, 2)->nullable(); // MB

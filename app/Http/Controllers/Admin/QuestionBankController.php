@@ -15,9 +15,7 @@ class QuestionBankController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('admin.question_banks.index',
-            compact('questionBanks')
-        );
+        return view('admin.question_banks.index', compact('questionBanks'));
     }
 
     public function create()
@@ -31,42 +29,26 @@ class QuestionBankController extends Controller
     {
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
-
-            'title_ar' => 'required',
-            'title_en' => 'required',
-
-            'tag_ar' => 'nullable',
-            'tag_en' => 'nullable',
-
-            'pages' => 'nullable|integer',
-            'file_size' => 'nullable|numeric',
-
+            'title_ar'   => 'required',
+            'title_en'   => 'required',
+            'pages'      => 'nullable|integer',
+            'file_size'  => 'nullable|numeric',
             'sort_order' => 'nullable|integer',
-
-            'status' => 'required|boolean',
-
-            'pdf_file' => 'required|mimes:pdf|max:20480',
+            'status'     => 'required|boolean',
+            'pdf_file'   => 'required|mimes:pdf|max:20480',
         ]);
 
         $pdf = uploadImage('assets/uploads/questionBank', $request->file('pdf_file'));
 
         QuestionBank::create([
             'subject_id' => $request->subject_id,
-
-            'title_ar' => $request->title_ar,
-            'title_en' => $request->title_en,
-
-            'tag_ar' => $request->tag_ar,
-            'tag_en' => $request->tag_en,
-
-            'pdf_file' => $pdf,
-
-            'pages' => $request->pages,
-            'file_size' => $request->file_size,
-
+            'title_ar'   => $request->title_ar,
+            'title_en'   => $request->title_en,
+            'pdf_file'   => $pdf,
+            'pages'      => $request->pages,
+            'file_size'  => $request->file_size,
             'sort_order' => $request->sort_order ?? 0,
-
-            'status' => $request->status,
+            'status'     => $request->status,
         ]);
 
         return redirect()
@@ -85,44 +67,27 @@ class QuestionBankController extends Controller
     {
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
-
-            'title_ar' => 'required',
-            'title_en' => 'required',
-
-            'tag_ar' => 'nullable',
-            'tag_en' => 'nullable',
-
-            'pages' => 'nullable|integer',
-            'file_size' => 'nullable|numeric',
-
+            'title_ar'   => 'required',
+            'title_en'   => 'required',
+            'pages'      => 'nullable|integer',
+            'file_size'  => 'nullable|numeric',
             'sort_order' => 'nullable|integer',
-
-            'status' => 'required|boolean',
-
-            'pdf_file' => 'nullable|mimes:pdf|max:20480',
+            'status'     => 'required|boolean',
+            'pdf_file'   => 'nullable|mimes:pdf|max:20480',
         ]);
 
         if ($request->hasFile('pdf_file')) {
-
-
             $questionBank->pdf_file = uploadImage('assets/uploads/questionBank', $request->file('pdf_file'));
         }
 
         $questionBank->update([
             'subject_id' => $request->subject_id,
-
-            'title_ar' => $request->title_ar,
-            'title_en' => $request->title_en,
-
-            'tag_ar' => $request->tag_ar,
-            'tag_en' => $request->tag_en,
-
-            'pages' => $request->pages,
-            'file_size' => $request->file_size,
-
+            'title_ar'   => $request->title_ar,
+            'title_en'   => $request->title_en,
+            'pages'      => $request->pages,
+            'file_size'  => $request->file_size,
             'sort_order' => $request->sort_order ?? 0,
-
-            'status' => $request->status,
+            'status'     => $request->status,
         ]);
 
         return redirect()
@@ -141,9 +106,6 @@ class QuestionBankController extends Controller
 
     private function subjectsWithPath(): \Illuminate\Support\Collection
     {
-        return Subject::with(['category.parent.parent'])
-            ->get()
-            ->sortBy(fn ($s) => $s->full_path)
-            ->values();
+        return Subject::orderBy('name_ar')->get();
     }
 }

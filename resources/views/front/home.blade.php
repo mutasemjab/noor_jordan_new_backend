@@ -171,18 +171,10 @@
         </div>
         <div class="teacher-card-body">
           <div class="teacher-name">{{ $teacher->name }}</div>
-          <div class="teacher-role">
-            {{ $teacher->specialization }}
-            @if($teacher->years_of_experience) — {{ $teacher->years_of_experience }} {{ __('front.teachers_experience') }}@endif
-          </div>
           <div class="teacher-stats-row">
             <div class="t-stat">
               <div class="t-stat-num">{{ $teacher->total_students ?? 0 }}<span>+</span></div>
               <div class="t-stat-label">{{ __('front.teacher_stat_students') }}</div>
-            </div>
-            <div class="t-stat">
-              <div class="t-stat-num">{{ number_format($teacher->average_rating ?? 4.8, 1) }}</div>
-              <div class="t-stat-label">{{ __('front.teacher_stat_rating') }}</div>
             </div>
             <div class="t-stat">
               <div class="t-stat-num">97<span>%</span></div>
@@ -192,61 +184,6 @@
         </div>
       </div>
       </a>
-      @empty
-      <p class="text-muted">{{ __('front.courses_no_courses') }}</p>
-      @endforelse
-    </div>
-  </div>
-</section>
-
-<!-- ======= COURSES ======= -->
-<section id="courses">
-  <div class="courses-inner">
-    <div class="section-header reveal">
-      <div class="section-eyebrow">{{ __('front.courses_section_tag') }}</div>
-      <h2 class="section-title">{{ __('front.courses_section_t') }}<br><span class="text-gradient-blue">{{ __('front.courses_section_span') }}</span></h2>
-      <p class="section-sub">{{ __('front.courses_section_desc') }}</p>
-    </div>
-    <div class="courses-grid">
-      @forelse($courses as $course)
-      <div class="course-card reveal">
-        <div class="course-thumb">
-          @if($course->thumbnail)
-            <img src="{{ asset('storage/'.$course->thumbnail) }}" alt="{{ $course->title }}">
-          @else
-            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&q=80&auto=format" alt="{{ $course->title }}">
-          @endif
-          @php
-            $levelKey = match($course->difficulty_level ?? '') {
-              'advanced'     => 'course_level_advanced',
-              'intermediate' => 'course_level_inter',
-              default        => 'course_level_basic',
-            };
-            $levelClass = match($course->difficulty_level ?? '') {
-              'advanced'     => 'level-advanced',
-              'intermediate' => 'level-inter',
-              default        => 'level-basic',
-            };
-          @endphp
-          <span class="course-level-badge {{ $levelClass }}">{{ __('front.'.$levelKey) }}</span>
-          @if($course->duration_hours)
-            <span class="course-duration">⏱ {{ $course->duration_hours }} {{ __('front.course_hours_unit') }}</span>
-          @endif
-        </div>
-        <div class="course-body">
-          <div class="course-category">{{ app()->getLocale() === 'ar' ? ($course->category->name_ar ?? '') : ($course->category->name_en ?? $course->category->name_ar ?? '') }}</div>
-          <h3 class="course-title">{{ $course->title }}</h3>
-          <p class="course-desc">{{ $course->description }}</p>
-          <div class="course-meta">
-            <div class="course-rating">
-              <span class="stars">{{ str_repeat('★', (int)round($course->average_rating ?? 5)) }}{{ str_repeat('☆', 5 - (int)round($course->average_rating ?? 5)) }}</span>
-              <span class="rating-num">{{ number_format($course->average_rating ?? 4.9, 1) }}</span>
-            </div>
-            <div class="course-meta-item">👥 {{ $course->total_students ?? 0 }} {{ __('front.teacher_stat_students') }}</div>
-          </div>
-          <a href="{{ route('courses.show', $course->id) }}" class="course-enroll-btn">{{ __('front.courses_enroll') }}</a>
-        </div>
-      </div>
       @empty
       <p class="text-muted">{{ __('front.courses_no_courses') }}</p>
       @endforelse

@@ -13,8 +13,7 @@ class TeacherController extends Controller
 {
     public function index(Request $request)
     {
-        $teachers = Teacher::withCount('courses')
-            ->when($request->search, fn ($q, $s) => $q
+        $teachers = Teacher::when($request->search, fn ($q, $s) => $q
                 ->where('name', 'like', "%{$s}%")
                 ->orWhere('email', 'like', "%{$s}%")
             )
@@ -36,24 +35,14 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'              => 'required|string|max:200',
-            'email'             => 'required|email|unique:teachers,email',
-            'phone'             => 'nullable|string|max:20',
-            'password'          => 'required|string|min:8|confirmed',
-            'specialization_ar' => 'nullable|string|max:255',
-            'specialization_en' => 'nullable|string|max:255',
-            'bio_ar'            => 'nullable|string',
-            'bio_en'            => 'nullable|string',
-            'qualification_ar'  => 'nullable|string|max:200',
-            'qualification_en'  => 'nullable|string|max:200',
-            'years_of_experience' => 'nullable|integer|min:0',
-            'gender'            => 'nullable|in:male,female',
-            'nationality'       => 'nullable|string|max:100',
-            'is_verified'       => 'boolean',
-            'avatar'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'name'        => 'required|string|max:200',
+            'email'       => 'required|email|unique:teachers,email',
+            'phone'       => 'nullable|string|max:20',
+            'password'    => 'required|string|min:8|confirmed',
+            'gender'      => 'nullable|in:male,female',
+            'nationality' => 'nullable|string|max:100',
+            'avatar'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
         ]);
-
-        $data['is_verified']          = $request->boolean('is_verified');
 
         if ($request->hasFile('avatar')) {
             $data['avatar'] = uploadImage('assets/uploads/teachers', $request->file('avatar'));
@@ -67,7 +56,7 @@ class TeacherController extends Controller
 
     public function show(Teacher $teacher)
     {
-        $teacher->load(['courses' => fn ($q) => $q->withCount('enrollments')->latest()->limit(5)]);
+        $teacher->load(['subjects']);
 
         return view('admin.teachers.show', compact('teacher'));
     }
@@ -80,27 +69,17 @@ class TeacherController extends Controller
     public function update(Request $request, Teacher $teacher)
     {
         $data = $request->validate([
-            'name'              => 'required|string|max:200',
-            'email'             => 'required|email|unique:teachers,email,' . $teacher->id,
-            'phone'             => 'nullable|string|max:20',
-            'password'          => 'nullable|string|min:8|confirmed',
-            'specialization_ar' => 'nullable|string|max:255',
-            'specialization_en' => 'nullable|string|max:255',
-            'bio_ar'            => 'nullable|string',
-            'bio_en'            => 'nullable|string',
-            'qualification_ar'  => 'nullable|string|max:200',
-            'qualification_en'  => 'nullable|string|max:200',
-            'years_of_experience' => 'nullable|integer|min:0',
-            'gender'            => 'nullable|in:male,female',
-            'nationality'       => 'nullable|string|max:100',
-            'is_active'         => 'boolean',
-            'is_verified'       => 'boolean',
-            
-            'avatar'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'name'        => 'required|string|max:200',
+            'email'       => 'required|email|unique:teachers,email,' . $teacher->id,
+            'phone'       => 'nullable|string|max:20',
+            'password'    => 'nullable|string|min:8|confirmed',
+            'gender'      => 'nullable|in:male,female',
+            'nationality' => 'nullable|string|max:100',
+            'is_active'   => 'boolean',
+            'avatar'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
         ]);
 
-        $data['is_active']            = $request->boolean('is_active');
-        $data['is_verified']          = $request->boolean('is_verified');
+        $data['is_active'] = $request->boolean('is_active');
 
         if (empty($data['password'])) {
             unset($data['password']);

@@ -27,7 +27,7 @@
                 @foreach($subjects as $subject)
                     <option value="{{ $subject->id }}"
                         {{ old('subject_id', $previousYearExam->subject_id ?? '') == $subject->id ? 'selected' : '' }}>
-                        {{ $subject->full_path }}
+                        {{ $subject->name_ar }}
                     </option>
                 @endforeach
 
@@ -59,24 +59,6 @@
                    name="title_en"
                    class="form-control"
                    value="{{ old('title_en',$previousYearExam->title_en ?? '') }}">
-        </div>
-
-        <div class="mb-3">
-            <label>{{ __('messages.tag_ar') }}</label>
-
-            <input type="text"
-                   name="tag_ar"
-                   class="form-control"
-                   value="{{ old('tag_ar',$previousYearExam->tag_ar ?? '') }}">
-        </div>
-
-        <div class="mb-3">
-            <label>{{ __('messages.tag_en') }}</label>
-
-            <input type="text"
-                   name="tag_en"
-                   class="form-control"
-                   value="{{ old('tag_en',$previousYearExam->tag_en ?? '') }}">
         </div>
 
         <div class="mb-3">

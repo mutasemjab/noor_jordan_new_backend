@@ -17,7 +17,7 @@
 @endif
 
 <div class="row g-3">
-<div class="col-12 col-xl-8">
+<div class="col-12">
 <form action="{{ route('admin.students.update', $student->id) }}" method="POST" enctype="multipart/form-data">
 @csrf @method('PUT')
 <div class="panel-card">
@@ -92,29 +92,6 @@
     </div>
 </div>
 </form>
-</div>
-
-<div class="col-12 col-xl-4">
-    <div class="panel-card">
-        <div class="panel-card-header"><h2 class="panel-card-title">معلومات الجهاز</h2></div>
-        <div class="panel-card-body">
-            @if($student->deviceId)
-                <p class="text-muted mb-1" style="font-size:13px">الجهاز المسجّل:</p>
-                <code class="d-block mb-3" style="font-size:11px;word-break:break-all">{{ $student->deviceId }}</code>
-                <form action="{{ route('admin.students.reset-device', $student->id) }}" method="POST"
-                      onsubmit="return confirm('هل أنت متأكد؟ سيتمكن الطالب من تسجيل الدخول من أي جهاز.')">
-                    @csrf
-                    <button type="submit" class="btn-danger-sm w-100">
-                        <i class="bi bi-phone-vibrate"></i> إعادة تعيين الجهاز
-                    </button>
-                </form>
-            @else
-                <p class="text-muted mb-0" style="font-size:13px">
-                    <i class="bi bi-phone-x"></i> لم يُسجَّل جهاز بعد
-                </p>
-            @endif
-        </div>
-    </div>
 </div>
 </div>
 @endsection

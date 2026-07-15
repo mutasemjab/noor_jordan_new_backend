@@ -21,7 +21,7 @@
     <div class="panel-card">
         <div class="panel-card-header"><h2 class="panel-card-title"><i class="bi bi-file-earmark-arrow-up"></i> استيراد المعلمين من Excel</h2></div>
         <div class="panel-card-body">
-            <p class="text-muted small mb-2">الأعمدة المطلوبة: <strong>الاسم</strong> (إلزامي)، البريد_الإلكتروني، الهاتف، التخصص، كلمة_المرور (افتراضي: Pass@1234)</p>
+            <p class="text-muted small mb-2">الأعمدة المطلوبة: <strong>الاسم</strong> (إلزامي)، البريد_الإلكتروني، الهاتف، كلمة_المرور (افتراضي: Pass@1234)</p>
             <form action="{{ route('admin.teachers.import') }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-end flex-wrap">
                 @csrf
                 <div>
@@ -61,7 +61,7 @@
     <div class="panel-card-body p-0">
         <table class="data-table">
             <thead>
-                <tr><th>#</th><th>{{ __('messages.teacher') }}</th><th>{{ __('messages.specialization') }}</th><th>{{ __('messages.courses') }}</th><th>{{ __('messages.rating') }}</th><th>{{ __('messages.Status') }}</th><th>{{ __('messages.Actions') }}</th></tr>
+                <tr><th>#</th><th>{{ __('messages.teacher') }}</th><th>{{ __('messages.phone_label') }}</th><th>{{ __('messages.total_students') }}</th><th>{{ __('messages.Status') }}</th><th>{{ __('messages.Actions') }}</th></tr>
             </thead>
             <tbody>
                 @forelse($teachers as $teacher)
@@ -80,21 +80,16 @@
                             </div>
                         </div>
                     </td>
-                    <td style="color:var(--muted)">{{ $teacher->specialization_en ?: $teacher->specialization_ar ?: '—' }}</td>
-                    <td>{{ $teacher->courses_count }}</td>
-                    <td>
-                        <span style="color:#ea580c;font-weight:600">
-                            <i class="bi bi-star-fill" style="font-size:.75rem"></i> {{ number_format($teacher->average_rating, 1) }}
-                        </span>
-                    </td>
+                    <td style="color:var(--muted)">{{ $teacher->phone ?: '—' }}</td>
+                    <td>{{ $teacher->total_students ?? 0 }}</td>
                     <td>
                         <span class="pill {{ $teacher->is_active ? 'pill-success' : 'pill-neutral' }}">
                             {{ $teacher->is_active ? __('messages.Active') : __('messages.Inactive') }}
                         </span>
-                        @if($teacher->is_verified)<span class="pill pill-info">{{ __('messages.verified') }}</span>@endif
                     </td>
                     <td>
                         <div class="d-flex gap-1">
+                            <a href="{{ route('admin.teachers.show', $teacher->id) }}" class="btn-outline-sm" style="padding:4px 8px"><i class="bi bi-eye"></i></a>
                             <a href="{{ route('admin.teachers.edit', $teacher->id) }}" class="btn-outline-sm" style="padding:4px 8px"><i class="bi bi-pencil"></i></a>
                             <form action="{{ route('admin.teachers.destroy', $teacher->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_teacher_confirm') }}')">
                                 @csrf @method('DELETE')
@@ -104,7 +99,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_teachers_found') }}</td></tr>
+                <tr><td colspan="6" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_teachers_found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

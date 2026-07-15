@@ -10,7 +10,7 @@ class Exam extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'course_id', 'unit_id', 'lesson_id', 'subject_id',
+        'subject_id',
         'title_ar', 'title_en',
         'description_ar', 'description_en',
         'exam_type', 'total_questions', 'duration_minutes',
@@ -38,21 +38,6 @@ class Exam extends Model
         return app()->getLocale() === 'ar'
             ? ($this->description_ar ?? $this->description_en ?? '')
             : ($this->description_en ?? $this->description_ar ?? '');
-    }
-
-    public function course()
-    {
-        return $this->belongsTo(Course::class);
-    }
-
-    public function unit()
-    {
-        return $this->belongsTo(Unit::class);
-    }
-
-    public function lesson()
-    {
-        return $this->belongsTo(Lesson::class);
     }
 
     public function subject()

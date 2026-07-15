@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\PreviousYearExam;
-use App\Models\Subject;
 use Illuminate\Http\Request;
 
 class PreviousYearExamController extends Controller
@@ -16,12 +15,7 @@ class PreviousYearExamController extends Controller
 
     private function subjectsWithPath(): \Illuminate\Support\Collection
     {
-        return auth('teacher')->user()
-            ->subjects()
-            ->with(['category.parent.parent'])
-            ->get()
-            ->sortBy(fn($s) => $s->full_path)
-            ->values();
+        return auth('teacher')->user()->subjects()->orderBy('name_ar')->get();
     }
 
     public function index()
@@ -45,8 +39,6 @@ class PreviousYearExamController extends Controller
             'subject_id' => 'nullable|exists:subjects,id',
             'title_ar'   => 'required|string|max:255',
             'title_en'   => 'nullable|string|max:255',
-            'tag_ar'     => 'nullable|string|max:255',
-            'tag_en'     => 'nullable|string|max:255',
             'year'       => 'nullable|integer|min:1900|max:2100',
             'pages'      => 'nullable|integer|min:0',
             'file_size'  => 'nullable|numeric',
@@ -62,8 +54,6 @@ class PreviousYearExamController extends Controller
             'subject_id' => $request->subject_id,
             'title_ar'   => $request->title_ar,
             'title_en'   => $request->title_en,
-            'tag_ar'     => $request->tag_ar,
-            'tag_en'     => $request->tag_en,
             'year'       => $request->year ?? date('Y'),
             'pages'      => $request->pages ?? 0,
             'file_size'  => $request->file_size,
@@ -90,8 +80,6 @@ class PreviousYearExamController extends Controller
             'subject_id' => 'nullable|exists:subjects,id',
             'title_ar'   => 'required|string|max:255',
             'title_en'   => 'nullable|string|max:255',
-            'tag_ar'     => 'nullable|string|max:255',
-            'tag_en'     => 'nullable|string|max:255',
             'year'       => 'nullable|integer|min:1900|max:2100',
             'pages'      => 'nullable|integer|min:0',
             'file_size'  => 'nullable|numeric',
@@ -108,8 +96,6 @@ class PreviousYearExamController extends Controller
             'subject_id' => $request->subject_id,
             'title_ar'   => $request->title_ar,
             'title_en'   => $request->title_en,
-            'tag_ar'     => $request->tag_ar,
-            'tag_en'     => $request->tag_en,
             'year'       => $request->year ?? date('Y'),
             'pages'      => $request->pages ?? 0,
             'file_size'  => $request->file_size,

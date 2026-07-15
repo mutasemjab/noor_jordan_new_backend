@@ -22,7 +22,7 @@
                         @foreach ($subjects as $subject)
                             <option value="{{ $subject->id }}"
                                 {{ old('subject_id') == $subject->id ? 'selected' : '' }}>
-                                {{ $subject->full_path }}
+                                {{ $subject->name_ar }}
                             </option>
                         @endforeach
                     </select>
@@ -44,18 +44,6 @@
                     <label>{{ __('messages.title_en_short') }}</label>
 
                     <input type="text" name="title_en" class="form-control">
-                </div>
-
-                <div class="mb-3">
-                    <label>{{ __('messages.tag_ar') }}</label>
-
-                    <input type="text" name="tag_ar" class="form-control">
-                </div>
-
-                <div class="mb-3">
-                    <label>{{ __('messages.tag_en') }}</label>
-
-                    <input type="text" name="tag_en" class="form-control">
                 </div>
 
                 <div class="mb-3">

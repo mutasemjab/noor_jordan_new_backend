@@ -1,17 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\Student\AnnouncementController;
+use App\Http\Controllers\Api\Student\ContractController;
 use App\Http\Controllers\Api\Student\AppSettingController;
 use App\Http\Controllers\Api\Student\BannerController;
 use App\Http\Controllers\Api\Student\AuthController;
-use App\Http\Controllers\Api\Student\CategoryController;
-use App\Http\Controllers\Api\Student\CourseActivationController;
-use App\Http\Controllers\Api\Student\CourseController;
 use App\Http\Controllers\Api\Student\EducationalNoteController;
 use App\Http\Controllers\Api\Student\ExamController;
 use App\Http\Controllers\Api\Student\HomeController;
-use App\Http\Controllers\Api\Student\LessonController;
-use App\Http\Controllers\Api\Student\LessonProgressController;
 use App\Http\Controllers\Api\Student\NotificationController;
 use App\Http\Controllers\Api\Student\PreviousYearExamController;
 use App\Http\Controllers\Api\Student\ProfileController;
@@ -46,25 +42,8 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
     // ── Home ───────────────────────────────────────────────────────────────
     Route::get('home', [HomeController::class, 'index']);
 
-    // ── Banners (slider images — no auth needed) ────────────────────────────
+    // ── Banners (slider images — no auth needed) ───────────────────────────
     Route::get('banners', [BannerController::class, 'index']);
-
-    // ── Category tree navigation ───────────────────────────────────────────
-    Route::get('categories',        [CategoryController::class, 'index']);
-    Route::get('categories/{id}',   [CategoryController::class, 'show']);
-    Route::get('subjects/{id}',     [CategoryController::class, 'subject']);
-
-    // ── Courses ────────────────────────────────────────────────────────────
-    Route::get('courses',       [CourseController::class, 'index']);
-    Route::get('courses/{id}',  [CourseController::class, 'show']);
-
-    // ── Course units + lesson content (auth optional — needed for locked check) ──
-    // GET /courses/{id}/units        → units + lessons list (locked/free based on enrollment)
-    // GET /lessons/{id}              → lesson detail (video_url, file_url) — 403 if locked
-    // GET /units/{id}/exams          → exams attached to a unit
-    Route::get('courses/{id}/units', [LessonController::class, 'courseUnits'])->middleware('auth:sanctum');
-    Route::get('lessons/{id}',       [LessonController::class, 'show'])->middleware('auth:sanctum');
-    Route::get('units/{id}/exams',   [LessonController::class, 'unitExams'])->middleware('auth:sanctum');
 
     // ── Teachers ───────────────────────────────────────────────────────────
     Route::get('teachers',      [TeacherController::class, 'index']);
@@ -75,7 +54,6 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
     Route::get('exams/{id}', [ExamController::class, 'show']);
 
     // ── Files (3 types: previous_year_exams / question_banks / worksheets) ─
-    // Filters: subject_id, year (pye+ws), search
     Route::get('previous-year-exams',       [PreviousYearExamController::class, 'index']);
     Route::get('previous-year-exams/{id}',  [PreviousYearExamController::class, 'show']);
     Route::get('question-banks',            [QuestionBankController::class, 'index']);
@@ -87,15 +65,12 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
 
         // Auth
-        Route::post('auth/logout',          [AuthController::class, 'logout']);
+        Route::post('auth/logout',           [AuthController::class, 'logout']);
         Route::delete('auth/delete-account', [AuthController::class, 'deleteAccount']);
 
         // Profile
         Route::get('profile', [ProfileController::class, 'show']);
         Route::put('profile', [ProfileController::class, 'update']);
-
-        // My courses (enrolled)
-        Route::get('my-courses', [ProfileController::class, 'myCourses']);
 
         // My exam history
         Route::get('my-exams', [ProfileController::class, 'myExams']);
@@ -104,28 +79,17 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
         Route::post('exams/{id}/start',          [ExamController::class, 'start']);
         Route::post('attempts/{attempt}/submit', [ExamController::class, 'submit']);
 
-        // Course activation via card code
-        // POST /courses/{id}/activate   body: { card_code: "XXXX-XXXX" }
-        Route::post('courses/{id}/activate', [CourseActivationController::class, 'activate']);
+        // Contract & payments
+        Route::get('contract', [ContractController::class, 'show']);
 
-        // Lesson progress
-        // POST /lessons/{id}/progress   body: { watch_seconds: 340, is_completed: true }
-        // GET  /courses/{id}/my-progress
-        Route::post('lessons/{id}/progress',       [LessonProgressController::class, 'update']);
-        Route::get('courses/{id}/my-progress',     [LessonProgressController::class, 'courseProgress']);
-
-        // Educational notes (المفكرة التعليمية — filtered by student's class)
+        // Educational notes
         Route::get('educational-notes', [EducationalNoteController::class, 'index']);
 
-        // Announcements (الإعلانات — filtered by student's class or global)
+        // Announcements
         Route::get('announcements',      [AnnouncementController::class, 'index']);
         Route::get('announcements/{id}', [AnnouncementController::class, 'show']);
 
         // Push notifications
-        // POST /device-token          body: { fcm_token: "..." }
-        // GET  /notifications         → list + unread_count
-        // POST /notifications/{id}/read
-        // POST /notifications/read-all
         Route::post('device-token',               [NotificationController::class, 'saveToken']);
         Route::get('notifications',               [NotificationController::class, 'index']);
         Route::post('notifications/read-all',     [NotificationController::class, 'markAllRead']);

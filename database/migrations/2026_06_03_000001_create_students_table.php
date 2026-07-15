@@ -23,7 +23,6 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('class_id')->nullable()->constrained('classes')->nullOnDelete();
             $table->string('fcm_token')->nullable();
-            $table->string('deviceId', 36)->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

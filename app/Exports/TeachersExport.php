@@ -15,8 +15,7 @@ class TeachersExport implements FromCollection, WithHeadings, WithMapping, WithS
 
     public function collection()
     {
-        return Teacher::withCount('courses')
-            ->when($this->filters['search'] ?? null, fn ($q, $s) => $q
+        return Teacher::when($this->filters['search'] ?? null, fn ($q, $s) => $q
                 ->where('name', 'like', "%{$s}%")
                 ->orWhere('email', 'like', "%{$s}%")
             )
@@ -29,7 +28,7 @@ class TeachersExport implements FromCollection, WithHeadings, WithMapping, WithS
 
     public function headings(): array
     {
-        return ['#', 'الاسم', 'البريد الإلكتروني', 'الهاتف', 'التخصص', 'سنوات الخبرة', 'الجنس', 'الدورات', 'موثّق', 'الحالة', 'تاريخ الانضمام'];
+        return ['#', 'الاسم', 'البريد الإلكتروني', 'الهاتف', 'الجنس', 'الحالة', 'تاريخ الانضمام'];
     }
 
     public function map($teacher): array
@@ -39,11 +38,7 @@ class TeachersExport implements FromCollection, WithHeadings, WithMapping, WithS
             $teacher->name,
             $teacher->email ?? '',
             $teacher->phone ?? '',
-            $teacher->specialization_ar ?? $teacher->specialization_en ?? '',
-            $teacher->years_of_experience ?? '',
             $teacher->gender === 'male' ? 'ذكر' : ($teacher->gender === 'female' ? 'أنثى' : ''),
-            $teacher->courses_count,
-            $teacher->is_verified ? 'نعم' : 'لا',
             $teacher->is_active ? 'نشط' : 'موقوف',
             $teacher->created_at?->format('Y-m-d'),
         ];

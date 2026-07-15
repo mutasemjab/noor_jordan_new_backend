@@ -14,8 +14,7 @@ class StudentController extends Controller
 {
     public function index(Request $request)
     {
-        $students = Student::withCount('enrollments')
-            ->when($request->search, fn ($q, $s) => $q
+        $students = Student::when($request->search, fn ($q, $s) => $q
                 ->where('name', 'like', "%{$s}%")
                 ->orWhere('email', 'like', "%{$s}%")
             )
@@ -61,7 +60,7 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
-        $student->load(['enrollments.course', 'examAttempts.exam']);
+        $student->load(['examAttempts.exam']);
 
         return view('admin.students.show', compact('student'));
     }
@@ -103,13 +102,6 @@ class StudentController extends Controller
             ->with('success', 'Student updated successfully.');
     }
 
-    public function resetDevice(Student $student)
-    {
-        $student->update(['deviceId' => null]);
-
-        return back()->with('success', 'تم إعادة تعيين الجهاز. يمكن للطالب الآن تسجيل الدخول من جهاز جديد.');
-    }
-
     public function destroy(Student $student)
     {
         $student->delete();
@@ -120,7 +112,7 @@ class StudentController extends Controller
 
     public function export(Request $request)
     {
-        $filters = $request->only(['search', 'is_active']);
+        $filters  = $request->only(['search', 'is_active']);
         $filename = 'students_' . now()->format('Y-m-d') . '.xlsx';
 
         return Excel::download(new StudentsExport($filters), $filename);
@@ -136,8 +128,8 @@ class StudentController extends Controller
         Excel::import($importer, $request->file('file'));
 
         $msg = "تم استيراد {$importer->imported} طالب بنجاح.";
-        if ($importer->skipped)  $msg .= " تم تخطي {$importer->skipped}.";
-        if ($importer->errors)   $msg .= ' أخطاء: ' . implode(' | ', $importer->errors);
+        if ($importer->skipped) $msg .= " تم تخطي {$importer->skipped}.";
+        if ($importer->errors)  $msg .= ' أخطاء: ' . implode(' | ', $importer->errors);
 
         return back()->with('success', $msg);
     }

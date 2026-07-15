@@ -22,7 +22,6 @@ class TeachersImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
             $name     = trim($row['الاسم']               ?? $row['name']     ?? '');
             $email    = trim($row['البريد_الإلكتروني']   ?? $row['email']    ?? '');
             $phone    = trim($row['الهاتف']              ?? $row['phone']    ?? '');
-            $specAr   = trim($row['التخصص']             ?? $row['specialization'] ?? '');
             $password = trim($row['كلمة_المرور']         ?? $row['password'] ?? 'Pass@1234');
 
             if (empty($name)) {
@@ -37,13 +36,11 @@ class TeachersImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
             }
 
             Teacher::create([
-                'name'              => $name,
-                'email'             => $email ?: null,
-                'phone'             => $phone ?: null,
-                'specialization_ar' => $specAr ?: null,
-                'password'          => $password,
-                'is_active'         => true,
-                'is_verified'       => false,
+                'name'      => $name,
+                'email'     => $email ?: null,
+                'phone'     => $phone ?: null,
+                'password'  => $password,
+                'is_active' => true,
             ]);
 
             $this->imported++;

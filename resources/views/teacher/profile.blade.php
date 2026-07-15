@@ -46,43 +46,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="panel-card mb-3">
-            <div class="panel-card-header"><h2 class="panel-card-title">{{ __('messages.t_professional_info') }}</h2></div>
-            <div class="panel-card-body">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.t_specialization_ar') }}</label>
-                        <input type="text" name="specialization_ar" value="{{ old('specialization_ar', $teacher->specialization_ar) }}" class="form-control" dir="rtl">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.t_specialization_en') }}</label>
-                        <input type="text" name="specialization_en" value="{{ old('specialization_en', $teacher->specialization_en) }}" class="form-control">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.t_qualification_ar') }}</label>
-                        <input type="text" name="qualification_ar" value="{{ old('qualification_ar', $teacher->qualification_ar) }}" class="form-control" dir="rtl">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.t_qualification_en') }}</label>
-                        <input type="text" name="qualification_en" value="{{ old('qualification_en', $teacher->qualification_en) }}" class="form-control">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.t_bio_ar') }}</label>
-                        <textarea name="bio_ar" rows="3" class="form-control" dir="rtl">{{ old('bio_ar', $teacher->bio_ar) }}</textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.t_bio_en') }}</label>
-                        <textarea name="bio_en" rows="3" class="form-control">{{ old('bio_en', $teacher->bio_en) }}</textarea>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('messages.t_years_of_experience') }}</label>
-                        <input type="number" name="years_of_experience" value="{{ old('years_of_experience', $teacher->years_of_experience) }}" min="0" class="form-control">
-                    </div>
-
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="col-12 col-xl-4">
@@ -104,10 +67,7 @@
             <div class="panel-card-header"><h2 class="panel-card-title">{{ __('messages.t_stats') }}</h2></div>
             <div class="panel-card-body">
                 <div style="font-size:.85rem">
-                    <div class="d-flex justify-content-between mb-2"><span style="color:var(--muted)">{{ __('messages.t_total_courses') }}</span><strong>{{ $teacher->total_courses ?? 0 }}</strong></div>
                     <div class="d-flex justify-content-between mb-2"><span style="color:var(--muted)">{{ __('messages.t_total_students') }}</span><strong>{{ $teacher->total_students ?? 0 }}</strong></div>
-                    <div class="d-flex justify-content-between mb-2"><span style="color:var(--muted)">{{ __('messages.t_avg_rating') }}</span><strong>{{ number_format($teacher->average_rating ?? 0, 1) }} ★</strong></div>
-                    <div class="d-flex justify-content-between"><span style="color:var(--muted)">{{ __('messages.t_verified') }}</span><strong>{{ $teacher->is_verified ? '✓ ' . __('messages.t_yes') : __('messages.t_pending') }}</strong></div>
                 </div>
             </div>
         </div>

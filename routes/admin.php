@@ -1,21 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\StudentContractController;
 use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\CardController;
-use App\Http\Controllers\Admin\CardNumberController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactMessageController;
-use App\Http\Controllers\Admin\CourseContentController;
-use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmployeeController;
-use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\ExamController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\PreviousYearExamController;
 use App\Http\Controllers\Admin\QuestionBankController;
 use App\Http\Controllers\Admin\WorksheetController;
@@ -54,19 +47,16 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
             return response()->json(Permission::where('guard_name', $guard_name)->get());
         });
 
-        // ── Courses ───────────────────────────────────────────────────
-        Route::resource('courses', CourseController::class, ['as' => 'admin']);
-
-        // ── Previous Year Exam ───────────────────────────────────────────────────
+        // ── Previous Year Exam ────────────────────────────────────────
         Route::resource('previous-year-exams', PreviousYearExamController::class, ['as' => 'admin']);
-    
-        // ── Question Bank ───────────────────────────────────────────────────
+
+        // ── Question Bank ─────────────────────────────────────────────
         Route::resource('question-banks', QuestionBankController::class, ['as' => 'admin']);
 
-        // ── Worksheets ──────────────────────────────────────────────────────
+        // ── Worksheets ────────────────────────────────────────────────
         Route::resource('worksheets', WorksheetController::class, ['as' => 'admin']);
 
-        // ── Educational Notes ───────────────────────────────────────────────
+        // ── Educational Notes ─────────────────────────────────────────
         Route::resource('educational-notes', EducationalNoteController::class, ['as' => 'admin']);
 
         // ── Teachers ──────────────────────────────────────────────────
@@ -78,48 +68,22 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         Route::get('students/export',  [StudentController::class, 'export'])->name('admin.students.export');
         Route::post('students/import', [StudentController::class, 'import'])->name('admin.students.import');
         Route::resource('students', StudentController::class, ['as' => 'admin']);
-        Route::post('students/{student}/reset-device', [StudentController::class, 'resetDevice'])->name('admin.students.reset-device');
 
-        // ── Categories (tree) ─────────────────────────────────────────
-        Route::get('categories/{id}/children', [CategoryController::class, 'children'])->name('admin.categories.children');
-        Route::resource('categories', CategoryController::class, ['as' => 'admin', 'except' => ['show']]);
-
-        // ── Exams ─────────────────────────────────────────────────────
-        Route::get('courses/{id}/exam-structure',   [ExamController::class, 'getCourseStructure'])->name('admin.courses.exam-structure');
-        Route::resource('exams', ExamController::class, ['as' => 'admin']);
-        Route::post('exams/{examId}/questions',     [ExamController::class, 'storeQuestion'])->name('admin.exams.questions.store');
-        Route::delete('questions/{questionId}',     [ExamController::class, 'destroyQuestion'])->name('admin.exams.questions.destroy');
-
-        // ── Cities ────────────────────────────────────────────────────
-        Route::resource('cities', CityController::class, ['as' => 'admin']);
-
-        // ── Points of Sale ────────────────────────────────────────────
-        Route::resource('pos', PosController::class, ['as' => 'admin']);
-
-        // ── Cards ─────────────────────────────────────────────────────
-        Route::resource('cards', CardController::class, ['as' => 'admin']);
-
-        // ── Card Numbers ──────────────────────────────────────────────
-        Route::post('card-numbers/bulk-generate', [CardNumberController::class, 'bulkGenerate'])->name('admin.card-numbers.bulk');
-        Route::get('card-numbers/print',          [CardNumberController::class, 'printView'])->name('admin.card-numbers.print');
-        Route::resource('card-numbers', CardNumberController::class, ['as' => 'admin']);
+        // ── Student Contracts & Payments ──────────────────────────────
+        Route::get('students/{student}/contract',          [StudentContractController::class, 'show'])->name('admin.students.contract');
+        Route::post('students/{student}/contract',         [StudentContractController::class, 'store'])->name('admin.students.contract.store');
+        Route::post('students/{student}/payments',         [StudentContractController::class, 'addPayment'])->name('admin.students.payments.store');
+        Route::post('students/{student}/quick-payment',    [StudentContractController::class, 'quickPayment'])->name('admin.students.quick-payment');
+        Route::delete('payments/{payment}',                [StudentContractController::class, 'deletePayment'])->name('admin.payments.delete');
+        Route::get('payments/{payment}/receipt',           [StudentContractController::class, 'receipt'])->name('admin.payments.receipt');
 
         // ── Subjects ──────────────────────────────────────────────────
         Route::resource('subjects', SubjectController::class, ['as' => 'admin']);
 
-        // ── Enrollments / Activations ─────────────────────────────────
-        Route::get('enrollments', [EnrollmentController::class, 'index'])->name('admin.enrollments.index');
-        Route::patch('enrollments/{enrollment}/toggle', [EnrollmentController::class, 'toggleActive'])->name('admin.enrollments.toggle');
-        Route::delete('enrollments/{enrollment}', [EnrollmentController::class, 'destroy'])->name('admin.enrollments.destroy');
-
-        // ── Course Content (Units / Lessons / Materials) ──────────────
-        Route::post('courses/{id}/units',     [CourseContentController::class, 'storeUnit'])->name('admin.courses.units.store');
-        Route::delete('units/{id}',           [CourseContentController::class, 'destroyUnit'])->name('admin.courses.units.destroy');
-        Route::post('units/{id}/lessons',     [CourseContentController::class, 'storeLesson'])->name('admin.courses.lessons.store');
-        Route::put('lessons/{id}',            [CourseContentController::class, 'updateLesson'])->name('admin.courses.lessons.update');
-        Route::delete('lessons/{id}',         [CourseContentController::class, 'destroyLesson'])->name('admin.courses.lessons.destroy');
-        Route::post('units/{id}/materials',   [CourseContentController::class, 'storeMaterial'])->name('admin.courses.materials.store');
-        Route::delete('materials/{id}',       [CourseContentController::class, 'destroyMaterial'])->name('admin.courses.materials.destroy');
+        // ── Exams ─────────────────────────────────────────────────────
+        Route::resource('exams', ExamController::class, ['as' => 'admin']);
+        Route::post('exams/{examId}/questions',  [ExamController::class, 'storeQuestion'])->name('admin.exams.questions.store');
+        Route::delete('questions/{questionId}',  [ExamController::class, 'destroyQuestion'])->name('admin.exams.questions.destroy');
 
         // ── Banners ───────────────────────────────────────────────────
         Route::post('banners/{banner}/toggle', [BannerController::class, 'toggleActive'])->name('admin.banners.toggle');
@@ -138,10 +102,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         Route::post('site-settings/toggle-price-display', [SiteSettingController::class, 'togglePriceDisplay'])->name('admin.site-settings.toggle-price');
 
         // ── Contact Messages ──────────────────────────────────────────
-        Route::get('contact-messages',              [ContactMessageController::class, 'index'])->name('admin.contact_messages.index');
-        Route::get('contact-messages/{contactMessage}', [ContactMessageController::class, 'show'])->name('admin.contact_messages.show');
-        Route::post('contact-messages/{contactMessage}/reply', [ContactMessageController::class, 'reply'])->name('admin.contact_messages.reply');
-        Route::delete('contact-messages/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('admin.contact_messages.destroy');
+        Route::get('contact-messages',                   [ContactMessageController::class, 'index'])->name('admin.contact_messages.index');
+        Route::get('contact-messages/{contactMessage}',  [ContactMessageController::class, 'show'])->name('admin.contact_messages.show');
+        Route::post('contact-messages/{contactMessage}/reply',   [ContactMessageController::class, 'reply'])->name('admin.contact_messages.reply');
+        Route::delete('contact-messages/{contactMessage}',       [ContactMessageController::class, 'destroy'])->name('admin.contact_messages.destroy');
     });
 });
 

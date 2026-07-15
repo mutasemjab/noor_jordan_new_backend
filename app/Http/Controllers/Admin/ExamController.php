@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Course, Exam, Question, Subject};
+use App\Models\{Exam, Question, Subject};
 use App\Services\ExamService;
-use Illuminate\Http\{JsonResponse, Request};
+use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
@@ -13,46 +13,22 @@ class ExamController extends Controller
 
     public function index(Request $request)
     {
-        $exams    = $this->exams->list($request->only(['search', 'course_id', 'exam_type', 'is_published']));
-        $courses  = Course::where('is_published', true)->get();
+        $exams    = $this->exams->list($request->only(['search', 'exam_type', 'is_published']));
+        $subjects = Subject::active()->get();
 
-        return view('admin.exams.index', compact('exams', 'courses'));
+        return view('admin.exams.index', compact('exams', 'subjects'));
     }
 
     public function create()
     {
-        $courses  = Course::where('is_published', true)->get();
         $subjects = Subject::active()->get();
 
-        return view('admin.exams.create', compact('courses', 'subjects'));
-    }
-
-    public function getCourseStructure(int $id): JsonResponse
-    {
-        $course = Course::with(['units' => fn ($q) => $q->orderBy('order_index'),
-                                'units.lessons' => fn ($q) => $q->orderBy('order_index')])
-            ->findOrFail($id);
-
-        $units = $course->units->map(fn ($unit) => [
-            'id'       => $unit->id,
-            'title_ar' => $unit->title_ar,
-            'title_en' => $unit->title_en,
-            'lessons'  => $unit->lessons->map(fn ($l) => [
-                'id'       => $l->id,
-                'title_ar' => $l->title_ar,
-                'title_en' => $l->title_en,
-            ]),
-        ]);
-
-        return response()->json(['units' => $units]);
+        return view('admin.exams.create', compact('subjects'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'course_id'               => 'nullable|exists:courses,id',
-            'unit_id'                 => 'nullable|exists:units,id',
-            'lesson_id'               => 'nullable|exists:lessons,id',
             'subject_id'              => 'nullable|exists:subjects,id',
             'title_ar'                => 'required|string|max:255',
             'title_en'                => 'required|string|max:255',
@@ -67,24 +43,7 @@ class ExamController extends Controller
             'shuffle_questions'       => 'boolean',
             'shuffle_options'         => 'boolean',
             'show_result_immediately' => 'boolean',
-            'placement_type'          => 'nullable|in:course,unit,lesson',
         ]);
-
-        $placementType = $request->input('placement_type', 'course');
-
-        // Clear placement fields not relevant to chosen type
-        if (empty($data['course_id'])) {
-            $data['unit_id']   = null;
-            $data['lesson_id'] = null;
-        } elseif ($placementType === 'course') {
-            $data['unit_id']   = null;
-            $data['lesson_id'] = null;
-        } elseif ($placementType === 'unit') {
-            $data['lesson_id'] = null;
-        }
-        // if 'lesson': keep both unit_id and lesson_id
-
-        unset($data['placement_type']);
 
         $data['is_published']            = $request->boolean('is_published');
         $data['shuffle_questions']       = $request->boolean('shuffle_questions');
@@ -107,10 +66,9 @@ class ExamController extends Controller
     public function edit(int $id)
     {
         $exam     = Exam::findOrFail($id);
-        $courses  = Course::where('is_published', true)->get();
         $subjects = Subject::active()->get();
 
-        return view('admin.exams.edit', compact('exam', 'courses', 'subjects'));
+        return view('admin.exams.edit', compact('exam', 'subjects'));
     }
 
     public function update(Request $request, int $id)
@@ -118,9 +76,6 @@ class ExamController extends Controller
         $exam = Exam::findOrFail($id);
 
         $data = $request->validate([
-            'course_id'               => 'nullable|exists:courses,id',
-            'unit_id'                 => 'nullable|exists:units,id',
-            'lesson_id'               => 'nullable|exists:lessons,id',
             'subject_id'              => 'nullable|exists:subjects,id',
             'title_ar'                => 'required|string|max:255',
             'title_en'                => 'required|string|max:255',
@@ -135,22 +90,7 @@ class ExamController extends Controller
             'shuffle_questions'       => 'boolean',
             'shuffle_options'         => 'boolean',
             'show_result_immediately' => 'boolean',
-            'placement_type'          => 'nullable|in:course,unit,lesson',
         ]);
-
-        $placementType = $request->input('placement_type', 'course');
-
-        if (empty($data['course_id'])) {
-            $data['unit_id']   = null;
-            $data['lesson_id'] = null;
-        } elseif ($placementType === 'course') {
-            $data['unit_id']   = null;
-            $data['lesson_id'] = null;
-        } elseif ($placementType === 'unit') {
-            $data['lesson_id'] = null;
-        }
-
-        unset($data['placement_type']);
 
         $data['is_published']            = $request->boolean('is_published');
         $data['shuffle_questions']       = $request->boolean('shuffle_questions');
@@ -170,8 +110,6 @@ class ExamController extends Controller
         return redirect()->route('admin.exams.index')
             ->with('success', 'Exam deleted successfully.');
     }
-
-    // ── Question management ───────────────────────────────────────────
 
     public function storeQuestion(Request $request, int $examId)
     {
@@ -221,8 +159,6 @@ class ExamController extends Controller
     public function destroyQuestion(int $questionId)
     {
         $question = Question::with('exam')->findOrFail($questionId);
-        $examId   = $question->exam_id;
-
         $this->exams->deleteQuestion($question);
 
         return back()->with('success', 'Question deleted.');

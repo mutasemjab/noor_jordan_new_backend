@@ -9,14 +9,8 @@ class ExamService
 {
     public function list(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        $query = Exam::with(['course', 'subject'])->withCount('questions');
+        $query = Exam::with(['subject'])->withCount('questions');
 
-        if (! empty($filters['teacher_id'])) {
-            $query->whereHas('course', fn ($q) => $q->where('teacher_id', $filters['teacher_id']));
-        }
-        if (! empty($filters['course_id'])) {
-            $query->where('course_id', $filters['course_id']);
-        }
         if (! empty($filters['exam_type'])) {
             $query->where('exam_type', $filters['exam_type']);
         }
@@ -36,7 +30,7 @@ class ExamService
 
     public function find(int $id): Exam
     {
-        return Exam::with(['course', 'subject', 'questions.options'])->findOrFail($id);
+        return Exam::with(['subject', 'questions.options'])->findOrFail($id);
     }
 
     public function create(array $data): Exam
