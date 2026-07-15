@@ -11,7 +11,7 @@ class SiteSettingSeeder extends Seeder
     {
         $settings = [
             // ── Hero ──────────────────────────────────────────────────────────
-            ['hero_badge',    'hero', '🎓 منصة الباحث التعليمية', '🎓 Al-Bahith Educational Platform'],
+            ['hero_badge',    'hero', '🎓 منصة نور الأردن التعليمية', '🎓 Noor Jordan Educational Platform'],
             ['hero_subtitle', 'hero',
                 'انطلق نحو التميّز مع أفضل المعلمين المتخصصين في الأردن، واحصل على نتائج استثنائية تفتح أمامك أبواب المستقبل.',
                 'Launch towards excellence with Jordan\'s finest specialist teachers and achieve exceptional results that open doors to your future.'],
@@ -21,7 +21,7 @@ class SiteSettingSeeder extends Seeder
             ['about_title',   'about', 'نبنيك اليوم', 'We Build You Today'],
             ['about_description', 'about',
                 'أكاديمية الباحث هي مؤسسة تعليمية رائدة في الأردن تأسست قبل أكثر من 25 عامًا بهدف توفير التعليم الأكاديمي المتميز لجميع المراحل الدراسية. نؤمن بأن كل طالب قادر على التفوق مع البيئة التعليمية المناسبة والمعلم الكفء.',
-                'Al-Bahith Academy is a leading educational institution in Jordan founded over 25 years ago with the goal of providing distinguished academic education for all grade levels. We believe every student can excel with the right learning environment and capable teacher.'],
+                'Noor Jordan School is a leading educational institution in Jordan founded over 25 years ago with the goal of providing distinguished academic education for all grade levels. We believe every student can excel with the right learning environment and capable teacher.'],
             ['about_years',         'about', '25', '25'],
             ['about_image_main',    'about', '', ''],
             ['about_image_secondary','about', '', ''],
@@ -37,7 +37,7 @@ class SiteSettingSeeder extends Seeder
             // ── Contact ───────────────────────────────────────────────────────
             ['contact_address', 'contact', 'عمّان، الأردن', 'Amman, Jordan'],
             ['contact_phone',   'contact', '+962 6 XXX XXXX', '+962 6 XXX XXXX'],
-            ['contact_email',   'contact', 'info@albahithacademy.edu.jo', 'info@albahithacademy.edu.jo'],
+            ['contact_email',   'contact', 'info@noor-jordan.com', 'info@noor-jordan.com'],
             ['contact_hours',   'contact', 'السبت – الخميس: 8 صباحاً – 8 مساءً', 'Sat – Thu: 8:00 AM – 8:00 PM'],
             ['contact_whatsapp','contact', '', ''],
 

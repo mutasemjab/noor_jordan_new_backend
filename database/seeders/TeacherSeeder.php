@@ -13,9 +13,9 @@ class TeacherSeeder extends Seeder
         $teachers = [
             [
                 'name'           => 'أ. محمد أحمد الزيود',
-                'email'          => 'mohammad.zayoud@baheth.jo',
+                'email'          => 'mohammad.zayoud@noor.jo',
                 'phone'          => '+962799001001',
-                'password'       => 'baheth2024',
+                'password'       => 'noor2024',
                 'gender'         => 'male',
                 'total_students' => 1850,
                 'is_active'      => true,
@@ -23,9 +23,9 @@ class TeacherSeeder extends Seeder
             ],
             [
                 'name'           => 'أ. سارة عبدالله النمر',
-                'email'          => 'sara.namer@baheth.jo',
+                'email'          => 'sara.namer@noor.jo',
                 'phone'          => '+962799001002',
-                'password'       => 'baheth2024',
+                'password'       => 'noor2024',
                 'gender'         => 'female',
                 'total_students' => 1420,
                 'is_active'      => true,
@@ -33,9 +33,9 @@ class TeacherSeeder extends Seeder
             ],
             [
                 'name'           => 'أ. خالد نادر الشريدة',
-                'email'          => 'khaled.shraida@baheth.jo',
+                'email'          => 'khaled.shraida@noor.jo',
                 'phone'          => '+962799001003',
-                'password'       => 'baheth2024',
+                'password'       => 'noor2024',
                 'gender'         => 'male',
                 'total_students' => 980,
                 'is_active'      => true,
@@ -43,9 +43,9 @@ class TeacherSeeder extends Seeder
             ],
             [
                 'name'           => 'أ. رنا هاني جرار',
-                'email'          => 'rana.jarrar@baheth.jo',
+                'email'          => 'rana.jarrar@noor.jo',
                 'phone'          => '+962799001004',
-                'password'       => 'baheth2024',
+                'password'       => 'noor2024',
                 'gender'         => 'female',
                 'total_students' => 1100,
                 'is_active'      => true,

@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-12 col-md-3">
                     <label class="form-label">{{ __('messages.prefix_label') }}</label>
-                    <input type="text" name="prefix" maxlength="20" class="form-control form-control-sm" placeholder="BAHETH-">
+                    <input type="text" name="prefix" maxlength="20" class="form-control form-control-sm" placeholder="Noor Jordan-">
                 </div>
                 <div class="col-12 col-md-2">
                     <button type="submit" class="btn-primary-sm w-100">

@@ -75,7 +75,7 @@ return [
     'contact_note'         => 'Our team will contact you within 24 business hours ⚡',
     'overlay_back'         => 'Back',
     'overlay_close'        => 'Close',
-    'overlay_logo_name'    => 'Al-Bahith Academy',
+    'overlay_logo_name'    => 'Noor Jordan School',
     'overlay_logo_sub'     => 'Learning Platform',
     'overlay_grades_eye'   => 'School Grades',
     'overlay_grades_t'     => 'Choose Your Grade',
@@ -105,10 +105,10 @@ return [
     'overlay_crs_sub'      => 'Choose the right course and start your journey',
 
     // ── Site Meta ─────────────────────────────────────────────────────────
-    'site_name'        => 'Al-Bahith Academy',
+    'site_name'        => 'Noor Jordan School',
     'site_tagline'     => 'Academic Excellence Platform',
-    'meta_description' => 'Al-Bahith Academy — A leading Jordanian educational institution since 1999. Courses, exams, learning community and expert teachers. Building minds, igniting futures.',
-    'page_title'       => 'Al-Bahith Academy | Academic Excellence',
+    'meta_description' => 'Noor Jordan School — A leading Jordanian educational institution since 1999. Courses, exams, learning community and expert teachers. Building minds, igniting futures.',
+    'page_title'       => 'Noor Jordan School | Academic Excellence',
 
     // ── Navbar ────────────────────────────────────────────────────────────
     'nav_home'         => 'Home',
@@ -258,7 +258,7 @@ return [
     // ── Testimonials ──────────────────────────────────────────────────────
     'testimonials_tag'    => 'Success Stories',
     'testimonials_title'  => 'Students Who Achieved Their Dreams',
-    'testimonials_desc'   => 'Thousands of students changed their future with Al-Bahith Academy.',
+    'testimonials_desc'   => 'Thousands of students changed their future with Noor Jordan School.',
 
     // ── FAQ ───────────────────────────────────────────────────────────────
     'faq_tag'    => 'FAQ',
@@ -277,7 +277,7 @@ return [
     // ── About ─────────────────────────────────────────────────────────────
     'about_tag'       => 'About Us',
     'about_title'     => 'Building Minds, Igniting Futures',
-    'about_text'      => 'Al-Bahith Academy is a leading Jordanian educational institution founded over 25 years ago. We have guided thousands of students to academic excellence through an integrated environment combining academic tradition with modern technology.',
+    'about_text'      => 'Noor Jordan School is a leading Jordanian educational institution founded over 25 years ago. We have guided thousands of students to academic excellence through an integrated environment combining academic tradition with modern technology.',
     'about_mission'   => 'Our Mission',
     'about_mission_t' => 'Empowering every student to reach their full academic potential through quality education and dedicated teaching.',
     'about_vision'    => 'Our Vision',
@@ -324,7 +324,7 @@ return [
     'footer_ios'          => 'iOS App',
     'footer_android'      => 'Android App',
     'footer_apk'          => 'Download APK',
-    'footer_copyright'    => '© :year Al-Bahith Academy. All rights reserved.',
+    'footer_copyright'    => '© :year Noor Jordan School. All rights reserved.',
 
     // ── Locale switch ─────────────────────────────────────────────────────
     'switch_to_en'        => 'EN',

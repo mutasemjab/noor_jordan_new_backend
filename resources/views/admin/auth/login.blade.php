@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('messages.admin_login_title') }} — Al-Baheth</title>
+    <title>{{ __('messages.admin_login_title') }} — Noor Jordan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -328,7 +328,7 @@
 
     <div class="l-brand">
         <div class="l-brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
-        <div class="l-brand-name">Al<span>Baheth</span></div>
+        <div class="l-brand-name">Al<span>Noor Jordan</span></div>
     </div>
 
     <div class="l-hero">
@@ -457,7 +457,7 @@
         </form>
 
         <div class="r-footer">
-            &copy; {{ date('Y') }} Al-Baheth. {{ __('messages.all_rights_reserved') }}
+            &copy; {{ date('Y') }} Noor Jordan. {{ __('messages.all_rights_reserved') }}
         </div>
 
     </div>

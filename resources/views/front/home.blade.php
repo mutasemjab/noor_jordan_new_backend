@@ -13,7 +13,7 @@
       <div class="hero-badge">{{ sett('hero_badge') ?: __('front.site_tagline') }}</div>
       <h1 class="hero-title" id="hero-title">
         {{ __('front.site_name') }}<br>
-        <span class="accent-blue">{{ app()->getLocale() === 'ar' ? 'الباحث' : 'Al-Bahith' }}</span>
+        <span class="accent-blue">{{ app()->getLocale() === 'ar' ? 'نور الأردن' : 'Noor Jordan' }}</span>
         <span style="color:rgba(255,255,255,0.3)"> · </span>
         <span class="accent-red">{{ app()->getLocale() === 'ar' ? 'التميّز' : 'Excellence' }}</span>
       </h1>
@@ -270,7 +270,7 @@
             <div class="ci-icon">📧</div>
             <div class="ci-text">
               <h5>{{ __('front.contact_email_label') }}</h5>
-              <p>{{ sett_raw('contact_email') ?: 'info@albahithacademy.edu.jo' }}</p>
+              <p>{{ sett_raw('contact_email') ?: 'info@noor-jordan.com' }}</p>
             </div>
           </div>
           <div class="contact-info-item">

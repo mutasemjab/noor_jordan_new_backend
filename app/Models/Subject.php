@@ -29,6 +29,18 @@ class Subject extends Model
         return $this->belongsToMany(Teacher::class, 'teacher_subjects');
     }
 
+    public function classes()
+    {
+        return $this->belongsToMany(SchoolClass::class, 'class_subjects')
+                    ->withPivot('teacher_id')
+                    ->withTimestamps();
+    }
+
+    public function classSubjects()
+    {
+        return $this->hasMany(ClassSubject::class);
+    }
+
     public function exams()
     {
         return $this->hasMany(Exam::class);

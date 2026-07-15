@@ -2,7 +2,7 @@
 
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
-        <span class="brand-text">Al<span>Bahith</span></span>
+        <span class="brand-text">Noor<span>Jordan</span></span>
     </div>
 
     <nav class="sidebar-nav">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Student\AnnouncementController;
+use App\Http\Controllers\Api\Student\ClassController;
 use App\Http\Controllers\Api\Student\ContractController;
 use App\Http\Controllers\Api\Student\AppSettingController;
 use App\Http\Controllers\Api\Student\BannerController;
@@ -65,8 +66,9 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
 
         // Auth
-        Route::post('auth/logout',           [AuthController::class, 'logout']);
-        Route::delete('auth/delete-account', [AuthController::class, 'deleteAccount']);
+        Route::post('auth/logout',                    [AuthController::class, 'logout']);
+        Route::delete('auth/delete-account',          [AuthController::class, 'deleteAccount']);
+        Route::post('auth/switch-sibling/{sibling}',  [AuthController::class, 'switchSibling']);
 
         // Profile
         Route::get('profile', [ProfileController::class, 'show']);
@@ -78,6 +80,9 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
         // Exam flow
         Route::post('exams/{id}/start',          [ExamController::class, 'start']);
         Route::post('attempts/{attempt}/submit', [ExamController::class, 'submit']);
+
+        // Class subjects & teachers
+        Route::get('my-subjects', [ClassController::class, 'mySubjects']);
 
         // Contract & payments
         Route::get('contract', [ContractController::class, 'show']);

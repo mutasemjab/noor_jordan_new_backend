@@ -35,4 +35,14 @@ class Teacher extends Authenticatable
     {
         return $this->belongsToMany(Subject::class, 'teacher_subjects');
     }
+
+    public function classSubjects()
+    {
+        return $this->hasMany(ClassSubject::class);
+    }
+
+    public function homeroomClasses()
+    {
+        return $this->hasMany(SchoolClass::class, 'homeroom_teacher_id');
+    }
 }

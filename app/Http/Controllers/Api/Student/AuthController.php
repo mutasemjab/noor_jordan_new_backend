@@ -8,40 +8,10 @@ use App\Models\Student;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
     use ApiResponse;
-
-    public function register(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'name'        => ['required', 'string', 'max:200'],
-            'national_id' => ['required', 'string', 'max:50', 'unique:students,national_id'],
-            'email'       => ['nullable', 'email', 'max:200', 'unique:students,email'],
-            'phone'       => ['nullable', 'string', 'max:20'],
-            'password'    => ['required', 'confirmed', Password::min(8)],
-            'class_id'    => ['nullable', 'exists:classes,id'],
-        ]);
-
-        $student = Student::create([
-            'name'        => $validated['name'],
-            'national_id' => $validated['national_id'],
-            'email'       => $validated['email'] ?? null,
-            'phone'       => $validated['phone'] ?? null,
-            'password'    => $validated['password'],
-            'class_id'    => $validated['class_id'] ?? null,
-            'is_active'   => true,
-        ]);
-
-        $token = $student->createToken('student-app')->plainTextToken;
-
-        return $this->success([
-            'token'   => $token,
-            'student' => $this->studentData($student),
-        ], 'تم التسجيل بنجاح', 201);
-    }
 
     public function login(Request $request): JsonResponse
     {
@@ -62,10 +32,39 @@ class AuthController extends Controller
 
         $token = $student->createToken('student-app')->plainTextToken;
 
+        $student->load(['schoolClass', 'siblings.schoolClass']);
+
         return $this->success([
             'token'   => $token,
-            'student' => $this->studentData($student->load('schoolClass')),
+            'student' => $this->studentData($student),
         ]);
+    }
+
+    public function switchSibling(Request $request, int $siblingId): JsonResponse
+    {
+        $current = $request->user();
+
+        // Verify the relationship exists in both directions
+        $isSibling = $current->siblings()->where('students.id', $siblingId)->exists();
+
+        if (! $isSibling) {
+            return $this->error('هذا الطالب ليس من أفراد عائلتك.', 403);
+        }
+
+        $sibling = Student::find($siblingId);
+
+        if (! $sibling || ! $sibling->is_active) {
+            return $this->error('الحساب غير متاح.', 403);
+        }
+
+        $token = $sibling->createToken('student-app')->plainTextToken;
+
+        $sibling->load(['schoolClass', 'siblings.schoolClass']);
+
+        return $this->success([
+            'token'   => $token,
+            'student' => $this->studentData($sibling),
+        ], 'تم التبديل إلى حساب ' . $sibling->name);
     }
 
     public function logout(Request $request): JsonResponse
@@ -77,10 +76,8 @@ class AuthController extends Controller
     public function deleteAccount(Request $request): JsonResponse
     {
         $student = $request->user();
-
         $student->update(['is_active' => false]);
         $student->tokens()->delete();
-
         return $this->success(null, 'تم حذف الحساب بنجاح');
     }
 
@@ -97,6 +94,12 @@ class AuthController extends Controller
             'class_id'    => $student->class_id,
             'gender'      => $student->gender,
             'is_active'   => $student->is_active,
+            'siblings'    => $student->siblings->map(fn ($s) => [
+                'id'     => $s->id,
+                'name'   => $s->name,
+                'avatar' => $s->avatar ? asset('assets/uploads/students/' . $s->avatar) : null,
+                'class'  => $s->schoolClass?->name,
+            ])->values(),
         ];
     }
 }

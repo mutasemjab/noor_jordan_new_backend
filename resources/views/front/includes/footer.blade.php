@@ -101,7 +101,7 @@
           @if(sett_raw('contact_email'))
             <li><a href="mailto:{{ sett_raw('contact_email') }}">📧 {{ sett_raw('contact_email') }}</a></li>
           @else
-            <li><a href="mailto:info@albahithacademy.edu.jo">📧 info@albahithacademy.edu.jo</a></li>
+            <li><a href="mailto:info@info@noor-jordan.com">📧 info@noor-jordan.com</a></li>
           @endif
           @if(sett_raw('contact_whatsapp'))
             <li><a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', sett_raw('contact_whatsapp')) }}" target="_blank">💬 WhatsApp</a></li>

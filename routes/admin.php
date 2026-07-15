@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\SchoolClassController;
 use App\Http\Controllers\Admin\StudentContractController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -76,6 +77,12 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         Route::post('students/{student}/quick-payment',    [StudentContractController::class, 'quickPayment'])->name('admin.students.quick-payment');
         Route::delete('payments/{payment}',                [StudentContractController::class, 'deletePayment'])->name('admin.payments.delete');
         Route::get('payments/{payment}/receipt',           [StudentContractController::class, 'receipt'])->name('admin.payments.receipt');
+
+        // ── School Classes ────────────────────────────────────────────
+        Route::resource('classes', SchoolClassController::class, ['as' => 'admin']);
+        Route::post('classes/{class}/subjects',                    [SchoolClassController::class, 'addSubject'])->name('admin.classes.subjects.add');
+        Route::put('classes/{class}/subjects/{subject}',           [SchoolClassController::class, 'updateSubject'])->name('admin.classes.subjects.update');
+        Route::delete('classes/{class}/subjects/{subject}',        [SchoolClassController::class, 'removeSubject'])->name('admin.classes.subjects.remove');
 
         // ── Subjects ──────────────────────────────────────────────────
         Route::resource('subjects', SubjectController::class, ['as' => 'admin']);

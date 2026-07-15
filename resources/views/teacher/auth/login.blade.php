@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Login — Al-Baheth</title>
+    <title>Teacher Login — Noor Jordan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -313,7 +313,7 @@
 
     <div class="l-brand">
         <div class="l-brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
-        <div class="l-brand-name">Al<span>Bahith</span></div>
+        <div class="l-brand-name">Noor<span>Jordan</span></div>
     </div>
 
     <div class="l-hero">
@@ -445,7 +445,7 @@
         </a>
 
         <div class="r-footer">
-            &copy; {{ date('Y') }} Al-Baheth. Empowering educators everywhere.
+            &copy; {{ date('Y') }} Noor Jordan. Empowering educators everywhere.
         </div>
 
     </div>

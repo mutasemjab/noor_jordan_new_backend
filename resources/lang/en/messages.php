@@ -30,7 +30,7 @@ return [
     'Admin_account' => 'Admin Account',
 
      // Brand
-    'edu_platform' => 'Al-Baheth',
+    'edu_platform' => 'Noor Jordan',
 
     // Navigation Labels
     'main' => 'Main',

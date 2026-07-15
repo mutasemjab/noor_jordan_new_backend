@@ -67,8 +67,11 @@ class StudentController extends Controller
 
     public function edit(Student $student)
     {
-        $classes = SchoolClass::where('is_active', true)->orderBy('name')->get();
-        return view('admin.students.edit', compact('student', 'classes'));
+        $classes  = SchoolClass::where('is_active', true)->orderBy('name')->get();
+        $allStudents = Student::where('id', '!=', $student->id)->orderBy('name')->get(['id', 'name', 'class_id']);
+        $siblingIds  = $student->siblings()->pluck('students.id')->toArray();
+
+        return view('admin.students.edit', compact('student', 'classes', 'allStudents', 'siblingIds'));
     }
 
     public function update(Request $request, Student $student)
@@ -84,6 +87,8 @@ class StudentController extends Controller
             'class_id'    => 'nullable|exists:classes,id',
             'is_active'   => 'boolean',
             'avatar'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'siblings'    => 'nullable|array',
+            'siblings.*'  => 'exists:students,id',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
@@ -98,8 +103,10 @@ class StudentController extends Controller
 
         $student->update($data);
 
+        $student->syncSiblings($request->input('siblings', []));
+
         return redirect()->route('admin.students.index')
-            ->with('success', 'Student updated successfully.');
+            ->with('success', 'تم تحديث بيانات الطالب بنجاح.');
     }
 
     public function destroy(Student $student)

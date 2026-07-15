@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(Get-ChildItem -Path \"c:\\\\xampp\\\\htdocs\\\\noor_jordan_new_backend\" -Directory)",
-      "Bash(Select-Object Name)"
+      "Bash(Select-Object Name)",
+      "Bash(php artisan *)"
     ]
   }
 }
