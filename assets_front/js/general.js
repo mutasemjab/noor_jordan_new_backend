@@ -26,7 +26,7 @@ class Particle {
     this.vx = (Math.random() - 0.5) * 0.4;
     this.vy = (Math.random() - 0.5) * 0.4;
     this.alpha = Math.random() * 0.5 + 0.1;
-    this.color = Math.random() > 0.6 ? '#E8192C' : '#1B4FD8';
+    this.color = Math.random() > 0.6 ? '#f4ae2d' : '#6b8cd6';
   }
   update() {
     this.x += this.vx; this.y += this.vy;
@@ -55,7 +55,7 @@ function connectParticles() {
       if (d < 100) {
         ctx.save();
         ctx.globalAlpha = 0.06 * (1 - d / 100);
-        ctx.strokeStyle = '#1B4FD8';
+        ctx.strokeStyle = '#6b8cd6';
         ctx.lineWidth = 0.5;
         ctx.beginPath();
         ctx.moveTo(particles[i].x, particles[i].y);
@@ -116,7 +116,7 @@ function initGSAP() {
   });
 
   // Staggered grids
-  ['teachers-grid', 'courses-grid'].forEach(cls => {
+  ['teachers-grid', 'courses-grid', 'features-grid'].forEach(cls => {
     const el = document.querySelector('.' + cls);
     if (!el) return;
     gsap.fromTo(Array.from(el.children),
@@ -194,7 +194,7 @@ document.querySelector('.hamburger').addEventListener('click', () => {
   links.style.position = 'fixed';
   links.style.top = '80px';
   links.style.left = '0'; links.style.right = '0';
-  links.style.background = 'rgba(10,22,40,0.98)';
+  links.style.background = 'rgba(35,58,119,0.98)';
   links.style.padding = '20px';
   links.style.gap = '4px';
   links.style.backdropFilter = 'blur(20px)';

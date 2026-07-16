@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Teacher extends Authenticatable
 {
-    use Notifiable, SoftDeletes;
+    use HasApiTokens, Notifiable, SoftDeletes;
 
     protected $guard = 'teacher';
 
@@ -44,5 +45,20 @@ class Teacher extends Authenticatable
     public function homeroomClasses()
     {
         return $this->hasMany(SchoolClass::class, 'homeroom_teacher_id');
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(ClassSchedule::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function grades()
+    {
+        return $this->hasMany(StudentGrade::class);
     }
 }

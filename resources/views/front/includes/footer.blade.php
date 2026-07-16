@@ -1,17 +1,23 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-grid">
+
+      {{-- Brand --}}
       <div class="footer-brand">
         <div class="footer-logo">
-          <div class="footer-logo-icon">ب</div>
+          <div class="footer-logo-icon">ن</div>
           <div class="footer-logo-text">
-            <strong>{{ __('front.site_name') }}</strong>
-            <span>{{ __('front.site_tagline') }}</span>
+            <strong>{{ app()->getLocale() === 'ar' ? 'مدارس نور الأردن الدولية' : 'Noor Jordan International Schools' }}</strong>
+            <span>{{ app()->getLocale() === 'ar' ? 'تميّز وإبداع منذ 1999' : 'Excellence Since 1999' }}</span>
           </div>
         </div>
-        <p class="footer-desc">{{ __('front.footer_tagline') }}</p>
+        <p class="footer-desc">
+          {{ app()->getLocale() === 'ar'
+            ? 'نقدم تعليماً متميزاً يجمع بين الأصالة والحداثة، مدعوماً بمنظومة رقمية متكاملة تخدم الطالب والمعلم وولي الأمر.'
+            : 'Delivering distinguished education blending heritage and modernity, supported by an integrated digital platform serving students, teachers, and parents.' }}
+        </p>
 
-        {{-- Dynamic social media icons --}}
+        {{-- Social icons --}}
         @php
           $footerSocials = [
             'social_facebook'  => ['bi-facebook',  'Facebook'],
@@ -34,10 +40,9 @@
               @endif
             @endforeach
           @else
-            {{-- Fallback placeholders when no social links set --}}
             <a href="#" class="footer-social">𝕏</a>
             <a href="#" class="footer-social">f</a>
-            <a href="#" class="footer-social">in</a>
+            <a href="#" class="footer-social">📷</a>
             <a href="#" class="footer-social">▶</a>
           @endif
         </div>
@@ -47,14 +52,14 @@
         <div class="d-flex gap-2 flex-wrap mt-3">
           @if(sett_raw('app_google_play'))
           <a href="{{ sett_raw('app_google_play') }}" target="_blank" rel="noopener"
-             style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.1);color:inherit;border-radius:8px;text-decoration:none;font-size:12px;border:1px solid rgba(255,255,255,0.2);">
+             style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border-radius:8px;text-decoration:none;font-size:12px;border:1px solid rgba(255,255,255,0.15);">
             <i class="bi bi-google-play" style="font-size:16px"></i>
             <div style="line-height:1.1"><small style="opacity:.7;font-size:9px;display:block">GET IT ON</small>Google Play</div>
           </a>
           @endif
           @if(sett_raw('app_store'))
           <a href="{{ sett_raw('app_store') }}" target="_blank" rel="noopener"
-             style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.1);color:inherit;border-radius:8px;text-decoration:none;font-size:12px;border:1px solid rgba(255,255,255,0.2);">
+             style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border-radius:8px;text-decoration:none;font-size:12px;border:1px solid rgba(255,255,255,0.15);">
             <i class="bi bi-apple" style="font-size:16px"></i>
             <div style="line-height:1.1"><small style="opacity:.7;font-size:9px;display:block">DOWNLOAD ON THE</small>App Store</div>
           </a>
@@ -63,60 +68,63 @@
         @endif
       </div>
 
+      {{-- Services --}}
       <div class="footer-col">
-        <h4>{{ app()->getLocale() === 'ar' ? 'المراحل الدراسية' : 'Grade Levels' }}</h4>
+        <h4>{{ app()->getLocale() === 'ar' ? 'خدماتنا' : 'Our Services' }}</h4>
         <ul>
-          <li><a href="{{ route('home') }}#grades">{{ app()->getLocale() === 'ar' ? 'الصفوف الأساسية 1–6' : 'Grades 1–6' }}</a></li>
-          <li><a href="{{ route('home') }}#grades">{{ app()->getLocale() === 'ar' ? 'الصفوف 7–10' : 'Grades 7–10' }}</a></li>
-          <li><a href="{{ route('home') }}#grades">{{ app()->getLocale() === 'ar' ? 'الحادي عشر (توجيهي)' : 'Grade 11 (Tawjihi)' }}</a></li>
-          <li><a href="{{ route('home') }}#grades">{{ app()->getLocale() === 'ar' ? 'الثاني عشر (توجيهي)' : 'Grade 12 (Tawjihi)' }}</a></li>
-          <li><a href="{{ route('courses.index') }}">{{ app()->getLocale() === 'ar' ? 'دورات صيفية' : 'Summer Courses' }}</a></li>
+          <li><a href="{{ route('home') }}#features">{{ app()->getLocale() === 'ar' ? 'جدول الحصص الرقمي' : 'Digital Schedule' }}</a></li>
+          <li><a href="{{ route('home') }}#features">{{ app()->getLocale() === 'ar' ? 'متابعة العلامات' : 'Grade Tracking' }}</a></li>
+          <li><a href="{{ route('home') }}#features">{{ app()->getLocale() === 'ar' ? 'تسجيل الغيابات' : 'Attendance System' }}</a></li>
+          <li><a href="{{ route('home') }}#features">{{ app()->getLocale() === 'ar' ? 'فيديوهات تعليمية' : 'Educational Videos' }}</a></li>
+          <li><a href="{{ route('home') }}#features">{{ app()->getLocale() === 'ar' ? 'تطبيق الطالب' : 'Student App' }}</a></li>
         </ul>
       </div>
 
+      {{-- Quick links --}}
       <div class="footer-col">
-        <h4>{{ __('front.footer_platform') }}</h4>
+        <h4>{{ app()->getLocale() === 'ar' ? 'روابط سريعة' : 'Quick Links' }}</h4>
         <ul>
-          <li><a href="{{ route('home') }}#about">{{ __('front.nav_about') }}</a></li>
-          <li><a href="{{ route('home') }}#teachers">{{ __('front.nav_teachers') }}</a></li>
-          <li><a href="{{ route('courses.index') }}">{{ __('front.nav_courses') }}</a></li>
-          <li><a href="{{ route('exams.index') }}">{{ __('front.nav_exams') }}</a></li>
-          <li><a href="{{ route('home') }}#contact">{{ __('front.nav_contact') }}</a></li>
+          <li><a href="{{ route('home') }}#about">{{ app()->getLocale() === 'ar' ? 'من نحن' : 'About Us' }}</a></li>
+          <li><a href="{{ route('home') }}#teachers">{{ app()->getLocale() === 'ar' ? 'معلمونا' : 'Our Teachers' }}</a></li>
+          <li><a href="{{ route('home') }}#contact">{{ app()->getLocale() === 'ar' ? 'تواصل معنا' : 'Contact Us' }}</a></li>
+          <li><a href="{{ route('student.login') }}">{{ app()->getLocale() === 'ar' ? 'دخول الطالب' : 'Student Login' }}</a></li>
         </ul>
       </div>
 
+      {{-- Contact --}}
       <div class="footer-col">
-        <h4>{{ __('front.footer_contact') }}</h4>
+        <h4>{{ app()->getLocale() === 'ar' ? 'معلومات التواصل' : 'Contact Info' }}</h4>
         <ul>
           @if(sett('contact_address'))
             <li><a href="#">📍 {{ sett('contact_address') }}</a></li>
           @else
-            <li><a href="#">📍 {{ __('front.contact_location') }}</a></li>
+            <li><a href="#">📍 {{ app()->getLocale() === 'ar' ? 'عمّان، الأردن' : 'Amman, Jordan' }}</a></li>
           @endif
           @if(sett_raw('contact_phone'))
             <li><a href="tel:{{ preg_replace('/[^0-9+]/', '', sett_raw('contact_phone')) }}">📞 {{ sett_raw('contact_phone') }}</a></li>
           @else
-            <li><a href="tel:+96264000000">📞 +962 6 XXX XXXX</a></li>
+            <li><a href="#">📞 +962 6 XXX XXXX</a></li>
           @endif
           @if(sett_raw('contact_email'))
             <li><a href="mailto:{{ sett_raw('contact_email') }}">📧 {{ sett_raw('contact_email') }}</a></li>
           @else
-            <li><a href="mailto:info@info@noor-jordan.com">📧 info@noor-jordan.com</a></li>
+            <li><a href="#">📧 info@noor-jordan.com</a></li>
           @endif
           @if(sett_raw('contact_whatsapp'))
             <li><a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', sett_raw('contact_whatsapp')) }}" target="_blank">💬 WhatsApp</a></li>
-          @else
-            <li><a href="#">💬 WhatsApp</a></li>
           @endif
         </ul>
       </div>
-    </div>
+
+    </div>{{-- /footer-grid --}}
 
     <div class="footer-bottom">
-      <p class="footer-copy">{{ str_replace(':year', date('Y'), __('front.footer_copyright')) }}</p>
+      <p class="footer-copy">
+        &copy; {{ date('Y') }} {{ app()->getLocale() === 'ar' ? 'مدارس نور الأردن الدولية. جميع الحقوق محفوظة.' : 'Noor Jordan International Schools. All rights reserved.' }}
+      </p>
       <div class="footer-bottom-links">
-        <a href="#">{{ __('front.footer_terms') }}</a>
-        <a href="#">{{ __('front.footer_privacy') }}</a>
+        <a href="#">{{ app()->getLocale() === 'ar' ? 'الشروط والأحكام' : 'Terms' }}</a>
+        <a href="#">{{ app()->getLocale() === 'ar' ? 'سياسة الخصوصية' : 'Privacy' }}</a>
         @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
           @if($localeCode !== app()->getLocale())
             <a href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">

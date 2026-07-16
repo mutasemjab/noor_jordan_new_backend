@@ -1,7 +1,11 @@
 @extends('layouts.front')
-@section('title', __('front.page_title'))
+@section('title', 'مدارس نور الأردن الدولية')
 
 @section('content')
+
+{{-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ --}}
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-img-overlay"></div>
@@ -10,36 +14,39 @@
 
   <div class="hero-inner">
     <div class="hero-content">
-      <div class="hero-badge">{{ sett('hero_badge') ?: __('front.site_tagline') }}</div>
-      <h1 class="hero-title" id="hero-title">
-        {{ __('front.site_name') }}<br>
-        <span class="accent-blue">{{ app()->getLocale() === 'ar' ? 'نور الأردن' : 'Noor Jordan' }}</span>
-        <span style="color:rgba(255,255,255,0.3)"> · </span>
-        <span class="accent-red">{{ app()->getLocale() === 'ar' ? 'التميّز' : 'Excellence' }}</span>
+      <div class="hero-badge">{{ app()->getLocale() === 'ar' ? 'منذ عام 1999 · تميّز وإبداع' : 'Since 1999 · Excellence & Innovation' }}</div>
+      <h1 class="hero-title">
+        {{ app()->getLocale() === 'ar' ? 'مدارس' : 'Noor Jordan' }}<br>
+        <span class="accent-gold">{{ app()->getLocale() === 'ar' ? 'نور الأردن' : 'International' }}</span><br>
+        <span style="font-size:0.65em;font-weight:700;color:rgba(255,255,255,0.7)">{{ app()->getLocale() === 'ar' ? 'الدولية' : 'Schools' }}</span>
       </h1>
-      <p class="hero-sub">{{ sett('hero_subtitle') ?: __('front.hero_sub') }}</p>
+      <p class="hero-sub">
+        {{ app()->getLocale() === 'ar'
+          ? 'نقدم تعليماً متميزاً يجمع بين الأصالة والحداثة، مدعوماً بمنظومة رقمية متكاملة تربط الطالب والمعلم وأولياء الأمور.'
+          : 'Delivering distinguished education that blends heritage and modernity, supported by an integrated digital platform connecting students, teachers, and parents.' }}
+      </p>
       <div class="hero-actions">
-        <a href="#courses" class="btn-primary">
-          <span>{{ __('front.hero_cta_start') }}</span>
+        <a href="#contact" class="btn-primary">
+          <span>{{ app()->getLocale() === 'ar' ? 'تواصل معنا' : 'Contact Us' }}</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         <a href="#about" class="btn-secondary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-          <span>{{ __('front.hero_cta_about') }}</span>
+          <span>{{ app()->getLocale() === 'ar' ? 'تعرّف علينا' : 'About Us' }}</span>
         </a>
       </div>
       <div class="hero-stats">
         <div class="stat-item">
           <div class="stat-number" data-count="{{ $stats['students'] }}"><span>+</span>0</div>
-          <div class="stat-label">{{ __('front.hero_stat_reg') }}</div>
+          <div class="stat-label">{{ app()->getLocale() === 'ar' ? 'طالب مسجّل' : 'Enrolled Students' }}</div>
         </div>
         <div class="stat-item">
           <div class="stat-number" data-count="{{ $stats['teachers'] }}">0</div>
-          <div class="stat-label">{{ __('front.hero_stat_teachers') }}</div>
+          <div class="stat-label">{{ app()->getLocale() === 'ar' ? 'معلم متخصص' : 'Specialist Teachers' }}</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number" data-count="{{ $stats['satisfaction'] }}"><span>%</span>0</div>
-          <div class="stat-label">{{ __('front.hero_stat_success') }}</div>
+          <div class="stat-number" data-count="{{ sett_raw('about_years') ?: 25 }}"><span>+</span>0</div>
+          <div class="stat-label">{{ app()->getLocale() === 'ar' ? 'عاماً من العطاء' : 'Years of Excellence' }}</div>
         </div>
       </div>
     </div>
@@ -47,20 +54,21 @@
     <div class="hero-visual">
       <div class="hero-card-main reveal-right">
         @php $heroImg = sett_raw('hero_image'); @endphp
-        <img src="{{ $heroImg ? asset('assets/uploads/site/'.$heroImg) : 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&q=80&auto=format' }}" alt="Students">
+        <img src="{{ $heroImg ? asset('assets/uploads/site/'.$heroImg) : 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&q=80&auto=format' }}"
+             alt="{{ app()->getLocale() === 'ar' ? 'بيئة تعليمية متميزة' : 'Distinguished Learning Environment' }}">
         <div class="hero-card-main-body">
-          <div class="hero-card-badge">{{ __('front.hero_card_year') }}</div>
-          <h4>{{ __('front.hero_card_path') }}</h4>
-          <p>{{ __('front.hero_card_desc') }}</p>
+          <div class="hero-card-badge">{{ app()->getLocale() === 'ar' ? 'العام الدراسي 2025–2026' : 'Academic Year 2025–2026' }}</div>
+          <h4>{{ app()->getLocale() === 'ar' ? 'مسيرة نحو التفوق' : 'A Journey Toward Excellence' }}</h4>
+          <p>{{ app()->getLocale() === 'ar' ? 'بيئة تعليمية آمنة ومحفّزة تُنمّي مواهب طلابنا وتُعدّهم لمستقبل واعد.' : 'A safe and stimulating educational environment that nurtures talent and prepares students for a bright future.' }}</p>
         </div>
       </div>
       <div class="card-float-1">
         <div class="f-num">⭐ 4.9</div>
-        <div class="f-label">{{ __('front.hero_float_parents') }}</div>
+        <div class="f-label">{{ app()->getLocale() === 'ar' ? 'تقييم أولياء الأمور' : 'Parent Rating' }}</div>
       </div>
       <div class="card-float-2">
         <div class="f-num">🏆 #1</div>
-        <div class="f-label">{{ __('front.hero_float_rank') }}</div>
+        <div class="f-label">{{ app()->getLocale() === 'ar' ? 'مدرسة رائدة في المنطقة' : 'Leading School in Region' }}</div>
       </div>
     </div>
   </div>
@@ -71,166 +79,252 @@
   </div>
 </section>
 
-<!-- ======= STATS BAND ======= -->
+{{-- ═══════════════════════════════════════════════════════
+     STATS BAND
+═══════════════════════════════════════════════════════ --}}
 <div class="stats-band">
   <div class="stats-band-inner">
     <div class="stat-band-item reveal">
       <div class="stat-band-num" data-count="{{ sett_raw('about_years') ?: 25 }}"><span>+</span>0</div>
-      <div class="stat-band-label">{{ __('front.stats_years') }}</div>
+      <div class="stat-band-label">{{ app()->getLocale() === 'ar' ? 'عاماً من التميّز' : 'Years of Excellence' }}</div>
     </div>
     <div class="stat-band-item reveal">
       <div class="stat-band-num" data-count="{{ $stats['students'] }}"><span>+</span>0</div>
-      <div class="stat-band-label">{{ __('front.stats_trust') }}</div>
+      <div class="stat-band-label">{{ app()->getLocale() === 'ar' ? 'طالب يثق بنا' : 'Students Trust Us' }}</div>
     </div>
     <div class="stat-band-item reveal">
       <div class="stat-band-num" data-count="{{ $stats['teachers'] }}">0</div>
-      <div class="stat-band-label">{{ __('front.stats_staff') }}</div>
+      <div class="stat-band-label">{{ app()->getLocale() === 'ar' ? 'كادر تعليمي متميز' : 'Specialist Teaching Staff' }}</div>
     </div>
     <div class="stat-band-item reveal">
       <div class="stat-band-num" data-count="{{ $stats['satisfaction'] }}"><span>%</span>0</div>
-      <div class="stat-band-label">{{ __('front.stats_tawjihi') }}</div>
+      <div class="stat-band-label">{{ app()->getLocale() === 'ar' ? 'نسبة النجاح في التوجيهي' : 'Tawjihi Pass Rate' }}</div>
     </div>
   </div>
 </div>
 
-<!-- ======= GRADES ======= -->
-<section id="grades">
-  <div class="grades-inner">
-    <div class="section-header reveal">
-      <div class="section-eyebrow">{{ __('front.grades_tag') }}</div>
-      <h2 class="section-title">{{ __('front.grades_title') }}<br><span class="text-gradient-blue">{{ __('front.grades_title_span') }}</span></h2>
-      <p class="section-sub">{{ __('front.grades_desc') }}</p>
+{{-- ═══════════════════════════════════════════════════════
+     FEATURES / SERVICES
+═══════════════════════════════════════════════════════ --}}
+<section id="features">
+  <div class="features-inner">
+    <div class="section-header reveal" style="text-align:center;">
+      <div class="section-eyebrow" style="justify-content:center;">
+        {{ app()->getLocale() === 'ar' ? 'خدماتنا' : 'Our Services' }}
+      </div>
+      <h2 class="section-title">
+        {{ app()->getLocale() === 'ar' ? 'منظومة تعليمية متكاملة' : 'A Complete Educational System' }}<br>
+        <span class="text-gradient-accent">{{ app()->getLocale() === 'ar' ? 'في متناول يدك' : 'At Your Fingertips' }}</span>
+      </h2>
+      <p class="section-sub" style="margin:0 auto;">
+        {{ app()->getLocale() === 'ar'
+          ? 'نوفر أدوات رقمية حديثة تجعل التجربة التعليمية أكثر وضوحاً وتفاعلاً لجميع أفراد الأسرة التعليمية.'
+          : 'We provide modern digital tools that make the educational experience clearer and more interactive for all members of the school community.' }}
+      </p>
     </div>
-    <div class="grades-grid">
 
-      <div class="grade-card reveal-left" onclick="APP.open('grades')" style="cursor:pointer">
-        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80&auto=format" alt="{{ __('front.grades_basic_tag') }}">
-        <div class="grade-overlay"></div>
-        <div class="grade-content">
-          <div class="grade-tag tag-blue">{{ __('front.grades_basic_tag') }}</div>
-          <h3 class="grade-title">{{ __('front.grades_basic_t1') }}<br>{{ __('front.grades_basic_t2') }}</h3>
-          <p class="grade-desc">{{ __('front.grades_basic_desc') }}</p>
-          <div class="grade-meta">
-            <div class="grade-meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <span>{{ __('front.grades_basic_students') }}</span>
-            </div>
-            <div class="grade-meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              <span>{{ __('front.grades_open') }}</span>
-            </div>
-            <div class="grade-arrow">→</div>
-          </div>
-        </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">📅</div>
+        <h3 class="feature-title">{{ app()->getLocale() === 'ar' ? 'جدول الحصص الرقمي' : 'Digital Class Schedule' }}</h3>
+        <p class="feature-desc">{{ app()->getLocale() === 'ar' ? 'يطّلع الطالب على جدول حصصه اليومي والأسبوعي بشكل فوري من خلال التطبيق، مع عرض المادة واسم المعلم والغرفة الدراسية.' : 'Students can instantly view their daily and weekly class schedule through the app, with subject name, teacher, and classroom.' }}</p>
       </div>
 
-      <div class="grade-card reveal-right" onclick="APP.open('tawjihi')" style="cursor:pointer">
-        <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&q=80&auto=format" alt="{{ __('front.grades_tawjihi_tag') }}">
-        <div class="grade-overlay"></div>
-        <div class="grade-content">
-          <div class="grade-tag tag-red">{{ __('front.grades_tawjihi_tag') }}</div>
-          <h3 class="grade-title">{{ __('front.grades_tawjihi_t1') }}<br>{{ __('front.grades_tawjihi_t2') }}</h3>
-          <p class="grade-desc">{{ __('front.grades_tawjihi_desc') }}</p>
-          <div class="grade-meta">
-            <div class="grade-meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <span>{{ __('front.grades_tawjihi_students') }}</span>
-            </div>
-            <div class="grade-meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <span>{{ __('front.grades_success') }}</span>
-            </div>
-            <div class="grade-arrow">→</div>
-          </div>
-        </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">{{ app()->getLocale() === 'ar' ? 'متابعة العلامات والتقييم' : 'Grades & Assessment' }}</h3>
+        <p class="feature-desc">{{ app()->getLocale() === 'ar' ? 'تقارير علامات مفصّلة لكل مادة مع معدلات الأداء، تُتاح للطلاب وأولياء الأمور فور رصدها.' : 'Detailed grade reports for each subject with performance averages, made available to students and parents as soon as they are recorded.' }}</p>
       </div>
 
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">{{ app()->getLocale() === 'ar' ? 'تسجيل الغيابات' : 'Attendance Tracking' }}</h3>
+        <p class="feature-desc">{{ app()->getLocale() === 'ar' ? 'نظام متابعة دقيق للحضور والغياب يومياً وبحسب الحصة، مع إشعارات فورية لأولياء الأمور عند الغياب.' : 'A precise daily and period-by-period attendance system with instant parent notifications upon absence.' }}</p>
+      </div>
+
+      <div class="feature-card feature-card-accent reveal">
+        <div class="feature-icon">📱</div>
+        <h3 class="feature-title">{{ app()->getLocale() === 'ar' ? 'تطبيق الطالب والمعلم' : 'Student & Teacher App' }}</h3>
+        <p class="feature-desc">{{ app()->getLocale() === 'ar' ? 'تطبيق موحّد يتيح للطالب متابعة شؤونه الدراسية كاملة، وللمعلم تسجيل الغيابات والعلامات من أي مكان.' : 'A unified app that lets students track all academic affairs, and allows teachers to record attendance and grades from anywhere.' }}</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎬</div>
+        <h3 class="feature-title">{{ app()->getLocale() === 'ar' ? 'فيديوهات تعليمية لكل مادة' : 'Educational Videos per Subject' }}</h3>
+        <p class="feature-desc">{{ app()->getLocale() === 'ar' ? 'مكتبة فيديوهات يوتيوب منظّمة لكل صف ومادة، يصل إليها الطالب من التطبيق لمراجعة الدروس في أي وقت.' : 'A library of YouTube videos organized by class and subject, accessible through the app for lesson review at any time.' }}</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-icon">📢</div>
+        <h3 class="feature-title">{{ app()->getLocale() === 'ar' ? 'الإعلانات والإشعارات' : 'Announcements & Notifications' }}</h3>
+        <p class="feature-desc">{{ app()->getLocale() === 'ar' ? 'قناة تواصل مباشرة بين الإدارة وأولياء الأمور والطلاب، تُرسل عبرها الإعلانات المدرسية والإشعارات الفورية.' : 'A direct communication channel between administration, parents, and students for school announcements and instant notifications.' }}</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ======= TEACHERS ======= -->
+{{-- ═══════════════════════════════════════════════════════
+     APP PROMO BAND
+═══════════════════════════════════════════════════════ --}}
+@if(sett_raw('app_google_play') || sett_raw('app_store'))
+<div class="app-band">
+  <div class="app-band-inner">
+    <div class="app-band-content reveal-left">
+      <div class="app-band-eyebrow">{{ app()->getLocale() === 'ar' ? 'التطبيق المدرسي' : 'School App' }}</div>
+      <h2 class="app-band-title">
+        {{ app()->getLocale() === 'ar' ? 'كل شيء تحتاجه' : 'Everything You Need' }}<br>
+        {{ app()->getLocale() === 'ar' ? 'في تطبيق واحد' : 'In One App' }}
+      </h2>
+      <p class="app-band-desc">
+        {{ app()->getLocale() === 'ar'
+          ? 'حمّل تطبيق مدارس نور الأردن الدولية وتابع جدول الحصص والعلامات والغيابات والإعلانات من هاتفك مباشرة.'
+          : 'Download the Noor Jordan International Schools app and track schedules, grades, attendance, and announcements directly from your phone.' }}
+      </p>
+      <div class="app-badges">
+        @if(sett_raw('app_google_play'))
+        <a href="{{ sett_raw('app_google_play') }}" target="_blank" rel="noopener" class="app-badge-btn">
+          <i class="bi bi-google-play"></i>
+          <div>
+            <small>GET IT ON</small>
+            <span>Google Play</span>
+          </div>
+        </a>
+        @endif
+        @if(sett_raw('app_store'))
+        <a href="{{ sett_raw('app_store') }}" target="_blank" rel="noopener" class="app-badge-btn">
+          <i class="bi bi-apple"></i>
+          <div>
+            <small>DOWNLOAD ON THE</small>
+            <span>App Store</span>
+          </div>
+        </a>
+        @endif
+      </div>
+    </div>
+    <div class="app-mockups reveal-right">
+      <div class="app-mock-card">
+        <div class="app-mock-icon">📅</div>
+        <div class="app-mock-title">{{ app()->getLocale() === 'ar' ? 'جدول الحصص' : 'Class Schedule' }}</div>
+        <div class="app-mock-sub">{{ app()->getLocale() === 'ar' ? 'يومي وأسبوعي' : 'Daily & weekly' }}</div>
+      </div>
+      <div class="app-mock-card">
+        <div class="app-mock-icon">📊</div>
+        <div class="app-mock-title">{{ app()->getLocale() === 'ar' ? 'العلامات' : 'Grades' }}</div>
+        <div class="app-mock-sub">{{ app()->getLocale() === 'ar' ? 'بحسب المادة' : 'Per subject' }}</div>
+      </div>
+      <div class="app-mock-card">
+        <div class="app-mock-icon">✅</div>
+        <div class="app-mock-title">{{ app()->getLocale() === 'ar' ? 'الحضور' : 'Attendance' }}</div>
+        <div class="app-mock-sub">{{ app()->getLocale() === 'ar' ? 'يومي ومفصّل' : 'Daily & detailed' }}</div>
+      </div>
+      <div class="app-mock-card">
+        <div class="app-mock-icon">🔔</div>
+        <div class="app-mock-title">{{ app()->getLocale() === 'ar' ? 'الإشعارات' : 'Notifications' }}</div>
+        <div class="app-mock-sub">{{ app()->getLocale() === 'ar' ? 'فورية ومباشرة' : 'Instant & direct' }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+
+{{-- ═══════════════════════════════════════════════════════
+     TEACHERS
+═══════════════════════════════════════════════════════ --}}
 <section id="teachers">
   <div class="section">
     <div class="section-header reveal">
-      <div class="section-eyebrow">{{ __('front.teachers_section_tag') }}</div>
-      <h2 class="section-title">{{ __('front.teachers_section_t') }}<br><span class="text-gradient-red">{{ __('front.teachers_section_span') }}</span></h2>
-      <p class="section-sub">{{ __('front.teachers_section_desc') }}</p>
+      <div class="section-eyebrow">{{ app()->getLocale() === 'ar' ? 'كادرنا التعليمي' : 'Our Teaching Staff' }}</div>
+      <h2 class="section-title">
+        {{ app()->getLocale() === 'ar' ? 'معلمون يُلهمون' : 'Teachers Who Inspire' }}<br>
+        <span class="text-gradient-primary">{{ app()->getLocale() === 'ar' ? 'ويُغيّرون حياة طلابهم' : 'And Transform Students\' Lives' }}</span>
+      </h2>
+      <p class="section-sub">{{ app()->getLocale() === 'ar' ? 'نخبة من المعلمين المؤهلين تأهيلاً عالياً والمتخصصين في مجالاتهم، يُقدّمون التعليم بأسلوب مبتكر وشغف حقيقي.' : 'A selection of highly qualified and specialized teachers who deliver education with an innovative approach and genuine passion.' }}</p>
     </div>
     <div class="teachers-grid">
       @forelse($teachers as $teacher)
-     <a href="{{ route('teachers.show',$teacher->id) }}" style="text-decoration:none;color:inherit;display:block">
-      <div class="teacher-card reveal">
-        <div class="teacher-img-wrap">
-          @if($teacher->avatar)
-            <img src="{{ asset('assets/uploads/'.$teacher->avatar) }}" alt="{{ $teacher->name }}">
-          @else
-            <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&q=80&auto=format" alt="{{ $teacher->name }}">
-          @endif
-          <div class="teacher-subject-badge">{{ strtoupper(substr($teacher->name, 0, 4)) }}</div>
-        </div>
-        <div class="teacher-card-body">
-          <div class="teacher-name">{{ $teacher->name }}</div>
-          <div class="teacher-stats-row">
-            <div class="t-stat">
-              <div class="t-stat-num">{{ $teacher->total_students ?? 0 }}<span>+</span></div>
-              <div class="t-stat-label">{{ __('front.teacher_stat_students') }}</div>
-            </div>
-            <div class="t-stat">
-              <div class="t-stat-num">97<span>%</span></div>
-              <div class="t-stat-label">{{ __('front.teacher_stat_success') }}</div>
+      <a href="{{ route('teachers.show', $teacher->id) }}" style="text-decoration:none;color:inherit;display:block">
+        <div class="teacher-card reveal">
+          <div class="teacher-img-wrap">
+            @if($teacher->avatar)
+              <img src="{{ asset('assets/uploads/'.$teacher->avatar) }}" alt="{{ $teacher->name }}">
+            @else
+              <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&q=80&auto=format" alt="{{ $teacher->name }}">
+            @endif
+            <div class="teacher-subject-badge">{{ strtoupper(substr($teacher->name, 0, 4)) }}</div>
+          </div>
+          <div class="teacher-card-body">
+            <div class="teacher-name">{{ $teacher->name }}</div>
+            <div class="teacher-role">{{ app()->getLocale() === 'ar' ? 'معلم متخصص' : 'Specialist Teacher' }}</div>
+            <div class="teacher-stats-row">
+              <div class="t-stat">
+                <div class="t-stat-num">{{ $teacher->total_students ?? 0 }}<span>+</span></div>
+                <div class="t-stat-label">{{ app()->getLocale() === 'ar' ? 'طالب' : 'Students' }}</div>
+              </div>
+              <div class="t-stat">
+                <div class="t-stat-num">97<span>%</span></div>
+                <div class="t-stat-label">{{ app()->getLocale() === 'ar' ? 'نسبة النجاح' : 'Pass Rate' }}</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </a>
       @empty
-      <p class="text-muted">{{ __('front.courses_no_courses') }}</p>
+      <p style="color:var(--text-muted)">{{ app()->getLocale() === 'ar' ? 'لا يوجد معلمون حالياً.' : 'No teachers available.' }}</p>
       @endforelse
     </div>
   </div>
 </section>
 
-<!-- ======= ABOUT ======= -->
+{{-- ═══════════════════════════════════════════════════════
+     ABOUT
+═══════════════════════════════════════════════════════ --}}
 <section id="about">
   <div class="about-inner">
     <div class="about-grid">
       <div class="about-images reveal-left">
         <div class="about-img-main">
           @php $imgMain = sett_raw('about_image_main'); @endphp
-          <img src="{{ $imgMain ? asset('assets/uploads/site/'.$imgMain) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80&auto=format' }}" alt="{{ __('front.about_tag') }}">
+          <img src="{{ $imgMain ? asset('assets/uploads/site/'.$imgMain) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80&auto=format' }}"
+               alt="{{ app()->getLocale() === 'ar' ? 'مبنى المدرسة' : 'School Building' }}">
         </div>
         <div class="about-img-secondary">
           @php $imgSec = sett_raw('about_image_secondary'); @endphp
-          <img src="{{ $imgSec ? asset('assets/uploads/site/'.$imgSec) : 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&q=80&auto=format' }}" alt="Classroom">
+          <img src="{{ $imgSec ? asset('assets/uploads/site/'.$imgSec) : 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&q=80&auto=format' }}"
+               alt="{{ app()->getLocale() === 'ar' ? 'بيئة الفصل الدراسي' : 'Classroom Environment' }}">
         </div>
         <div class="about-badge">
           <div class="about-badge-num">{{ sett_raw('about_years') ?: '25' }}+</div>
-          <div class="about-badge-text">{{ __('front.about_badge_text') }}</div>
+          <div class="about-badge-text">{{ app()->getLocale() === 'ar' ? 'عاماً من العطاء' : 'Years of Service' }}</div>
         </div>
       </div>
 
       <div class="reveal-right">
-        <div class="about-section-eyebrow">{{ __('front.about_tag') }}</div>
-        <h2 class="about-title">{{ sett('about_title') ?: __('front.about_title') }}</h2>
-        <p class="about-desc">{{ sett('about_description') ?: __('front.about_text') }}</p>
+        <div class="about-section-eyebrow">{{ app()->getLocale() === 'ar' ? 'من نحن' : 'About Us' }}</div>
+        <h2 class="about-title">{{ sett('about_title') ?: (app()->getLocale() === 'ar' ? 'مدارس نور الأردن الدولية' : 'Noor Jordan International Schools') }}</h2>
+        <p class="about-desc">{{ sett('about_description') ?: (app()->getLocale() === 'ar' ? 'منذ تأسيسنا، ونحن نسعى لتقديم تعليم عالي الجودة يجمع بين الأصالة والحداثة. نؤمن بأن كل طالب يملك موهبة فريدة تستحق أن تُنمَّى في بيئة آمنة ومحفّزة تحت إشراف معلمين متميزين.' : 'Since our founding, we have been committed to delivering high-quality education that blends heritage and modernity. We believe every student has a unique talent that deserves to flourish in a safe and stimulating environment under the supervision of distinguished teachers.') }}</p>
         <div class="about-values">
           @php
-            $valueIcons = ['🎯','🔬','🤝','🌟'];
-            $valueColors = ['vi-blue','vi-red','vi-blue','vi-red'];
+            $valueIcons  = ['🎯','🔬','🤝','🌟'];
+            $valueColors = ['vi-primary','vi-accent','vi-primary','vi-accent'];
+            $valueTitles = app()->getLocale() === 'ar'
+              ? ['رؤية تعليمية واضحة','منهج علمي رصين','شراكة مع الأهل','بيئة آمنة ومحفّزة']
+              : ['Clear Educational Vision','Rigorous Academic Curriculum','Partnership With Parents','Safe & Stimulating Environment'];
+            $valueDescs = app()->getLocale() === 'ar'
+              ? ['نستشرف المستقبل ونُعدّ طلابنا لمتطلبات سوق العمل الحديث.','مناهج معتمدة ومحدّثة تواكب المعايير الدولية.','نؤمن بأهمية التواصل المستمر مع أولياء الأمور.','نوفر مساحة تعليمية تُشجّع على الإبداع والتفكير النقدي.']
+              : ['We envision the future and prepare students for modern workforce demands.','Accredited and updated curricula aligned with international standards.','We believe in continuous communication with parents.','We provide a learning space that encourages creativity and critical thinking.'];
           @endphp
-          @foreach([1,2,3,4] as $i)
+          @foreach([0,1,2,3] as $i)
           <div class="value-item">
-            <div class="value-icon {{ $valueColors[$i-1] }}">{{ $valueIcons[$i-1] }}</div>
+            <div class="value-icon {{ $valueColors[$i] }}">{{ $valueIcons[$i] }}</div>
             <div class="value-item-text">
-              <h5>{{ sett('about_value'.$i.'_title') ?: __('front.about_value'.$i.'_t') }}</h5>
-              <p>{{ sett('about_value'.$i.'_desc') ?: __('front.about_value'.$i.'_d') }}</p>
+              <h5>{{ sett('about_value'.($i+1).'_title') ?: $valueTitles[$i] }}</h5>
+              <p>{{ sett('about_value'.($i+1).'_desc') ?: $valueDescs[$i] }}</p>
             </div>
           </div>
           @endforeach
         </div>
         <a href="#contact" class="btn-primary">
-          <span>{{ __('front.about_cta') }}</span>
+          <span>{{ app()->getLocale() === 'ar' ? 'تواصل معنا الآن' : 'Contact Us Now' }}</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
@@ -238,46 +332,57 @@
   </div>
 </section>
 
-<!-- ======= CONTACT ======= -->
+{{-- ═══════════════════════════════════════════════════════
+     CONTACT
+═══════════════════════════════════════════════════════ --}}
 <section id="contact">
   <div class="contact-inner">
     <div class="section-header reveal" style="text-align:center; max-width:600px; margin: 0 auto 64px;">
-      <div class="section-eyebrow" style="justify-content:center">{{ __('front.contact_tag') }}</div>
-      <h2 class="section-title">{{ __('front.contact_service_t') }}<br><span class="text-gradient-blue">{{ __('front.contact_service_span') }}</span></h2>
-      <p class="section-sub" style="margin: 0 auto;">{{ __('front.contact_service_desc') }}</p>
+      <div class="section-eyebrow" style="justify-content:center">
+        {{ app()->getLocale() === 'ar' ? 'تواصل معنا' : 'Get In Touch' }}
+      </div>
+      <h2 class="section-title">
+        {{ app()->getLocale() === 'ar' ? 'هل لديك استفسار؟' : 'Have a Question?' }}<br>
+        <span class="text-gradient-accent">{{ app()->getLocale() === 'ar' ? 'نحن هنا للمساعدة' : 'We Are Here To Help' }}</span>
+      </h2>
+      <p class="section-sub" style="margin: 0 auto;">
+        {{ app()->getLocale() === 'ar' ? 'سواء كنت تريد الاستفسار عن التسجيل، المناهج، أو الخدمات التي نقدمها — تواصل معنا وسيرد عليك فريقنا في أقرب وقت.' : 'Whether you are inquiring about enrollment, curriculum, or our services — reach out and our team will respond as soon as possible.' }}
+      </p>
     </div>
     <div class="contact-grid">
       <div>
-        <div class="section-eyebrow">{{ __('front.contact_info_tag') }}</div>
-        <h3 style="font-size:26px; font-weight:800; color:var(--navy); margin-bottom:8px; line-height:1.2;">{{ __('front.contact_easy_t') }}<br>{{ __('front.contact_easy_sub') }}</h3>
-        <p style="font-size:14px; color:var(--text-muted); margin-bottom:0; line-height:1.8; font-weight:400;">{{ __('front.contact_easy_desc') }}</p>
+        <div class="section-eyebrow">{{ app()->getLocale() === 'ar' ? 'معلومات التواصل' : 'Contact Information' }}</div>
+        <h3 style="font-size:26px; font-weight:800; color:var(--primary); margin-bottom:8px; line-height:1.2;">
+          {{ app()->getLocale() === 'ar' ? 'تواصل معنا بسهولة' : 'Reach Us Easily' }}<br>
+          <span style="font-size:0.8em;font-weight:400;color:var(--text-muted)">{{ app()->getLocale() === 'ar' ? 'عبر أي قناة تفضّلها' : 'Through Any Channel You Prefer' }}</span>
+        </h3>
         <div class="contact-info-card">
           <div class="contact-info-item">
             <div class="ci-icon">📍</div>
             <div class="ci-text">
-              <h5>{{ __('front.contact_loc_label') }}</h5>
-              <p>{{ sett('contact_address') ?: __('front.contact_loc_val') }}</p>
+              <h5>{{ app()->getLocale() === 'ar' ? 'العنوان' : 'Address' }}</h5>
+              <p>{{ sett('contact_address') ?: (app()->getLocale() === 'ar' ? 'عمّان، المملكة الأردنية الهاشمية' : 'Amman, Hashemite Kingdom of Jordan') }}</p>
             </div>
           </div>
           <div class="contact-info-item">
             <div class="ci-icon">📞</div>
             <div class="ci-text">
-              <h5>{{ __('front.contact_phone_label') }}</h5>
-              <p>{{ sett_raw('contact_phone') ?: __('front.contact_ph_val') }}</p>
+              <h5>{{ app()->getLocale() === 'ar' ? 'الهاتف' : 'Phone' }}</h5>
+              <p>{{ sett_raw('contact_phone') ?: '+962 6 XXX XXXX' }}</p>
             </div>
           </div>
           <div class="contact-info-item">
             <div class="ci-icon">📧</div>
             <div class="ci-text">
-              <h5>{{ __('front.contact_email_label') }}</h5>
+              <h5>{{ app()->getLocale() === 'ar' ? 'البريد الإلكتروني' : 'Email' }}</h5>
               <p>{{ sett_raw('contact_email') ?: 'info@noor-jordan.com' }}</p>
             </div>
           </div>
           <div class="contact-info-item">
             <div class="ci-icon">🕐</div>
             <div class="ci-text">
-              <h5>{{ __('front.contact_hours_label') }}</h5>
-              <p>{{ sett('contact_hours') ?: __('front.contact_hours_val') }}</p>
+              <h5>{{ app()->getLocale() === 'ar' ? 'ساعات العمل' : 'Working Hours' }}</h5>
+              <p>{{ sett('contact_hours') ?: (app()->getLocale() === 'ar' ? 'الأحد – الخميس: 7:30 ص – 3:00 م' : 'Sun – Thu: 7:30 AM – 3:00 PM') }}</p>
             </div>
           </div>
           @if(sett_raw('contact_whatsapp'))
@@ -285,13 +390,18 @@
             <div class="ci-icon">💬</div>
             <div class="ci-text">
               <h5>WhatsApp</h5>
-              <p><a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', sett_raw('contact_whatsapp')) }}" target="_blank">{{ sett_raw('contact_whatsapp') }}</a></p>
+              <p>
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', sett_raw('contact_whatsapp')) }}"
+                   target="_blank" style="color:white;text-decoration:none;">
+                  {{ sett_raw('contact_whatsapp') }}
+                </a>
+              </p>
             </div>
           </div>
           @endif
         </div>
 
-        {{-- Social Media Icons --}}
+        {{-- Social icons --}}
         @php
           $socials = [
             'social_facebook'  => ['bi-facebook',  'Facebook'],
@@ -308,43 +418,26 @@
         <div class="d-flex gap-2 flex-wrap mt-4">
           @foreach($socials as $key => [$icon, $label])
             @if(sett_raw($key))
-              <a href="{{ sett_raw($key) }}" target="_blank" rel="noopener"
-                 class="social-icon-btn" title="{{ $label }}"
-                 style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--primary,#1e40af);color:#fff;font-size:18px;text-decoration:none">
+              <a href="{{ sett_raw($key) }}" target="_blank" rel="noopener" title="{{ $label }}"
+                 style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;font-size:18px;text-decoration:none;border:1px solid rgba(244,174,45,0.3);transition:all 0.2s"
+                 onmouseover="this.style.background='var(--accent)';this.style.color='var(--primary)'"
+                 onmouseout="this.style.background='var(--primary)';this.style.color='#fff'">
                 <i class="bi {{ $icon }}"></i>
               </a>
             @endif
           @endforeach
         </div>
         @endif
-
-        {{-- App Store Buttons --}}
-        @if(sett_raw('app_google_play') || sett_raw('app_store'))
-        <div class="d-flex gap-2 flex-wrap mt-3">
-          @if(sett_raw('app_google_play'))
-          <a href="{{ sett_raw('app_google_play') }}" target="_blank" rel="noopener"
-             style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:#000;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;">
-            <i class="bi bi-google-play" style="font-size:20px"></i>
-            <div style="line-height:1.1"><small style="opacity:.7;font-size:10px;display:block">GET IT ON</small>Google Play</div>
-          </a>
-          @endif
-          @if(sett_raw('app_store'))
-          <a href="{{ sett_raw('app_store') }}" target="_blank" rel="noopener"
-             style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:#000;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;">
-            <i class="bi bi-apple" style="font-size:20px"></i>
-            <div style="line-height:1.1"><small style="opacity:.7;font-size:10px;display:block">DOWNLOAD ON THE</small>App Store</div>
-          </a>
-          @endif
-        </div>
-        @endif
       </div>
 
       <div class="contact-form reveal-right">
-        <h4 style="font-size:22px; font-weight:800; color:var(--navy); margin-bottom:28px;">{{ __('front.contact_form_title') }}</h4>
+        <h4 style="font-size:22px; font-weight:800; color:var(--primary); margin-bottom:28px;">
+          {{ app()->getLocale() === 'ar' ? 'أرسل لنا رسالة' : 'Send Us a Message' }}
+        </h4>
 
         @if(session('contact_success'))
-          <div class="form-success-msg" style="background:#d1fae5;color:#065f46;padding:14px 18px;border-radius:8px;margin-bottom:20px;font-weight:600;">
-            {{ __('front.contact_success') }}
+          <div style="background:#d1fae5;color:#065f46;padding:14px 18px;border-radius:8px;margin-bottom:20px;font-weight:600;">
+            {{ app()->getLocale() === 'ar' ? 'شكراً! تم إرسال رسالتك بنجاح. سنرد عليك في أقرب وقت.' : 'Thank you! Your message has been sent. We will reply soon.' }}
           </div>
         @endif
 
@@ -352,198 +445,52 @@
           @csrf
           <div class="form-row">
             <div class="form-group">
-              <label>{{ __('front.contact_name') }}</label>
+              <label>{{ app()->getLocale() === 'ar' ? 'الاسم الكامل' : 'Full Name' }}</label>
               <input type="text" name="name" value="{{ old('name') }}"
-                     placeholder="{{ __('front.contact_name_ph') }}" required>
-              @error('name')<span class="form-error">{{ $message }}</span>@enderror
+                     placeholder="{{ app()->getLocale() === 'ar' ? 'أدخل اسمك الكامل' : 'Enter your full name' }}" required>
+              @error('name')<span style="color:red;font-size:12px">{{ $message }}</span>@enderror
             </div>
             <div class="form-group">
-              <label>{{ __('front.contact_phone') }}</label>
+              <label>{{ app()->getLocale() === 'ar' ? 'رقم الهاتف' : 'Phone Number' }}</label>
               <input type="tel" name="phone" value="{{ old('phone') }}"
-                     placeholder="{{ __('front.contact_phone_ph') }}">
+                     placeholder="{{ app()->getLocale() === 'ar' ? '+962 7X XXX XXXX' : '+962 7X XXX XXXX' }}">
             </div>
           </div>
           <div class="form-group" style="margin-bottom:18px;">
-            <label>{{ __('front.contact_email') }}</label>
+            <label>{{ app()->getLocale() === 'ar' ? 'البريد الإلكتروني' : 'Email Address' }}</label>
             <input type="email" name="email" value="{{ old('email') }}"
                    placeholder="email@example.com" required>
-            @error('email')<span class="form-error">{{ $message }}</span>@enderror
+            @error('email')<span style="color:red;font-size:12px">{{ $message }}</span>@enderror
           </div>
           <div class="form-group" style="margin-bottom:18px;">
-            <label>{{ __('front.contact_subject') }}</label>
+            <label>{{ app()->getLocale() === 'ar' ? 'موضوع الرسالة' : 'Subject' }}</label>
             <select name="subject">
-              <option value="">{{ __('front.contact_subject_ph') }}</option>
-              <option value="{{ __('front.contact_subject_courses') }}">{{ __('front.contact_subject_courses') }}</option>
-              <option value="{{ __('front.contact_subject_exams') }}">{{ __('front.contact_subject_exams') }}</option>
-              <option value="{{ __('front.contact_subject_support') }}">{{ __('front.contact_subject_support') }}</option>
-              <option value="{{ __('front.contact_subject_partnership') }}">{{ __('front.contact_subject_partnership') }}</option>
+              <option value="">{{ app()->getLocale() === 'ar' ? 'اختر الموضوع' : 'Select a subject' }}</option>
+              <option value="{{ app()->getLocale() === 'ar' ? 'استفسار عن التسجيل' : 'Enrollment Inquiry' }}">{{ app()->getLocale() === 'ar' ? 'استفسار عن التسجيل' : 'Enrollment Inquiry' }}</option>
+              <option value="{{ app()->getLocale() === 'ar' ? 'المناهج والخدمات' : 'Curriculum & Services' }}">{{ app()->getLocale() === 'ar' ? 'المناهج والخدمات' : 'Curriculum & Services' }}</option>
+              <option value="{{ app()->getLocale() === 'ar' ? 'الرسوم الدراسية' : 'Tuition Fees' }}">{{ app()->getLocale() === 'ar' ? 'الرسوم الدراسية' : 'Tuition Fees' }}</option>
+              <option value="{{ app()->getLocale() === 'ar' ? 'شكوى أو اقتراح' : 'Complaint or Suggestion' }}">{{ app()->getLocale() === 'ar' ? 'شكوى أو اقتراح' : 'Complaint or Suggestion' }}</option>
+              <option value="{{ app()->getLocale() === 'ar' ? 'أخرى' : 'Other' }}">{{ app()->getLocale() === 'ar' ? 'أخرى' : 'Other' }}</option>
             </select>
           </div>
           <div class="form-group" style="margin-bottom:24px;">
-            <label>{{ __('front.contact_message') }}</label>
-            <textarea name="message" placeholder="{{ __('front.contact_message_ph') }}" required>{{ old('message') }}</textarea>
-            @error('message')<span class="form-error">{{ $message }}</span>@enderror
+            <label>{{ app()->getLocale() === 'ar' ? 'نص الرسالة' : 'Message' }}</label>
+            <textarea name="message" placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب رسالتك هنا...' : 'Write your message here...' }}" required>{{ old('message') }}</textarea>
+            @error('message')<span style="color:red;font-size:12px">{{ $message }}</span>@enderror
           </div>
           <div class="form-submit">
             <button type="submit" class="btn-primary" style="flex:1; justify-content:center;">
-              <span>{{ __('front.contact_send') }}</span>
+              <span>{{ app()->getLocale() === 'ar' ? 'إرسال الرسالة' : 'Send Message' }}</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
-          <p class="form-note" style="margin-top:14px;">{{ __('front.contact_note') }}</p>
+          <p class="form-note" style="margin-top:14px;">
+            {{ app()->getLocale() === 'ar' ? 'سيتم الرد على رسالتك خلال 24 ساعة عمل.' : 'We will respond to your message within 24 business hours.' }}
+          </p>
         </form>
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- ── OVERLAY HTML ── -->
-<div id="app-overlay">
-  <!-- NAV -->
-  <div class="ov-nav">
-    <div class="ov-logo" onclick="APP.closeOverlay()">
-      <div class="ov-logo-icon">ب</div>
-      <div class="ov-logo-text">
-        <strong>{{ __('front.overlay_logo_name') }}</strong>
-        <span>{{ __('front.overlay_logo_sub') }}</span>
-      </div>
-    </div>
-    <div class="ov-breadcrumb" id="ov-bc"></div>
-    <button class="ov-back" id="ov-back" onclick="APP.back()" hidden>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      {{ __('front.overlay_back') }}
-    </button>
-    <button class="ov-close" onclick="APP.closeOverlay()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      {{ __('front.overlay_close') }}
-    </button>
-  </div>
-
-  <!-- PAGE: GRADE LIST -->
-  <div class="ov-page" id="ovp-grades">
-    <div class="ov-hero">
-      <div class="ov-hero-inner">
-        <div class="ov-eyebrow">{{ __('front.overlay_grades_eye') }}</div>
-        <h1 class="ov-hero-title">{{ __('front.overlay_grades_t') }}</h1>
-        <p class="ov-hero-sub">{{ __('front.overlay_grades_sub') }}</p>
-      </div>
-    </div>
-    <div class="ov-body">
-      <div class="ov-grade-grid" id="ov-grade-list"></div>
-    </div>
-  </div>
-
-  <!-- PAGE: SUBJECTS (grade) — with Semester Filter Tabs -->
-  <div class="ov-page" id="ovp-subjects">
-    <div class="ov-hero">
-      <div class="ov-hero-inner">
-        <div class="ov-eyebrow" id="subj-ey">{{ __('front.overlay_grades_eye') }}</div>
-        <h1 class="ov-hero-title" id="subj-ttl">{{ __('front.overlay_subj_t') }}</h1>
-        <p class="ov-hero-sub">{{ __('front.overlay_subj_sub') }}</p>
-      </div>
-    </div>
-    <div class="ov-body">
-      <div class="ov-sem-tabs">
-        <button class="ov-sem-tab" id="ov-tab-1" onclick="APP.setSemester(1)">
-          <span class="ov-sem-tab-roman">I</span>
-          <span class="ov-sem-tab-label">{{ __('front.overlay_sem1') }}</span>
-        </button>
-        <button class="ov-sem-tab" id="ov-tab-2" onclick="APP.setSemester(2)">
-          <span class="ov-sem-tab-roman">II</span>
-          <span class="ov-sem-tab-label">{{ __('front.overlay_sem2') }}</span>
-        </button>
-      </div>
-      <div class="ov-subj-grid" id="ov-subj-list"></div>
-    </div>
-  </div>
-
-  <!-- PAGE: COURSES -->
-  <div class="ov-page" id="ovp-courses">
-    <div class="ov-hero">
-      <div class="ov-hero-inner">
-        <div class="ov-eyebrow" id="crs-ey">{{ __('front.overlay_crs_eye') }}</div>
-        <h1 class="ov-hero-title" id="crs-ttl">{{ __('front.overlay_crs_t') }}</h1>
-        <p class="ov-hero-sub" id="crs-sb">{{ __('front.overlay_crs_sub') }}</p>
-      </div>
-    </div>
-    <div class="ov-body">
-      <div class="ov-course-grid" id="ov-course-list"></div>
-    </div>
-  </div>
-
-  <!-- PAGE: TAWJIHI — GENERATIONS -->
-  <div class="ov-page" id="ovp-tawjihi">
-    <div class="ov-hero">
-      <div class="ov-hero-inner">
-        <div class="ov-eyebrow">{{ __('front.overlay_tawjihi_eye') }}</div>
-        <h1 class="ov-hero-title">{{ __('front.overlay_tawjihi_t') }}</h1>
-        <p class="ov-hero-sub">{{ __('front.overlay_tawjihi_sub') }}</p>
-      </div>
-    </div>
-    <div class="ov-body">
-      <div class="ov-section-hd">
-        <div class="ov-section-eye">{{ __('front.overlay_gen_eye') }}</div>
-        <h2 class="ov-section-title">{{ __('front.overlay_gen_t') }}</h2>
-        <p class="ov-section-sub">{{ __('front.overlay_gen_sub') }}</p>
-      </div>
-      <div class="ov-gen-grid" id="ov-gen-list"></div>
-    </div>
-  </div>
-
-  <!-- PAGE: FIELDS -->
-  <div class="ov-page" id="ovp-fields">
-    <div class="ov-hero">
-      <div class="ov-hero-inner">
-        <div class="ov-eyebrow" id="fld-ey">{{ __('front.overlay_fields_eye') }}</div>
-        <h1 class="ov-hero-title">{{ __('front.overlay_fields_t') }}</h1>
-        <p class="ov-hero-sub">{{ __('front.overlay_fields_sub') }}</p>
-      </div>
-    </div>
-    <div class="ov-body">
-      <div class="ov-field-grid" id="ov-field-list"></div>
-    </div>
-  </div>
-
-  <!-- PAGE: FIELD SUBJECTS -->
-  <div class="ov-page" id="ovp-fsubjects">
-    <div class="ov-hero">
-      <div class="ov-hero-inner">
-        <div class="ov-eyebrow" id="fs-ey">{{ __('front.overlay_fsubj_eye') }}</div>
-        <h1 class="ov-hero-title" id="fs-ttl">{{ __('front.overlay_fsubj_t') }}</h1>
-        <p class="ov-hero-sub" id="fs-sb">{{ __('front.overlay_fsubj_sub') }}</p>
-      </div>
-    </div>
-    <div class="ov-body">
-      <div class="ov-subj-section" id="ov-comp-sec">
-        <div class="ov-subj-sec-hd">
-          <span class="ov-subj-badge sb-comp">{{ __('front.overlay_comp_badge') }}</span>
-          <div>
-            <div class="ov-subj-sec-label">{{ __('front.overlay_comp_label') }}</div>
-            <div class="ov-subj-sec-count" id="ov-comp-count"></div>
-          </div>
-        </div>
-        <div class="ov-subj-grid" id="ov-comp-list"></div>
-      </div>
-      <div class="ov-subj-section">
-        <div class="ov-subj-sec-hd">
-          <span class="ov-subj-badge sb-elec">{{ __('front.overlay_elec_badge') }}</span>
-          <div>
-            <div class="ov-subj-sec-label">{{ __('front.overlay_elec_label') }}</div>
-            <div class="ov-subj-sec-count" id="ov-elec-count"></div>
-          </div>
-        </div>
-        <div class="ov-subj-grid" id="ov-elec-list"></div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- end #app-overlay -->
-
 @endsection
-
-@push('data')
-<script>
-window.APP_DATA = @json($overlayData);
-</script>
-@endpush

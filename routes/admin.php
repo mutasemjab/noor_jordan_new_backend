@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\ClassSubjectVideoController;
+use App\Http\Controllers\Admin\GradeController;
+use App\Http\Controllers\Admin\PeriodSettingController;
 use App\Http\Controllers\Admin\SchoolClassController;
 use App\Http\Controllers\Admin\StudentContractController;
 use App\Http\Controllers\Admin\BannerController;
@@ -80,9 +84,28 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
 
         // ── School Classes ────────────────────────────────────────────
         Route::resource('classes', SchoolClassController::class, ['as' => 'admin']);
-        Route::post('classes/{class}/subjects',                    [SchoolClassController::class, 'addSubject'])->name('admin.classes.subjects.add');
-        Route::put('classes/{class}/subjects/{subject}',           [SchoolClassController::class, 'updateSubject'])->name('admin.classes.subjects.update');
-        Route::delete('classes/{class}/subjects/{subject}',        [SchoolClassController::class, 'removeSubject'])->name('admin.classes.subjects.remove');
+        Route::post('classes/{class}/subjects',             [SchoolClassController::class, 'addSubject'])->name('admin.classes.subjects.add');
+        Route::put('classes/{class}/subjects/{subject}',    [SchoolClassController::class, 'updateSubject'])->name('admin.classes.subjects.update');
+        Route::delete('classes/{class}/subjects/{subject}', [SchoolClassController::class, 'removeSubject'])->name('admin.classes.subjects.remove');
+        Route::get('classes/{class}/schedule',              [SchoolClassController::class, 'schedule'])->name('admin.classes.schedule');
+        Route::post('classes/{class}/schedule',             [SchoolClassController::class, 'updateSchedule'])->name('admin.classes.schedule.update');
+        Route::get('classes/{class}/videos',                [ClassSubjectVideoController::class, 'index'])->name('admin.classes.videos');
+        Route::post('classes/{class}/videos',               [ClassSubjectVideoController::class, 'store'])->name('admin.classes.videos.store');
+        Route::delete('classes/{class}/videos/{video}',     [ClassSubjectVideoController::class, 'destroy'])->name('admin.classes.videos.destroy');
+
+        // ── Period Settings ───────────────────────────────────────────
+        Route::get('period-settings',                 [PeriodSettingController::class, 'index'])->name('admin.period-settings.index');
+        Route::post('period-settings',                [PeriodSettingController::class, 'store'])->name('admin.period-settings.store');
+        Route::put('period-settings/{periodSetting}', [PeriodSettingController::class, 'update'])->name('admin.period-settings.update');
+        Route::delete('period-settings/{periodSetting}', [PeriodSettingController::class, 'destroy'])->name('admin.period-settings.destroy');
+
+        // ── Attendance ────────────────────────────────────────────────
+        Route::get('attendance',  [AttendanceController::class, 'index'])->name('admin.attendance.index');
+        Route::post('attendance', [AttendanceController::class, 'store'])->name('admin.attendance.store');
+
+        // ── Grades ────────────────────────────────────────────────────
+        Route::get('grades',  [GradeController::class, 'index'])->name('admin.grades.index');
+        Route::post('grades', [GradeController::class, 'store'])->name('admin.grades.store');
 
         // ── Subjects ──────────────────────────────────────────────────
         Route::resource('subjects', SubjectController::class, ['as' => 'admin']);

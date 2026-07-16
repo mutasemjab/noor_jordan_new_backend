@@ -236,7 +236,7 @@ const APP = (() => {
     },
 
     closeOverlay() {
-      overlay.classList.remove('visible');
+      if (overlay) overlay.classList.remove('visible');
       document.body.style.overflow = '';
       stack = [];
     }
