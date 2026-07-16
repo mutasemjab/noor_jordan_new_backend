@@ -42,7 +42,6 @@
           @else
             <a href="#" class="footer-social">𝕏</a>
             <a href="#" class="footer-social">f</a>
-            <a href="#" class="footer-social">📷</a>
             <a href="#" class="footer-social">▶</a>
           @endif
         </div>

@@ -1,69 +1,70 @@
-@extends('layouts.front')
-@section('title', __('front.auth_login_title') . ' — ' . __('front.site_name'))
 
-@section('content')
+<?php $__env->startSection('title', __('front.auth_login_title') . ' — ' . __('front.site_name')); ?>
+
+<?php $__env->startSection('content'); ?>
 <section class="auth-section">
   <div class="auth-inner">
 
-    {{-- Hero side --}}
+    
     <div class="auth-hero">
       <div class="auth-hero-content">
         <div class="auth-logo">
           <div class="auth-logo-icon">ب</div>
           <div class="auth-logo-text">
-            <strong>{{ __('front.site_name') }}</strong>
-            <span>{{ __('front.site_tagline') }}</span>
+            <strong><?php echo e(__('front.site_name')); ?></strong>
+            <span><?php echo e(__('front.site_tagline')); ?></span>
           </div>
         </div>
-        <h1 class="auth-hero-title">{{ __('front.auth_login_hero_title') }}</h1>
-        <p class="auth-hero-sub">{{ __('front.auth_login_hero_sub') }}</p>
+        <h1 class="auth-hero-title"><?php echo e(__('front.auth_login_hero_title')); ?></h1>
+        <p class="auth-hero-sub"><?php echo e(__('front.auth_login_hero_sub')); ?></p>
         <div class="auth-hero-stats">
           <div class="auth-stat">
             <div class="auth-stat-num">+2,400</div>
-            <div class="auth-stat-label">{{ __('front.stat_students') }}</div>
+            <div class="auth-stat-label"><?php echo e(__('front.stat_students')); ?></div>
           </div>
           <div class="auth-stat">
             <div class="auth-stat-num">120</div>
-            <div class="auth-stat-label">{{ __('front.stat_teachers') }}</div>
+            <div class="auth-stat-label"><?php echo e(__('front.stat_teachers')); ?></div>
           </div>
           <div class="auth-stat">
             <div class="auth-stat-num">98%</div>
-            <div class="auth-stat-label">{{ __('front.stat_satisfaction') }}</div>
+            <div class="auth-stat-label"><?php echo e(__('front.stat_satisfaction')); ?></div>
           </div>
         </div>
       </div>
     </div>
 
-    {{-- Form side --}}
+    
     <div class="auth-form-side">
       <div class="auth-card">
         <div class="auth-card-header">
-          <h2 class="auth-card-title">{{ __('front.auth_login_title') }}</h2>
-          <p class="auth-card-sub">{{ __('front.auth_login_sub') }}</p>
+          <h2 class="auth-card-title"><?php echo e(__('front.auth_login_title')); ?></h2>
+          <p class="auth-card-sub"><?php echo e(__('front.auth_login_sub')); ?></p>
         </div>
 
-        @if ($errors->any())
+        <?php if($errors->any()): ?>
           <div class="auth-alert auth-alert-error">
-            {{ $errors->first() }}
-          </div>
-        @endif
+            <?php echo e($errors->first()); ?>
 
-        <form action="{{ route('student.login.post') }}" method="POST" class="auth-form">
-          @csrf
+          </div>
+        <?php endif; ?>
+
+        <form action="<?php echo e(route('student.login.post')); ?>" method="POST" class="auth-form">
+          <?php echo csrf_field(); ?>
 
           <div class="auth-field">
-            <label for="login">{{ app()->getLocale() === 'ar' ? 'الرقم الوطني أو البريد الإلكتروني' : 'National ID or Email' }}</label>
+            <label for="login"><?php echo e(app()->getLocale() === 'ar' ? 'الرقم الوطني أو البريد الإلكتروني' : 'National ID or Email'); ?></label>
             <input type="text" id="login" name="login"
-                   value="{{ old('login') }}"
-                   placeholder="{{ app()->getLocale() === 'ar' ? 'أدخل رقمك الوطني' : 'Enter your national ID' }}"
+                   value="<?php echo e(old('login')); ?>"
+                   placeholder="<?php echo e(app()->getLocale() === 'ar' ? 'أدخل رقمك الوطني' : 'Enter your national ID'); ?>"
                    autocomplete="username" required>
           </div>
 
           <div class="auth-field">
-            <label for="password">{{ __('front.auth_password_label') }}</label>
+            <label for="password"><?php echo e(__('front.auth_password_label')); ?></label>
             <div class="auth-input-wrap">
               <input type="password" id="password" name="password"
-                     placeholder="{{ __('front.auth_password_ph') }}"
+                     placeholder="<?php echo e(__('front.auth_password_ph')); ?>"
                      autocomplete="current-password" required>
               <button type="button" class="auth-eye-btn" onclick="togglePass('password')">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -73,31 +74,33 @@
 
           <div class="auth-row">
             <label class="auth-checkbox">
-              <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-              <span>{{ __('front.auth_remember') }}</span>
+              <input type="checkbox" name="remember" <?php echo e(old('remember') ? 'checked' : ''); ?>>
+              <span><?php echo e(__('front.auth_remember')); ?></span>
             </label>
           </div>
 
           <button type="submit" class="auth-submit-btn">
-            {{ __('front.auth_login_btn') }}
+            <?php echo e(__('front.auth_login_btn')); ?>
+
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="{{ app()->getLocale() === 'ar' ? 'M19 12H5M12 19l-7-7 7-7' : 'M5 12h14M12 5l7 7-7 7' }}"/>
+              <path d="<?php echo e(app()->getLocale() === 'ar' ? 'M19 12H5M12 19l-7-7 7-7' : 'M5 12h14M12 5l7 7-7 7'); ?>"/>
             </svg>
           </button>
         </form>
 
         <p class="auth-switch">
-          {{ __('front.auth_no_account') }}
-          <a href="{{ route('student.register') }}">{{ __('front.auth_create_account') }}</a>
+          <?php echo e(__('front.auth_no_account')); ?>
+
+          <a href="<?php echo e(route('student.register')); ?>"><?php echo e(__('front.auth_create_account')); ?></a>
         </p>
       </div>
     </div>
 
   </div>
 </section>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
 .auth-section { min-height: 100vh; display: flex; align-items: stretch; }
 .auth-inner   { display: flex; width: 100%; min-height: 100vh; }
@@ -228,13 +231,15 @@
   .auth-hero-stats { gap: 20px; }
 }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 function togglePass(id) {
   const inp = document.getElementById(id);
   inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.front', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\noor_jordan_new_backend\resources\views/front/login.blade.php ENDPATH**/ ?>

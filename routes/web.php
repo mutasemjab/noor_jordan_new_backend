@@ -19,7 +19,6 @@ Route::group([
     Route::get('/exams/{id}/take',                     [HomeController::class, 'examTake'])->name('exams.take');
     Route::post('/exams/{id}/submit',                  [HomeController::class, 'examSubmit'])->name('exams.submit');
     Route::get('/exams/{examId}/result/{attemptId}',   [HomeController::class, 'examResult'])->name('exams.result');
-    Route::get('/teachers/{id}',                       [HomeController::class, 'teacherProfile'])->name('teachers.show');
 
     // ── Student auth (guests only) ────────────────────────────────────────
     Route::middleware('guest:student')->group(function () {

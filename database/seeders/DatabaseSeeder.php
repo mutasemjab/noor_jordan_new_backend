@@ -10,11 +10,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             PermissionSeeder::class,
-            SubjectSeeder::class,
-            TeacherSeeder::class,
-            ExamSeeder::class,
             ClassesSeeder::class,
+            TeacherSeeder::class,
+            SubjectSeeder::class,
+            ExamSeeder::class,
             SiteSettingSeeder::class,
+
+
         ]);
     }
 }

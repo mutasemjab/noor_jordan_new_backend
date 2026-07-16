@@ -27,20 +27,6 @@
         </a>
       @endif
     @endforeach
-
-    {{-- Student login --}}
-    @auth('student')
-      <a href="{{ route('student.logout') }}"
-         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-         class="nav-auth-btn nav-auth-outline">
-        {{ app()->getLocale() === 'ar' ? 'تسجيل الخروج' : 'Logout' }}
-      </a>
-      <form id="logout-form" action="{{ route('student.logout') }}" method="POST" style="display:none;">@csrf</form>
-    @else
-      <a href="{{ route('student.login') }}" class="nav-auth-btn nav-auth-primary">
-        {{ app()->getLocale() === 'ar' ? 'دخول الطالب' : 'Student Login' }}
-      </a>
-    @endauth
   </div>
 
   <div class="hamburger"><span></span><span></span><span></span></div>

@@ -13,50 +13,17 @@ class ExamSeeder extends Seeder
 {
     public function run(): void
     {
-        // ── Subject lookup helpers ────────────────────────────────────────
-        $tawjihiRoot = Category::whereNull('parent_id')->where('order_index', 2)->first();
-        $primaryRoot = Category::whereNull('parent_id')->where('order_index', 1)->first();
 
-        // Health stream ministry category
-        $healthMinCatId = $tawjihiRoot
-            ? Category::where('level', 2)
-                ->whereHas('parent', fn ($q) => $q
-                    ->where('parent_id', $tawjihiRoot->id)
-                    ->where('order_index', 1)
-                )
-                ->where('order_index', 1)
-                ->value('id')
-            : null;
+       
 
-        // Grade 10 semester 1 category
-        $g10Sem1CatId = $primaryRoot
-            ? Category::where('level', 2)
-                ->whereHas('parent', fn ($q) => $q
-                    ->where('parent_id', $primaryRoot->id)
-                    ->where('order_index', 10)
-                )
-                ->where('order_index', 1)
-                ->value('id')
-            : null;
 
-        // Grade 9 semester 1 category
-        $g9Sem1CatId = $primaryRoot
-            ? Category::where('level', 2)
-                ->whereHas('parent', fn ($q) => $q
-                    ->where('parent_id', $primaryRoot->id)
-                    ->where('order_index', 9)
-                )
-                ->where('order_index', 1)
-                ->value('id')
-            : null;
 
-        $findSubject = fn (string $nameAr, ?int $catId) =>
-            $catId ? Subject::where('name_ar', $nameAr)->where('category_id', $catId)->first() : null;
+
 
         $exams = [
             // ── Previous-year Tawjihi exams ───────────────────────────────
             [
-                'subject'        => $findSubject('الرياضيات', $healthMinCatId),
+                'subject'        => 1,
                 'title_ar'       => 'امتحان التوجيهي في الرياضيات (الفرع الصحي) — دورة 2009',
                 'title_en'       => 'Tawjihi Mathematics Exam (Health Track) — 2009 Session',
                 'exam_type'      => 'previous_years',
@@ -69,7 +36,7 @@ class ExamSeeder extends Seeder
                 'questions'      => $this->mathQuestions2009(),
             ],
             [
-                'subject'        => $findSubject('الرياضيات', $healthMinCatId),
+                'subject'        => 2,
                 'title_ar'       => 'امتحان التوجيهي في الرياضيات (الفرع الصحي) — دورة 2010',
                 'title_en'       => 'Tawjihi Mathematics Exam (Health Track) — 2010 Session',
                 'exam_type'      => 'previous_years',
@@ -82,7 +49,7 @@ class ExamSeeder extends Seeder
                 'questions'      => $this->mathQuestions2010(),
             ],
             [
-                'subject'        => $findSubject('اللغة العربية وآدابها', $healthMinCatId),
+                'subject'        => 3,
                 'title_ar'       => 'امتحان التوجيهي في اللغة العربية — دورة 2009',
                 'title_en'       => 'Tawjihi Arabic Language Exam — 2009 Session',
                 'exam_type'      => 'previous_years',
@@ -94,56 +61,7 @@ class ExamSeeder extends Seeder
                 'is_published'   => true,
                 'questions'      => $this->arabicQuestions2009(),
             ],
-            [
-                'subject'        => $findSubject('الكيمياء', $healthMinCatId),
-                'title_ar'       => 'امتحان التوجيهي في الكيمياء (الفرع الصحي) — دورة 2009',
-                'title_en'       => 'Tawjihi Chemistry Exam (Health Track) — 2009 Session',
-                'exam_type'      => 'previous_years',
-                'academic_year'  => 2009,
-                'duration_minutes' => 120,
-                'total_marks'    => 100,
-                'pass_marks'     => 50,
-                'difficulty_level' => 'hard',
-                'is_published'   => true,
-                'questions'      => $this->chemistryQuestions2009(),
-            ],
-            // ── Practice exams ─────────────────────────────────────────────
-            [
-                'subject'        => $findSubject('الرياضيات', $g10Sem1CatId),
-                'title_ar'       => 'اختبار تجريبي — رياضيات الصف العاشر (الوحدة الأولى)',
-                'title_en'       => 'Practice Test — Grade 10 Math (Unit 1)',
-                'exam_type'      => 'practice',
-                'duration_minutes' => 45,
-                'total_marks'    => 50,
-                'pass_marks'     => 25,
-                'difficulty_level' => 'medium',
-                'is_published'   => true,
-                'questions'      => $this->mathPracticeQuestions(),
-            ],
-            [
-                'subject'        => $findSubject('الفيزياء', $g10Sem1CatId),
-                'title_ar'       => 'اختبار تجريبي — فيزياء الصف العاشر',
-                'title_en'       => 'Practice Test — Grade 10 Physics',
-                'exam_type'      => 'practice',
-                'duration_minutes' => 40,
-                'total_marks'    => 40,
-                'pass_marks'     => 20,
-                'difficulty_level' => 'medium',
-                'is_published'   => true,
-                'questions'      => $this->physicsPracticeQuestions(),
-            ],
-            [
-                'subject'        => $findSubject('اللغة الإنجليزية', $g9Sem1CatId),
-                'title_ar'       => 'اختبار قواعد اللغة الإنجليزية — الصف التاسع',
-                'title_en'       => 'English Grammar Test — Grade 9',
-                'exam_type'      => 'mock',
-                'duration_minutes' => 30,
-                'total_marks'    => 30,
-                'pass_marks'     => 15,
-                'difficulty_level' => 'easy',
-                'is_published'   => true,
-                'questions'      => $this->englishGrammarQuestions(),
-            ],
+           
         ];
 
         foreach ($exams as $examData) {
@@ -156,7 +74,7 @@ class ExamSeeder extends Seeder
             $exam = Exam::updateOrCreate(
                 ['title_ar' => $examData['title_ar']],
                 array_merge($examData, [
-                    'subject_id'             => $subject->id,
+                    'subject_id'             => $subject,
                     'shuffle_questions'      => true,
                     'shuffle_options'        => true,
                     'show_result_immediately'=> true,

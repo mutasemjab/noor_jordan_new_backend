@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedInteger('total_students')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('fcm_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -242,7 +242,6 @@
     </div>
     <div class="teachers-grid">
       @forelse($teachers as $teacher)
-      <a href="{{ route('teachers.show', $teacher->id) }}" style="text-decoration:none;color:inherit;display:block">
         <div class="teacher-card reveal">
           <div class="teacher-img-wrap">
             @if($teacher->avatar)
@@ -267,7 +266,7 @@
             </div>
           </div>
         </div>
-      </a>
+   
       @empty
       <p style="color:var(--text-muted)">{{ app()->getLocale() === 'ar' ? 'لا يوجد معلمون حالياً.' : 'No teachers available.' }}</p>
       @endforelse
