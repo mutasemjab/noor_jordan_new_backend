@@ -209,6 +209,50 @@ class ExamController extends Controller
         return $this->success($result, $attempt->is_passed ? 'أحسنت! لقد اجتزت الامتحان' : 'تم تسليم الامتحان');
     }
 
+    // GET /attempts/{attempt}  [auth]  — fetch a previously submitted attempt's result
+    public function result(Request $request, int $attemptId): JsonResponse
+    {
+        $attempt = ExamAttempt::where('student_id', $request->user()->id)
+            ->where('status', 'submitted')
+            ->findOrFail($attemptId);
+
+        $exam    = Exam::with('questions.options')->findOrFail($attempt->exam_id);
+        $answers = $attempt->answers()->with('question.options')->get();
+
+        $correct    = $answers->where('is_correct', true)->count();
+        $wrong      = $answers->where('is_correct', false)->count();
+        $unanswered = max(0, ($exam->total_questions ?? 0) - $answers->count());
+
+        $result = [
+            'attempt_id'         => $attempt->id,
+            'exam'               => $this->examCard($exam),
+            'score'              => $attempt->score,
+            'total_marks'        => $attempt->total_marks,
+            'percentage'         => (float) $attempt->percentage,
+            'correct_answers'    => $correct,
+            'wrong_answers'      => $wrong,
+            'unanswered'         => $unanswered,
+            'is_passed'          => $attempt->is_passed,
+            'time_taken_minutes' => (int) ceil($attempt->time_taken_seconds / 60),
+            'submitted_at'       => $attempt->submitted_at?->format('Y-m-d H:i'),
+        ];
+
+        if ($exam->show_result_immediately) {
+            $result['answers'] = $answers->map(fn ($a) => [
+                'question_id'        => $a->question_id,
+                'question_text'      => $a->question?->question_text,
+                'selected_option_id' => $a->selected_option_id,
+                'is_correct'         => $a->is_correct,
+                'marks_earned'       => $a->marks_earned,
+                'correct_option_id'  => $a->question?->correctOption?->id,
+                'correct_option'     => $a->question?->correctOption?->option_text,
+                'explanation'        => $a->question?->explanation,
+            ])->values();
+        }
+
+        return $this->success($result);
+    }
+
     private function examCard(Exam $exam): array
     {
         return [

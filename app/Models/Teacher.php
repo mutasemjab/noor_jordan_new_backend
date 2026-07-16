@@ -18,6 +18,7 @@ class Teacher extends Authenticatable
         'gender', 'nationality',
         'total_students',
         'is_active',
+        'fcm_token',
     ];
 
     protected $hidden = ['password', 'remember_token'];
