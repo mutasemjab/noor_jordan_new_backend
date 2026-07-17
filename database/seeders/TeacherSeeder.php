@@ -14,6 +14,7 @@ class TeacherSeeder extends Seeder
             [
                 'name'           => 'أ. محمد أحمد الزيود',
                 'email'          => 'mohammad.zayoud@noor.jo',
+                'national_id'          => '123456789',
                 'phone'          => '+962799001001',
                 'password'       => 'noor2024',
                 'gender'         => 'male',
@@ -24,6 +25,7 @@ class TeacherSeeder extends Seeder
             [
                 'name'           => 'أ. سارة عبدالله النمر',
                 'email'          => 'sara.namer@noor.jo',
+                 'national_id'          => '123456769',
                 'phone'          => '+962799001002',
                 'password'       => 'noor2024',
                 'gender'         => 'female',
@@ -34,6 +36,7 @@ class TeacherSeeder extends Seeder
             [
                 'name'           => 'أ. خالد نادر الشريدة',
                 'email'          => 'khaled.shraida@noor.jo',
+                 'national_id'          => '123453789',
                 'phone'          => '+962799001003',
                 'password'       => 'noor2024',
                 'gender'         => 'male',
@@ -44,6 +47,7 @@ class TeacherSeeder extends Seeder
             [
                 'name'           => 'أ. رنا هاني جرار',
                 'email'          => 'rana.jarrar@noor.jo',
+                 'national_id'          => '123416789',
                 'phone'          => '+962799001004',
                 'password'       => 'noor2024',
                 'gender'         => 'female',
