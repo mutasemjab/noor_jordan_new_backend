@@ -17,7 +17,7 @@ class TeachersExport implements FromCollection, WithHeadings, WithMapping, WithS
     {
         return Teacher::when($this->filters['search'] ?? null, fn ($q, $s) => $q
                 ->where('name', 'like', "%{$s}%")
-                ->orWhere('email', 'like', "%{$s}%")
+                ->orWhere('national_id', 'like', "%{$s}%")
             )
             ->when(isset($this->filters['is_active']) && $this->filters['is_active'] !== '',
                 fn ($q) => $q->where('is_active', (bool) $this->filters['is_active'])
@@ -28,7 +28,7 @@ class TeachersExport implements FromCollection, WithHeadings, WithMapping, WithS
 
     public function headings(): array
     {
-        return ['#', 'الاسم', 'البريد الإلكتروني', 'الهاتف', 'الجنس', 'الحالة', 'تاريخ الانضمام'];
+        return ['#', 'الاسم', 'الرقم الوطني', 'الهاتف', 'الجنس', 'الحالة', 'تاريخ الانضمام'];
     }
 
     public function map($teacher): array
@@ -36,7 +36,7 @@ class TeachersExport implements FromCollection, WithHeadings, WithMapping, WithS
         return [
             $teacher->id,
             $teacher->name,
-            $teacher->email ?? '',
+            $teacher->national_id ?? '',
             $teacher->phone ?? '',
             $teacher->gender === 'male' ? 'ذكر' : ($teacher->gender === 'female' ? 'أنثى' : ''),
             $teacher->is_active ? 'نشط' : 'موقوف',

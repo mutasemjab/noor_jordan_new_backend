@@ -29,6 +29,11 @@
                         <input type="text" name="name" value="{{ old('name', $teacher->name) }}" class="form-control" required>
                     </div>
                     <div class="col-md-6">
+                        <label class="form-label">الرقم الوطني <span class="text-danger">*</span></label>
+                        <input type="text" name="national_id" value="{{ old('national_id', $teacher->national_id) }}" class="form-control" required>
+                    </div>
+               
+                    <div class="col-md-6">
                         <label class="form-label">{{ __('messages.email_label') }} <span class="text-danger">*</span></label>
                         <input type="email" name="email" value="{{ old('email', $teacher->email) }}" class="form-control" required>
                     </div>

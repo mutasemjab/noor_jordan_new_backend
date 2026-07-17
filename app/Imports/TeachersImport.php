@@ -20,7 +20,7 @@ class TeachersImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
             $rowNum = $index + 2;
 
             $name     = trim($row['الاسم']               ?? $row['name']     ?? '');
-            $email    = trim($row['البريد_الإلكتروني']   ?? $row['email']    ?? '');
+            $national_id    = trim($row['الرقم الوطني']   ?? $row['national_id']    ?? '');
             $phone    = trim($row['الهاتف']              ?? $row['phone']    ?? '');
             $password = trim($row['كلمة_المرور']         ?? $row['password'] ?? 'Pass@1234');
 
@@ -29,15 +29,15 @@ class TeachersImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
                 continue;
             }
 
-            if ($email && Teacher::where('email', $email)->exists()) {
-                $this->errors[] = "صف {$rowNum}: البريد «{$email}» موجود مسبقاً — تم التخطي";
+            if ($national_id && Teacher::where('national_id', $national_id)->exists()) {
+                $this->errors[] = "صف {$rowNum}: الرقم «{$national_id}» موجود مسبقاً — تم التخطي";
                 $this->skipped++;
                 continue;
             }
 
             Teacher::create([
                 'name'      => $name,
-                'email'     => $email ?: null,
+                'national_id'     => $national_id ?: null,
                 'phone'     => $phone ?: null,
                 'password'  => $password,
                 'is_active' => true,

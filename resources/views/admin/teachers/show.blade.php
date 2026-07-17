@@ -28,6 +28,7 @@
                     </div>
                 @endif
                 <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:4px">{{ $teacher->name }}</h3>
+                <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:4px">{{ $teacher->national_id }}</h3>
                 <div class="d-flex justify-content-center gap-2 mb-3">
                     <span class="pill {{ $teacher->is_active ? 'pill-success' : 'pill-neutral' }}">{{ $teacher->is_active ? __('messages.Active') : __('messages.Inactive') }}</span>
                 </div>

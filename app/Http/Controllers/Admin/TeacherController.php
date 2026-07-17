@@ -15,7 +15,7 @@ class TeacherController extends Controller
     {
         $teachers = Teacher::when($request->search, fn ($q, $s) => $q
                 ->where('name', 'like', "%{$s}%")
-                ->orWhere('email', 'like', "%{$s}%")
+                ->orWhere('national_id', 'like', "%{$s}%")
             )
             ->when($request->is_active !== null && $request->is_active !== '', fn ($q) =>
                 $q->where('is_active', $request->boolean('is_active'))
@@ -36,6 +36,7 @@ class TeacherController extends Controller
     {
         $data = $request->validate([
             'name'        => 'required|string|max:200',
+            'national_id'       => 'required|unique:teachers,national_id',
             'email'       => 'required|email|unique:teachers,email',
             'phone'       => 'nullable|string|max:20',
             'password'    => 'required|string|min:8|confirmed',
@@ -70,6 +71,7 @@ class TeacherController extends Controller
     {
         $data = $request->validate([
             'name'        => 'required|string|max:200',
+            'national_id'       => 'required|unique:teachers,national_id,' . $teacher->id,
             'email'       => 'required|email|unique:teachers,email,' . $teacher->id,
             'phone'       => 'nullable|string|max:20',
             'password'    => 'nullable|string|min:8|confirmed',

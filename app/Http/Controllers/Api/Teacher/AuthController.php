@@ -16,11 +16,11 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $request->validate([
-            'email'    => ['required', 'email'],
+            'national_id'    => ['required', 'string'],
             'password' => ['required'],
         ]);
 
-        $teacher = Teacher::where('email', $request->email)->first();
+        $teacher = Teacher::where('national_id', $request->national_id)->first();
 
         if (! $teacher || ! Hash::check($request->password, $teacher->password)) {
             return $this->error('البريد الإلكتروني أو كلمة المرور غير صحيحة', 401);
@@ -49,7 +49,7 @@ class AuthController extends Controller
         return [
             'id'     => $teacher->id,
             'name'   => $teacher->name,
-            'email'  => $teacher->email,
+            'national_id'  => $teacher->national_id,
             'phone'  => $teacher->phone,
             'gender' => $teacher->gender,
             'avatar' => $teacher->avatar
