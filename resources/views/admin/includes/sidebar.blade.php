@@ -38,45 +38,13 @@
                     <span>{{ __('messages.teachers') }}</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="{{ route('admin.enrollments.index') }}"
-                    class="nav-link {{ request()->routeIs('admin.enrollments.*') ? 'active' : '' }}">
-                    <i class="nav-icon bi bi-journal-check"></i>
-                    <span>{{ __('messages.enrollments') }}</span>
-                </a>
-            </li>
+       
         </ul>
 
         <div class="nav-label">{{ __('messages.academic') }}</div>
         <ul>
 
-            {{-- Courses --}}
-            <li class="nav-item">
-                <a href="#courses-menu" class="nav-link" data-submenu="courses-menu"
-                    aria-expanded="{{ request()->routeIs('admin.courses.*') ? 'true' : 'false' }}">
-                    <i class="nav-icon bi bi-book"></i>
-                    <span>{{ __('messages.courses') }}</span>
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                </a>
-                <ul class="nav-submenu {{ request()->routeIs('admin.courses.*') ? 'show' : '' }}" id="courses-menu">
-                    <li class="nav-item">
-                        <a href="{{ route('admin.courses.index') }}" class="nav-link">
-                            <span>{{ __('messages.all_courses') }}</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.courses.create') }}" class="nav-link">
-                            <span>{{ __('messages.add_course') }}</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.categories.index') }}" class="nav-link">
-                            <span>{{ __('messages.categories') }}</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
+        
             {{-- Subjects --}}
             <li class="nav-item">
                 <a href="{{ route('admin.subjects.index') }}"
@@ -171,17 +139,6 @@
                 </a>
             </li>
 
-        </ul>
-
-        <div class="nav-label">{{ __('messages.cards_management') }}</div>
-        <ul>
-            <li class="nav-item">
-                <a href="{{ route('admin.cards.index') }}"
-                    class="nav-link {{ request()->routeIs('admin.cards.*') ? 'active' : '' }}">
-                    <i class="nav-icon bi bi-credit-card"></i>
-                    <span>{{ __('messages.cards') }}</span>
-                </a>
-            </li>
         </ul>
 
         <div class="nav-label">{{ __('messages.system') }}</div>
