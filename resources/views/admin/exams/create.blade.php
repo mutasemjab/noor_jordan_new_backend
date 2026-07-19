@@ -55,15 +55,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-4">
-                <label class="form-label">{{ __('messages.course') }}</label>
-                <select name="course_id" id="courseSelect" class="form-select">
-                    <option value="">{{ __('messages.standalone') }}</option>
-                    @foreach($courses as $c)
-                        <option value="{{ $c->id }}" @selected(old('course_id') == $c->id)>{{ Str::limit($c->title_en ?: $c->title_ar, 35) }}</option>
-                    @endforeach
-                </select>
-            </div>
+            
 
             {{-- ── Course Placement ── --}}
             <div class="col-12" id="placementPanel" style="display:none;">
@@ -144,81 +136,4 @@
 </div>
 </div>
 
-@push('scripts')
-<script>
-function buildStructureUrl(id) {
-    return '{{ route("admin.courses.exam-structure", ":cid") }}'.replace(':cid', id);
-}
-let courseStructure = null;
-
-const oldUnitId   = '{{ old("unit_id") }}';
-const oldLessonId = '{{ old("lesson_id") }}';
-
-document.getElementById('courseSelect').addEventListener('change', function () {
-    loadCourseStructure(this.value);
-});
-
-// On page load, restore if old('course_id') was set
-window.addEventListener('DOMContentLoaded', function () {
-    const courseId = document.getElementById('courseSelect').value;
-    if (courseId) {
-        loadCourseStructure(courseId, oldUnitId, oldLessonId);
-    }
-    updatePlacementUI();
-});
-
-function loadCourseStructure(courseId, preselectUnit, preselectLesson) {
-    const panel = document.getElementById('placementPanel');
-    if (!courseId) {
-        panel.style.display = 'none';
-        courseStructure = null;
-        return;
-    }
-    fetch(buildStructureUrl(courseId))
-        .then(r => r.json())
-        .then(data => {
-            courseStructure = data;
-            buildUnitSelect(data.units, preselectUnit);
-            panel.style.display = '';
-            updatePlacementUI();
-            if (preselectUnit) filterLessons(preselectLesson);
-        });
-}
-
-function buildUnitSelect(units, preselectUnit) {
-    const sel = document.getElementById('unitSelect');
-    sel.innerHTML = '<option value="">— {{ __("messages.select_unit") }} —</option>';
-    units.forEach(u => {
-        const opt = document.createElement('option');
-        opt.value = u.id;
-        opt.textContent = (u.title_en || u.title_ar);
-        opt.dataset.lessons = JSON.stringify(u.lessons);
-        if (preselectUnit && String(u.id) === String(preselectUnit)) opt.selected = true;
-        sel.appendChild(opt);
-    });
-}
-
-function filterLessons(preselectLesson) {
-    const unitSel   = document.getElementById('unitSelect');
-    const lessonSel = document.getElementById('lessonSelect');
-    const selected  = unitSel.options[unitSel.selectedIndex];
-    lessonSel.innerHTML = '<option value="">— {{ __("messages.select_lesson") }} —</option>';
-    if (!selected || !selected.dataset.lessons) return;
-    const lessons = JSON.parse(selected.dataset.lessons);
-    lessons.forEach(l => {
-        const opt = document.createElement('option');
-        opt.value = l.id;
-        opt.textContent = (l.title_en || l.title_ar);
-        if (preselectLesson && String(l.id) === String(preselectLesson)) opt.selected = true;
-        lessonSel.appendChild(opt);
-    });
-}
-
-function updatePlacementUI() {
-    const type = document.querySelector('input[name="placement_type"]:checked')?.value || 'course';
-    document.getElementById('unitSelectWrap').style.display   = (type === 'unit' || type === 'lesson') ? '' : 'none';
-    document.getElementById('lessonSelectWrap').style.display = (type === 'lesson') ? '' : 'none';
-}
-</script>
-@endpush
 @endsection

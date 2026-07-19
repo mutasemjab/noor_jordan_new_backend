@@ -33,14 +33,7 @@
                     <option value="0" @selected(request('is_published') === '0')>{{ __('messages.draft') }}</option>
                 </select>
             </div>
-            <div class="col-6 col-md-2">
-                <select name="course_id" class="form-select form-select-sm">
-                    <option value="">{{ __('messages.all_courses') }}</option>
-                    @foreach($courses as $c)
-                        <option value="{{ $c->id }}" @selected(request('course_id') == $c->id)>{{ Str::limit($c->title_en ?: $c->title_ar, 25) }}</option>
-                    @endforeach
-                </select>
-            </div>
+          
             <div class="col-6 col-md-2">
                 <button type="submit" class="btn-primary-sm w-100"><i class="bi bi-search"></i></button>
             </div>
