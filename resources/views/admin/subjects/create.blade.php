@@ -6,11 +6,7 @@
 <div class="page-header d-flex align-items-start justify-content-between flex-wrap gap-3">
     <div>
         <h1 class="page-title">{{ __('messages.add_subject') }}</h1>
-        @if($parentPreset)
-            <p class="page-sub">{{ __('messages.under') }}: <strong>{{ $parentPreset->name_ar }}</strong></p>
-        @endif
     </div>
-  
 </div>
 
 @if($errors->any())
@@ -23,7 +19,6 @@
 <div class="col-12 col-xl-7">
 <form action="{{ route('admin.subjects.store') }}" method="POST">
 @csrf
-<input type="hidden" name="redirect_to_tree" value="{{ request('redirect_to_tree', 0) }}">
 
 <div class="panel-card">
     <div class="panel-card-header"><h2 class="panel-card-title">{{ __('messages.subject_info') }}</h2></div>
