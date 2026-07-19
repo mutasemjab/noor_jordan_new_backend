@@ -36,6 +36,11 @@ class Subject extends Model
                     ->withTimestamps();
     }
 
+    public function getGradesLabelAttribute(): string
+    {
+        return $this->classes->pluck('name')->implode('، ');
+    }
+
     public function classSubjects()
     {
         return $this->hasMany(ClassSubject::class);

@@ -65,6 +65,17 @@
             </div>
 
             <div class="col-12">
+                <label class="form-label">{{ __('messages.grades_label') }}</label>
+                <select name="class_ids[]" class="form-select select2" multiple data-placeholder="{{ __('messages.select_grades') }}">
+                    @foreach($classes as $class)
+                        <option value="{{ $class->id }}" @selected(in_array($class->id, old('class_ids', [])))>
+                            {{ $class->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-12">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="is_active" value="1"
                            id="is_active" {{ old('is_active', true) ? 'checked' : '' }}>

@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">{{ __('messages.gender_label') }}</label>
-                        <select name="gender" class="form-select">
+                        <select name="gender" class="form-select select2">
                             <option value="">{{ __('messages.select_option') }}</option>
                             <option value="male" @selected(old('gender') === 'male')>{{ __('messages.male') }}</option>
                             <option value="female" @selected(old('gender') === 'female')>{{ __('messages.female') }}</option>

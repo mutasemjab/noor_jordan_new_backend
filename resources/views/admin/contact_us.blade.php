@@ -31,7 +31,7 @@
                 <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="{{ __('messages.search_contact_ph') }}">
             </div>
             <div class="col-6 col-md-3">
-                <select name="status" class="form-select form-select-sm">
+                <select name="status" class="form-select form-select-sm select2">
                     <option value="">{{ __('messages.All Status') }}</option>
                     @foreach(['new','read','replied','closed'] as $s)
                         <option value="{{ $s }}" @selected(request('status') === $s)>{{ __('messages.'.$statusConfig[$s][1]) }}</option>

@@ -55,7 +55,7 @@
                         class="form-control form-control-sm" placeholder="{{ __('messages.search_name_email_ph') }}">
                 </div>
                 <div class="col-6 col-md-3">
-                    <select name="is_active" class="form-select form-select-sm">
+                    <select name="is_active" class="form-select form-select-sm select2">
                         <option value="">{{ __('messages.All Status') }}</option>
                         <option value="1" @selected(request('is_active') === '1')>{{ __('messages.Active') }}</option>
                         <option value="0" @selected(request('is_active') === '0')>{{ __('messages.Inactive') }}</option>

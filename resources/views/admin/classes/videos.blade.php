@@ -26,7 +26,7 @@
             <div class="row g-3 align-items-end">
                 <div class="col-md-3">
                     <label class="form-label">المادة <span class="text-danger">*</span></label>
-                    <select name="subject_id" class="form-select" required>
+                    <select name="subject_id" class="form-select select2" required>
                         <option value="">— اختر المادة —</option>
                         @foreach($class->classSubjects as $cs)
                         <option value="{{ $cs->subject_id }}">{{ $cs->subject->name_ar }}</option>

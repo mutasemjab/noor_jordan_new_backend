@@ -43,7 +43,7 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label">{{ __('messages.exam_type_label') }} <span class="text-danger">*</span></label>
-                <select name="exam_type" class="form-select @error('exam_type') is-invalid @enderror" required>
+                <select name="exam_type" class="form-select select2 @error('exam_type') is-invalid @enderror" required>
                     @foreach(['mock','unit','final','practice','previous_years','placement'] as $type)
                         <option value="{{ $type }}" @selected(old('exam_type', $exam->exam_type) === $type)>{{ __('messages.'.$type) }}</option>
                     @endforeach
@@ -52,7 +52,7 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label">{{ __('messages.difficulty') }}</label>
-                <select name="difficulty_level" class="form-select">
+                <select name="difficulty_level" class="form-select select2">
                     @foreach(['easy','medium','hard','mixed'] as $d)
                         <option value="{{ $d }}" @selected(old('difficulty_level', $exam->difficulty_level) === $d)>{{ __('messages.'.$d) }}</option>
                     @endforeach
@@ -87,13 +87,13 @@
                     <div class="row g-2" id="placementSelects">
                         <div class="col-md-6" id="unitSelectWrap" style="{{ ($currentPlacement === 'unit' || $currentPlacement === 'lesson') ? '' : 'display:none;' }}">
                             <label class="form-label" style="font-size:.8rem;">{{ __('messages.select_unit') }}</label>
-                            <select name="unit_id" id="unitSelect" class="form-select form-select-sm" onchange="filterLessons()">
+                            <select name="unit_id" id="unitSelect" class="form-select form-select-sm select2" onchange="filterLessons()">
                                 <option value="">— {{ __('messages.select_unit') }} —</option>
                             </select>
                         </div>
                         <div class="col-md-6" id="lessonSelectWrap" style="{{ $currentPlacement === 'lesson' ? '' : 'display:none;' }}">
                             <label class="form-label" style="font-size:.8rem;">{{ __('messages.select_lesson') }}</label>
-                            <select name="lesson_id" id="lessonSelect" class="form-select form-select-sm">
+                            <select name="lesson_id" id="lessonSelect" class="form-select form-select-sm select2">
                                 <option value="">— {{ __('messages.select_lesson') }} —</option>
                             </select>
                         </div>

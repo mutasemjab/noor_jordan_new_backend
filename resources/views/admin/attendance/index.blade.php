@@ -20,7 +20,7 @@
         <form method="GET" class="row g-3 align-items-end">
             <div class="col-md-4">
                 <label class="form-label">الصف <span class="text-danger">*</span></label>
-                <select name="class_id" class="form-select" required>
+                <select name="class_id" class="form-select select2" required>
                     <option value="">— اختر الصف —</option>
                     @foreach($classes as $class)
                     <option value="{{ $class->id }}" @selected(request('class_id') == $class->id)>{{ $class->name }}</option>
@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-3">
                 <label class="form-label">الحصة (اختياري)</label>
-                <select name="period" class="form-select">
+                <select name="period" class="form-select select2">
                     <option value="">يومي (كل اليوم)</option>
                     @foreach($periods as $p)
                     <option value="{{ $p->period_number }}" @selected(request('period') == $p->period_number)>

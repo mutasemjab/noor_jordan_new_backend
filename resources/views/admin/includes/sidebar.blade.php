@@ -38,13 +38,43 @@
                     <span>{{ __('messages.teachers') }}</span>
                 </a>
             </li>
-       
+
+        </ul>
+
+        <div class="nav-label">{{ __('messages.classes') }}</div>
+        <ul>
+            {{-- Classes / Grades --}}
+            <li class="nav-item">
+                <a href="{{ route('admin.classes.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.classes.*') ? 'active' : '' }}">
+                    <i class="nav-icon bi bi-building"></i>
+                    <span>{{ __('messages.classes') }}</span>
+                </a>
+            </li>
+
+            {{-- Attendance --}}
+            <li class="nav-item">
+                <a href="{{ route('admin.attendance.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.attendance.*') ? 'active' : '' }}">
+                    <i class="nav-icon bi bi-calendar-check"></i>
+                    <span>{{ __('messages.attendance') }}</span>
+                </a>
+            </li>
+
+            {{-- Student Grades --}}
+            <li class="nav-item">
+                <a href="{{ route('admin.grades.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.grades.*') ? 'active' : '' }}">
+                    <i class="nav-icon bi bi-award"></i>
+                    <span>{{ __('messages.student_grades') }}</span>
+                </a>
+            </li>
         </ul>
 
         <div class="nav-label">{{ __('messages.academic') }}</div>
         <ul>
 
-        
+
             {{-- Subjects --}}
             <li class="nav-item">
                 <a href="{{ route('admin.subjects.index') }}"

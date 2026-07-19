@@ -35,7 +35,7 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label">الصف المستهدف</label>
-                <select name="class_id" class="form-select">
+                <select name="class_id" class="form-select select2">
                     <option value="">— للجميع —</option>
                     @foreach($classes as $class)
                         <option value="{{ $class->id }}" @selected(old('class_id', $announcement->class_id) == $class->id)>{{ $class->name }}</option>

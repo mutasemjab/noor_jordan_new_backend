@@ -22,12 +22,12 @@
         <div class="mb-3">
             <label>{{ __('messages.subject') }}</label>
 
-            <select name="subject_id" class="form-control">
+            <select name="subject_id" class="form-control select2">
                 <option value="">— اختر المادة —</option>
                 @foreach($subjects as $subject)
                     <option value="{{ $subject->id }}"
                         {{ old('subject_id', $questionBank->subject_id ?? '') == $subject->id ? 'selected' : '' }}>
-                        {{ $subject->name_ar }}
+                        {{ $subject->grades_label ? $subject->grades_label.' - ' : '' }}{{ $subject->name_ar }}
                     </option>
                 @endforeach
 
@@ -109,7 +109,7 @@
 
             <label>{{ __('messages.Status') }}</label>
 
-            <select name="status" class="form-control">
+            <select name="status" class="form-control select2">
 
                 <option value="1"
                     {{ old('status',$questionBank->status ?? 1) == 1 ? 'selected' : '' }}>

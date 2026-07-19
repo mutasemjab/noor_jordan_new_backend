@@ -56,7 +56,7 @@
 
             <div class="col-12" id="class_select" style="{{ old('target') === 'class' ? '' : 'display:none' }}">
                 <label class="form-label">اختر الصف</label>
-                <select name="class_id" class="form-select @error('class_id') is-invalid @enderror">
+                <select name="class_id" class="form-select select2 @error('class_id') is-invalid @enderror">
                     <option value="">— اختر —</option>
                     @foreach($classes as $class)
                         <option value="{{ $class->id }}" @selected(old('class_id') == $class->id)>{{ $class->name }}</option>
@@ -67,7 +67,7 @@
 
             <div class="col-12" id="student_select" style="{{ old('target') === 'student' ? '' : 'display:none' }}">
                 <label class="form-label">اختر الطالب</label>
-                <select name="student_id" class="form-select @error('student_id') is-invalid @enderror">
+                <select name="student_id" class="form-select select2 @error('student_id') is-invalid @enderror">
                     <option value="">— اختر —</option>
                     @foreach($students as $student)
                         <option value="{{ $student->id }}" @selected(old('student_id') == $student->id)>

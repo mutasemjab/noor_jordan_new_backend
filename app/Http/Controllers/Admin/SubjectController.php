@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SchoolClass;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,9 @@ class SubjectController extends Controller
 
     public function create()
     {
-        return view('admin.subjects.create');
+        $classes = SchoolClass::where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.subjects.create', compact('classes'));
     }
 
     public function store(Request $request)
@@ -35,11 +38,16 @@ class SubjectController extends Controller
             'is_active'   => 'boolean',
             'icon'        => 'nullable|string|max:100',
             'color_class' => 'nullable|string|max:100',
+            'class_ids'   => 'nullable|array',
+            'class_ids.*' => 'exists:classes,id',
         ]);
 
         $data['is_active'] = $request->boolean('is_active', true);
+        $classIds = $data['class_ids'] ?? [];
+        unset($data['class_ids']);
 
-        Subject::create($data);
+        $subject = Subject::create($data);
+        $subject->classes()->sync($classIds);
 
         return redirect()->route('admin.subjects.index')
             ->with('success', __('messages.subject_created'));
@@ -47,7 +55,10 @@ class SubjectController extends Controller
 
     public function edit(Subject $subject)
     {
-        return view('admin.subjects.edit', compact('subject'));
+        $classes = SchoolClass::where('is_active', true)->orderBy('name')->get();
+        $selectedClassIds = $subject->classes()->pluck('classes.id')->toArray();
+
+        return view('admin.subjects.edit', compact('subject', 'classes', 'selectedClassIds'));
     }
 
     public function update(Request $request, Subject $subject)
@@ -59,10 +70,16 @@ class SubjectController extends Controller
             'is_active'   => 'boolean',
             'icon'        => 'nullable|string|max:100',
             'color_class' => 'nullable|string|max:100',
+            'class_ids'   => 'nullable|array',
+            'class_ids.*' => 'exists:classes,id',
         ]);
 
         $data['is_active'] = $request->boolean('is_active', true);
+        $classIds = $data['class_ids'] ?? [];
+        unset($data['class_ids']);
+
         $subject->update($data);
+        $subject->classes()->sync($classIds);
 
         return redirect()->route('admin.subjects.index')
             ->with('success', __('messages.subject_updated'));

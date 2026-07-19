@@ -106,6 +106,6 @@ class QuestionBankController extends Controller
 
     private function subjectsWithPath(): \Illuminate\Support\Collection
     {
-        return Subject::orderBy('name_ar')->get();
+        return Subject::with('classes')->orderBy('name_ar')->get();
     }
 }

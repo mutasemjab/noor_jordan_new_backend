@@ -55,6 +55,12 @@
                             <a href="{{ route('admin.classes.show', $class->id) }}" class="btn-outline-sm" style="padding:4px 10px;font-size:.78rem">
                                 <i class="bi bi-journal-text"></i> إدارة المواد
                             </a>
+                            <a href="{{ route('admin.classes.schedule', $class->id) }}" class="btn-outline-sm" style="padding:4px 10px;font-size:.78rem">
+                                <i class="bi bi-calendar3"></i> الجدول
+                            </a>
+                            <a href="{{ route('admin.classes.videos', $class->id) }}" class="btn-outline-sm" style="padding:4px 10px;font-size:.78rem">
+                                <i class="bi bi-youtube"></i> الفيديوهات
+                            </a>
                             <form action="{{ route('admin.classes.destroy', $class->id) }}" method="POST"
                                   onsubmit="return confirm('حذف الصف {{ $class->name }}؟')">
                                 @csrf @method('DELETE')

@@ -34,11 +34,11 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label">{{ __('messages.subject') }}</label>
-                            <select name="subject_id" class="form-control">
+                            <select name="subject_id" class="form-control select2">
                                 <option value="">— {{ __('messages.select_subject') }} —</option>
                                 @foreach($subjects as $subject)
                                     <option value="{{ $subject->id }}" {{ old('subject_id') == $subject->id ? 'selected' : '' }}>
-                                        {{ $subject->name_ar }}
+                                        {{ $subject->grades_label ? $subject->grades_label.' - ' : '' }}{{ $subject->name_ar }}
                                     </option>
                                 @endforeach
                             </select>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label">{{ __('messages.Status') }}</label>
-                            <select name="status" class="form-control">
+                            <select name="status" class="form-control select2">
                                 <option value="1" {{ old('status', 1) == 1 ? 'selected' : '' }}>{{ __('messages.Active') }}</option>
                                 <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>{{ __('messages.Inactive') }}</option>
                             </select>

@@ -28,7 +28,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">مربي الصف</label>
-                        <select name="homeroom_teacher_id" class="form-select @error('homeroom_teacher_id') is-invalid @enderror">
+                        <select name="homeroom_teacher_id" class="form-select select2 @error('homeroom_teacher_id') is-invalid @enderror">
                             <option value="">— اختر المعلم —</option>
                             @foreach($teachers as $teacher)
                                 <option value="{{ $teacher->id }}" @selected(old('homeroom_teacher_id') == $teacher->id)>

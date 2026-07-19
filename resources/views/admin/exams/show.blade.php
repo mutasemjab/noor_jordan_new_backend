@@ -94,7 +94,7 @@
                     <div class="row g-2 mb-3">
                         <div class="col-md-4">
                             <label class="form-label">{{ __('messages.type_label') }}</label>
-                            <select name="question_type" class="form-select form-select-sm" onchange="toggleOptions(this.value)">
+                            <select name="question_type" class="form-select form-select-sm select2" onchange="toggleOptions(this.value)">
                                 <option value="mcq">{{ __('messages.mcq') }}</option>
                                 <option value="true_false">{{ __('messages.true_false') }}</option>
                                 <option value="short_answer">{{ __('messages.short_answer') }}</option>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">{{ __('messages.difficulty') }}</label>
-                            <select name="difficulty" class="form-select form-select-sm">
+                            <select name="difficulty" class="form-select form-select-sm select2">
                                 <option value="easy">{{ __('messages.easy') }}</option>
                                 <option value="medium" selected>{{ __('messages.medium') }}</option>
                                 <option value="hard">{{ __('messages.hard') }}</option>
@@ -114,37 +114,62 @@
                         </div>
                     </div>
 
-                    {{-- MCQ Options --}}
-                    <div id="options-section">
+                    {{-- Options: MCQ (free text) or True/False (fixed) --}}
+                    <div id="options-wrap">
                         <label class="form-label">{{ __('messages.options_label') }}</label>
-                        @for($i = 0; $i < 4; $i++)
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <input type="radio" name="correct_option" value="{{ $i }}" {{ $i === 0 ? 'checked' : '' }}>
-                            <input type="text" name="options[{{ $i }}][text_ar]" class="form-control form-control-sm" placeholder="{{ str_replace(':n', $i+1, __('messages.option_ar')) }}" dir="rtl">
-                            <input type="text" name="options[{{ $i }}][text_en]" class="form-control form-control-sm" placeholder="{{ __('messages.option_en') }}">
+
+                        <div id="mcq-options">
+                            @for($i = 0; $i < 4; $i++)
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <input type="radio" name="correct_option" value="{{ $i }}" {{ $i === 0 ? 'checked' : '' }}>
+                                <input type="text" name="options[{{ $i }}][text_ar]" class="form-control form-control-sm" placeholder="{{ str_replace(':n', $i+1, __('messages.option_ar')) }}" dir="rtl">
+                                <input type="text" name="options[{{ $i }}][text_en]" class="form-control form-control-sm" placeholder="{{ __('messages.option_en') }}">
+                            </div>
+                            @endfor
                         </div>
-                        @endfor
-                        {{-- Hidden correct flag --}}
+
+                        <div id="tf-options" style="display:none">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <input type="radio" name="correct_option" value="0" disabled>
+                                <span class="form-control form-control-sm" style="background:#f8fafc">{{ __('messages.true') }}</span>
+                                <input type="hidden" name="options[0][text_ar]" value="{{ __('messages.true') }}" disabled>
+                                <input type="hidden" name="options[0][text_en]" value="True" disabled>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <input type="radio" name="correct_option" value="1" disabled>
+                                <span class="form-control form-control-sm" style="background:#f8fafc">{{ __('messages.false') }}</span>
+                                <input type="hidden" name="options[1][text_ar]" value="{{ __('messages.false') }}" disabled>
+                                <input type="hidden" name="options[1][text_en]" value="False" disabled>
+                            </div>
+                        </div>
+
                         <script>
-                        document.addEventListener('change', function(e) {
-                            if (e.target.name === 'correct_option') {
-                                document.querySelectorAll('[name^="options"][name$="[correct]"]').forEach(el => el.remove());
-                                var idx = e.target.value;
+                        function setCorrectFlag() {
+                            var form = document.getElementById('question-form');
+                            form.querySelectorAll('[name^="options"][name$="[correct]"]').forEach(el => el.remove());
+                            var checked = form.querySelector('input[name="correct_option"]:checked:not(:disabled)');
+                            if (checked) {
                                 var inp = document.createElement('input');
                                 inp.type = 'hidden';
-                                inp.name = 'options['+idx+'][correct]';
+                                inp.name = 'options[' + checked.value + '][correct]';
                                 inp.value = '1';
-                                document.getElementById('question-form').appendChild(inp);
+                                form.appendChild(inp);
                             }
+                        }
+                        document.addEventListener('change', function(e) {
+                            if (e.target.name === 'correct_option') setCorrectFlag();
                         });
-                        // Set initial correct
-                        (function(){
-                            var inp = document.createElement('input');
-                            inp.type = 'hidden'; inp.name = 'options[0][correct]'; inp.value = '1';
-                            document.getElementById('question-form').appendChild(inp);
-                        })();
+                        setCorrectFlag();
+
                         function toggleOptions(type) {
-                            document.getElementById('options-section').style.display = (type === 'short_answer') ? 'none' : '';
+                            var mcq = document.getElementById('mcq-options');
+                            var tf = document.getElementById('tf-options');
+                            document.getElementById('options-wrap').style.display = (type === 'short_answer') ? 'none' : '';
+                            mcq.style.display = (type === 'mcq') ? '' : 'none';
+                            tf.style.display = (type === 'true_false') ? '' : 'none';
+                            mcq.querySelectorAll('input').forEach(el => el.disabled = (type !== 'mcq'));
+                            tf.querySelectorAll('input').forEach(el => el.disabled = (type !== 'true_false'));
+                            setCorrectFlag();
                         }
                         </script>
                     </div>

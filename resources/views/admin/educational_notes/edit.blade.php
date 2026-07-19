@@ -56,7 +56,7 @@
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="form-label">{{ __('messages.teacher') }}</label>
-                            <select name="teacher_id" class="form-control">
+                            <select name="teacher_id" class="form-control select2">
                                 <option value="">— {{ __('messages.select_teacher') }} —</option>
                                 @foreach($teachers as $teacher)
                                     <option value="{{ $teacher->id }}" {{ old('teacher_id', $educationalNote->teacher_id) == $teacher->id ? 'selected' : '' }}>{{ $teacher->name }}</option>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label">{{ __('messages.class_label') }}</label>
-                            <select name="class_id" class="form-control">
+                            <select name="class_id" class="form-control select2">
                                 <option value="">— {{ __('messages.select_class') }} —</option>
                                 @foreach($classes as $class)
                                     <option value="{{ $class->id }}"

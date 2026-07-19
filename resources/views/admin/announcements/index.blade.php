@@ -16,7 +16,7 @@
     <div class="panel-card-body p-0">
         <form method="GET" class="d-flex gap-2 p-3 border-bottom flex-wrap">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="بحث في العنوان..." class="form-control" style="max-width:250px">
-            <select name="class_id" class="form-select" style="max-width:200px">
+            <select name="class_id" class="form-select select2" style="max-width:200px">
                 <option value="">كل الصفوف</option>
                 <option value="0" @selected(request('class_id') === '0')>عام (بدون صف)</option>
                 @foreach($classes as $class)

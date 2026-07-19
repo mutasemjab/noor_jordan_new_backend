@@ -19,7 +19,7 @@
                 <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="{{ __('messages.search_exam_title_ph') }}">
             </div>
             <div class="col-6 col-md-2">
-                <select name="exam_type" class="form-select form-select-sm">
+                <select name="exam_type" class="form-select form-select-sm select2">
                     <option value="">{{ __('messages.all_types') }}</option>
                     @foreach(['mock','unit','final','practice','previous_years','placement'] as $type)
                         <option value="{{ $type }}" @selected(request('exam_type') === $type)>{{ __('messages.'.$type) }}</option>
@@ -27,7 +27,7 @@
                 </select>
             </div>
             <div class="col-6 col-md-2">
-                <select name="is_published" class="form-select form-select-sm">
+                <select name="is_published" class="form-select form-select-sm select2">
                     <option value="">{{ __('messages.All Status') }}</option>
                     <option value="1" @selected(request('is_published') === '1')>{{ __('messages.published') }}</option>
                     <option value="0" @selected(request('is_published') === '0')>{{ __('messages.draft') }}</option>

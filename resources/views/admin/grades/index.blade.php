@@ -20,7 +20,7 @@
         <form method="GET" class="row g-3 align-items-end" id="filter-form">
             <div class="col-md-3">
                 <label class="form-label">الصف <span class="text-danger">*</span></label>
-                <select name="class_id" class="form-select" id="class-select" required>
+                <select name="class_id" class="form-select select2" id="class-select" required>
                     <option value="">— اختر الصف —</option>
                     @foreach($classes as $class)
                     <option value="{{ $class->id }}" @selected(request('class_id') == $class->id)>{{ $class->name }}</option>
@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-3">
                 <label class="form-label">المادة <span class="text-danger">*</span></label>
-                <select name="subject_id" class="form-select" required>
+                <select name="subject_id" class="form-select select2" required>
                     <option value="">— اختر المادة —</option>
                     @foreach($subjects as $subject)
                     <option value="{{ $subject->id }}" @selected(request('subject_id') == $subject->id)>{{ $subject->name_ar }}</option>

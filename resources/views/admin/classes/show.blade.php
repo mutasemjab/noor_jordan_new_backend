@@ -8,9 +8,17 @@
         <h1 class="page-title">{{ $class->name }}</h1>
         <p class="page-sub">إدارة مواد الصف وتعيين المعلمين</p>
     </div>
-    <a href="{{ route('admin.classes.index') }}" class="btn-outline-sm">
-        <i class="bi bi-arrow-left"></i> رجوع
-    </a>
+    <div class="d-flex gap-2">
+        <a href="{{ route('admin.classes.schedule', $class->id) }}" class="btn-outline-sm">
+            <i class="bi bi-calendar3"></i> الجدول الدراسي
+        </a>
+        <a href="{{ route('admin.classes.videos', $class->id) }}" class="btn-outline-sm">
+            <i class="bi bi-youtube"></i> الفيديوهات
+        </a>
+        <a href="{{ route('admin.classes.index') }}" class="btn-outline-sm">
+            <i class="bi bi-arrow-left"></i> رجوع
+        </a>
+    </div>
 </div>
 
 @if(session('success'))
@@ -37,7 +45,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">مربي الصف</label>
-                        <select name="homeroom_teacher_id" class="form-select">
+                        <select name="homeroom_teacher_id" class="form-select select2">
                             <option value="">— بدون مربي صف —</option>
                             @foreach($teachers as $teacher)
                                 <option value="{{ $teacher->id }}"
@@ -109,7 +117,7 @@
                                 <form action="{{ route('admin.classes.subjects.update', [$class->id, $cs->subject_id]) }}"
                                       method="POST" class="d-flex gap-1 align-items-center">
                                     @csrf @method('PUT')
-                                    <select name="teacher_id" class="form-select form-select-sm" style="min-width:160px">
+                                    <select name="teacher_id" class="form-select form-select-sm select2" style="min-width:160px">
                                         <option value="">— بدون معلم —</option>
                                         @foreach($teachers as $teacher)
                                             <option value="{{ $teacher->id }}" @selected($cs->teacher_id == $teacher->id)>
@@ -154,7 +162,7 @@
                     <div class="row g-3 align-items-end">
                         <div class="col-md-5">
                             <label class="form-label">المادة <span class="text-danger">*</span></label>
-                            <select name="subject_id" class="form-select" required>
+                            <select name="subject_id" class="form-select select2" required>
                                 <option value="">— اختر المادة —</option>
                                 @foreach($availableSubjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name_ar }}</option>
@@ -163,7 +171,7 @@
                         </div>
                         <div class="col-md-5">
                             <label class="form-label">المعلم</label>
-                            <select name="teacher_id" class="form-select">
+                            <select name="teacher_id" class="form-select select2">
                                 <option value="">— اختر المعلم —</option>
                                 @foreach($teachers as $teacher)
                                     <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>

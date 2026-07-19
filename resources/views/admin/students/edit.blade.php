@@ -56,7 +56,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">{{ __('messages.gender_label') }}</label>
-                        <select name="gender" class="form-select">
+                        <select name="gender" class="form-select select2">
                             <option value="">{{ __('messages.select_option') }}</option>
                             <option value="male"   @selected(old('gender', $student->gender) === 'male')>{{ __('messages.male') }}</option>
                             <option value="female" @selected(old('gender', $student->gender) === 'female')>{{ __('messages.female') }}</option>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">{{ __('messages.class_label') }}</label>
-                        <select name="class_id" class="form-select">
+                        <select name="class_id" class="form-select select2">
                             <option value="">— {{ __('messages.select_class') }} —</option>
                             @foreach($classes as $class)
                                 <option value="{{ $class->id }}" @selected(old('class_id', $student->class_id) == $class->id)>{{ $class->name }}</option>
