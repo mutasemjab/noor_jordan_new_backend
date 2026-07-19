@@ -22,6 +22,13 @@
                     allowClear: $el.data('allow-clear') === true,
                     placeholder: $el.data('placeholder') || $el.find('option[value=""]').first().text() || null,
                 });
+
+                // Select2's own change trigger doesn't fire native events, so plain
+                // addEventListener('change', ...) / onchange="" handlers never see it.
+                // Re-dispatch a real native "change" event so existing page JS keeps working.
+                $el.on('select2:select select2:unselect select2:clear', function () {
+                    this.dispatchEvent(new Event('change', { bubbles: true }));
+                });
             });
     }
 
