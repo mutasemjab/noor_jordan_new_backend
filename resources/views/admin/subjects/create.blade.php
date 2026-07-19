@@ -10,9 +10,7 @@
             <p class="page-sub">{{ __('messages.under') }}: <strong>{{ $parentPreset->name_ar }}</strong></p>
         @endif
     </div>
-    <a href="{{ route('admin.categories.index') }}" class="btn-outline-sm">
-        <i class="bi bi-arrow-left"></i> {{ __('messages.Back') }}
-    </a>
+  
 </div>
 
 @if($errors->any())
@@ -32,20 +30,7 @@
     <div class="panel-card-body">
         <div class="row g-3">
 
-            {{-- Category tree picker --}}
-            <div class="col-12">
-                <label class="form-label">{{ __('messages.category') }} <span class="text-danger">*</span></label>
-                <select name="category_id" class="form-select @error('category_id') is-invalid @enderror" required>
-                    <option value="">— {{ __('messages.select_option') }} —</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}"
-                            {{ old('category_id', $parentPreset?->id) == $cat->id ? 'selected' : '' }}>
-                            {{ $cat->full_path }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
-            </div>
+       
 
             <div class="col-md-6">
                 <label class="form-label">{{ __('messages.subject_ar') }} <span class="text-danger">*</span></label>

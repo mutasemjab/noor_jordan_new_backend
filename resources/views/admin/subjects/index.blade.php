@@ -9,9 +9,6 @@
         <p class="page-sub">{{ __('messages.manage_subjects_desc') }}</p>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ route('admin.categories.index') }}" class="btn-outline-sm">
-            <i class="bi bi-diagram-3"></i> {{ __('messages.categories_title') }}
-        </a>
         <a href="{{ route('admin.subjects.create') }}" class="btn-primary-sm">
             <i class="bi bi-plus-circle"></i> {{ __('messages.add_subject') }}
         </a>
@@ -30,16 +27,6 @@
             <div class="col-12 col-md-5">
                 <input type="text" name="search" value="{{ request('search') }}"
                        class="form-control form-control-sm" placeholder="{{ __('messages.search_subject_ph') }}">
-            </div>
-            <div class="col-12 col-md-5">
-                <select name="category_id" class="form-select form-select-sm">
-                    <option value="">{{ __('messages.all_categories') }}</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}" @selected(request('category_id') == $cat->id)>
-                            {{ str_repeat('— ', $cat->level) }}{{ $cat->name_ar }} ({{ $cat->name_en }})
-                        </option>
-                    @endforeach
-                </select>
             </div>
             <div class="col-12 col-md-2">
                 <button type="submit" class="btn-primary-sm w-100"><i class="bi bi-search"></i></button>

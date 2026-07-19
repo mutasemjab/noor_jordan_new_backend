@@ -5,9 +5,7 @@
 
 <div class="page-header d-flex align-items-start justify-content-between flex-wrap gap-3">
     <div><h1 class="page-title">{{ __('messages.edit_subject') }}: {{ $subject->name_ar }}</h1></div>
-    <a href="{{ route('admin.categories.index') }}" class="btn-outline-sm">
-        <i class="bi bi-arrow-left"></i> {{ __('messages.Back') }}
-    </a>
+ 
 </div>
 
 @if($errors->any())
@@ -26,19 +24,6 @@
     <div class="panel-card-body">
         <div class="row g-3">
 
-            {{-- Category tree picker --}}
-            <div class="col-12">
-                <label class="form-label">{{ __('messages.category') }}</label>
-                <select name="category_id" class="form-select">
-                    <option value="">— {{ __('messages.select_option') }} —</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}"
-                            {{ old('category_id', $subject->category_id) == $cat->id ? 'selected' : '' }}>
-                            {{ $cat->full_path }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
 
             <div class="col-md-6">
                 <label class="form-label">{{ __('messages.subject_ar') }} <span class="text-danger">*</span></label>
