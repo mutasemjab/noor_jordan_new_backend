@@ -17,10 +17,10 @@
 {{-- Filter --}}
 <div class="panel-card mb-3">
     <div class="panel-card-body">
-        <form method="GET" class="row g-3 align-items-end" id="filter-form">
+        <form method="GET" class="row g-3 align-items-end">
             <div class="col-md-3">
                 <label class="form-label">الصف <span class="text-danger">*</span></label>
-                <select name="class_id" class="form-select select2" id="class-select" required>
+                <select name="class_id" class="form-select select2" required>
                     <option value="">— اختر الصف —</option>
                     @foreach($classes as $class)
                     <option value="{{ $class->id }}" @selected(request('class_id') == $class->id)>{{ $class->name }}</option>
@@ -138,14 +138,5 @@
     <div class="panel-card-body text-center py-5" style="color:var(--muted)">لا يوجد طلاب في هذا الصف.</div>
 </div>
 @endif
-
-@push('scripts')
-<script>
-// Auto-submit when class changes to reload subjects
-document.getElementById('class-select')?.addEventListener('change', function() {
-    document.getElementById('filter-form').submit();
-});
-</script>
-@endpush
 
 @endsection

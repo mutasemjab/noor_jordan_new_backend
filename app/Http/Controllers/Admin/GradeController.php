@@ -15,7 +15,7 @@ class GradeController extends Controller
     public function index(Request $request)
     {
         $classes  = SchoolClass::where('is_active', true)->orderBy('name')->get();
-        $subjects = collect();
+        $subjects = Subject::orderBy('name_ar')->get();
         $students = collect();
         $grades   = collect();
         $selectedClass   = null;
@@ -23,10 +23,6 @@ class GradeController extends Controller
 
         if ($request->filled('class_id')) {
             $selectedClass = SchoolClass::findOrFail($request->class_id);
-            $subjects = ClassSubject::where('class_id', $request->class_id)
-                ->with('subject')
-                ->get()
-                ->map(fn ($cs) => $cs->subject);
         }
 
         if ($request->filled('class_id') && $request->filled('subject_id')) {
