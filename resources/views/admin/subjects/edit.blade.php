@@ -72,9 +72,7 @@
                 <button type="submit" class="btn-primary-sm">
                     <i class="bi bi-save"></i> {{ __('messages.save_changes') }}
                 </button>
-                <a href="{{ route('admin.categories.index') }}" class="btn-outline-sm">
-                    {{ __('messages.cancel') }}
-                </a>
+           
             </div>
         </div>
     </div>
