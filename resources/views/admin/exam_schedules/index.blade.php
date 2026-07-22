@@ -59,21 +59,6 @@
               @enderror
             </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-semibold">الصف (اختياري)</label>
-              <select name="class_id" class="form-select select2 @error('class_id') is-invalid @enderror">
-                <option value="">— عام (لكل الصفوف) —</option>
-                @foreach($classes as $class)
-                  <option value="{{ $class->id }}" @selected(old('class_id', $selectedClass?->id) == $class->id)>
-                    {{ $class->name }}
-                  </option>
-                @endforeach
-              </select>
-              @error('class_id')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-
             <div class="mb-4">
               <label class="form-label fw-semibold">صورة الجدول <span class="text-danger">*</span></label>
               <div id="dropZone"
