@@ -87,6 +87,7 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
         Route::get('my-subjects',                 [ClassController::class, 'mySubjects']);
         Route::get('subjects/{subjectId}/videos', [ClassController::class, 'subjectVideos']);
         Route::get('my-schedule',                 [StudentScheduleController::class, 'index']);
+        Route::get('exam-schedules',              [StudentScheduleController::class, 'examSchedules']);
 
         // Attendance
         Route::get('my-attendance', [StudentAttendanceController::class, 'index']);
@@ -143,7 +144,8 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         });
 
         // Schedule
-        Route::get('my-schedule', [TeacherScheduleController::class, 'index']);
+        Route::get('my-schedule',    [TeacherScheduleController::class, 'index']);
+        Route::get('exam-schedules', [TeacherScheduleController::class, 'examSchedules']);
 
         // Classes & students
         Route::get('my-classes',               [TeacherClassController::class, 'myClasses']);

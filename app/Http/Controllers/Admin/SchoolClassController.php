@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClassSchedule;
 use App\Models\ClassSubject;
-use App\Models\PeriodSetting;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SchoolClassController extends Controller
 {
@@ -122,48 +119,33 @@ class SchoolClassController extends Controller
 
     public function schedule(SchoolClass $class)
     {
-        $periods = PeriodSetting::orderBy('period_number')->get();
-        $classSubjects = ClassSubject::where('class_id', $class->id)->with('subject')->get();
-
-        // Build lookup: [day][period] = subject_id
-        $current = ClassSchedule::where('class_id', $class->id)
-            ->get()
-            ->groupBy('day')
-            ->map(fn ($rows) => $rows->pluck('subject_id', 'period_number'));
-
-        return view('admin.classes.schedule', compact('class', 'periods', 'classSubjects', 'current'));
+        return view('admin.classes.schedule', compact('class'));
     }
 
     public function updateSchedule(Request $request, SchoolClass $class)
     {
-        // Delete existing and re-insert
-        ClassSchedule::where('class_id', $class->id)->delete();
+        $request->validate([
+            'image' => 'required|image|mimes:jpg,jpeg,png,gif,webp|max:8192',
+        ], [
+            'image.required' => 'يرجى اختيار صورة الجدول.',
+            'image.image'    => 'الملف المرفق يجب أن يكون صورة.',
+            'image.max'      => 'حجم الصورة يجب ألا يتجاوز 8 ميغابايت.',
+        ]);
 
-        $rows = [];
-        foreach ($request->input('schedule', []) as $day => $byPeriod) {
-            foreach ($byPeriod as $period => $subjectId) {
-                if (! $subjectId) continue;
-
-                $cs = ClassSubject::where('class_id', $class->id)
-                    ->where('subject_id', $subjectId)
-                    ->first();
-
-                $rows[] = [
-                    'class_id'      => $class->id,
-                    'day'           => (int) $day,
-                    'period_number' => (int) $period,
-                    'subject_id'    => (int) $subjectId,
-                    'teacher_id'    => $cs?->teacher_id,
-                    'created_at'    => now(),
-                    'updated_at'    => now(),
-                ];
+        // Remove old image
+        if ($class->schedule_image) {
+            $oldPath = public_path('assets/uploads/schedules/' . $class->schedule_image);
+            if (file_exists($oldPath)) {
+                @unlink($oldPath);
             }
         }
 
-        if ($rows) {
-            ClassSchedule::insert($rows);
-        }
+        $file     = $request->file('image');
+        $filename = 'schedule_' . $class->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('assets/uploads/schedules'), $filename);
 
-        return back()->with('success', 'تم حفظ الجدول الدراسي.');
+        $class->update(['schedule_image' => $filename]);
+
+        return back()->with('success', 'تم رفع صورة الجدول بنجاح.');
     }
 }

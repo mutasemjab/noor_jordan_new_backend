@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\ExamScheduleController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\ClassSubjectVideoController;
 use App\Http\Controllers\Admin\GradeController;
@@ -118,6 +119,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         // ── Banners ───────────────────────────────────────────────────
         Route::post('banners/{banner}/toggle', [BannerController::class, 'toggleActive'])->name('admin.banners.toggle');
         Route::resource('banners', BannerController::class, ['as' => 'admin']);
+
+        // ── Exam Schedules ────────────────────────────────────────────
+        Route::resource('exam-schedules', ExamScheduleController::class, ['as' => 'admin']);
 
         // ── Announcements ─────────────────────────────────────────────
         Route::resource('announcements', AnnouncementController::class, ['as' => 'admin']);

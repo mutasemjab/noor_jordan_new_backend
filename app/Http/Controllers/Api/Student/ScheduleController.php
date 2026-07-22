@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api\Student;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponse;
-use App\Models\ClassSchedule;
-use App\Models\PeriodSetting;
+use App\Models\ExamSchedule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -21,44 +20,37 @@ class ScheduleController extends Controller
             return $this->error('الطالب غير مسجل في أي صف.', 404);
         }
 
-        $periods = PeriodSetting::orderBy('period_number')->get();
+        $class = $student->schoolClass;
 
-        $schedules = ClassSchedule::where('class_id', $student->class_id)
-            ->with(['subject:id,name_ar,name_en,icon,color_class', 'teacher:id,name,avatar'])
-            ->get();
+        return $this->success([
+            'class_id'       => $class->id,
+            'class_name'     => $class->name,
+            'schedule_image' => $class->schedule_image
+                ? asset('assets/uploads/schedules/' . $class->schedule_image)
+                : null,
+        ]);
+    }
 
-        $days = ClassSchedule::$dayNames;
+    public function examSchedules(Request $request): JsonResponse
+    {
+        $student = $request->user();
 
-        $grid = [];
-        foreach ($days as $dayNum => $dayName) {
-            $periods_data = [];
-            foreach ($periods as $p) {
-                $slot = $schedules->first(
-                    fn ($s) => $s->day === $dayNum && $s->period_number === $p->period_number
-                );
-                $periods_data[] = [
-                    'period_number' => $p->period_number,
-                    'label'         => $p->label,
-                    'start_time'    => \Carbon\Carbon::parse($p->start_time)->format('H:i'),
-                    'end_time'      => \Carbon\Carbon::parse($p->end_time)->format('H:i'),
-                    'subject'       => $slot?->subject ? [
-                        'id'          => $slot->subject->id,
-                        'name'        => $slot->subject->name_ar,
-                        'icon'        => $slot->subject->icon,
-                        'color_class' => $slot->subject->color_class,
-                    ] : null,
-                    'teacher'       => $slot?->teacher ? [
-                        'id'     => $slot->teacher->id,
-                        'name'   => $slot->teacher->name,
-                        'avatar' => $slot->teacher->avatar
-                            ? asset('assets/uploads/teachers/' . $slot->teacher->avatar)
-                            : null,
-                    ] : null,
-                ];
-            }
-            $grid[] = ['day' => $dayNum, 'name' => $dayName, 'periods' => $periods_data];
-        }
+        $schedules = ExamSchedule::where(function ($q) use ($student) {
+            $q->whereNull('class_id')
+              ->orWhere('class_id', $student->class_id);
+        })
+        ->orderByDesc('created_at')
+        ->get()
+        ->map(fn ($es) => [
+            'id'         => $es->id,
+            'name'       => $es->name,
+            'class_name' => $es->schoolClass?->name,
+            'image'      => $es->image
+                ? asset('assets/uploads/exam-schedules/' . $es->image)
+                : null,
+            'created_at' => $es->created_at->toDateString(),
+        ]);
 
-        return $this->success($grid);
+        return $this->success($schedules);
     }
 }

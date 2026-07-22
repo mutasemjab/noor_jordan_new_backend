@@ -8,7 +8,7 @@ class SchoolClass extends Model
 {
     protected $table = 'classes';
 
-    protected $fillable = ['name', 'is_active', 'homeroom_teacher_id'];
+    protected $fillable = ['name', 'is_active', 'homeroom_teacher_id', 'schedule_image'];
 
     protected $casts = ['is_active' => 'boolean'];
 
