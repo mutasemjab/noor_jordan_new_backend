@@ -134,7 +134,7 @@ class SchoolClassController extends Controller
 
         // Remove old image
         if ($class->schedule_image) {
-            $oldPath = public_path('assets/uploads/schedules/' . $class->schedule_image);
+            $oldPath = base_path('assets/uploads/schedules/' . $class->schedule_image);
             if (file_exists($oldPath)) {
                 @unlink($oldPath);
             }
@@ -142,7 +142,7 @@ class SchoolClassController extends Controller
 
         $file     = $request->file('image');
         $filename = 'schedule_' . $class->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('assets/uploads/schedules'), $filename);
+        $file->move(base_path('assets/uploads/schedules'), $filename);
 
         $class->update(['schedule_image' => $filename]);
 

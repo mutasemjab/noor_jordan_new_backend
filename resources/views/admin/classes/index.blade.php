@@ -61,6 +61,9 @@
                             <a href="{{ route('admin.classes.videos', $class->id) }}" class="btn-outline-sm" style="padding:4px 10px;font-size:.78rem">
                                 <i class="bi bi-youtube"></i> الفيديوهات
                             </a>
+                            <a href="{{ route('admin.exam-schedules.index', ['class_id' => $class->id]) }}" class="btn-outline-sm" style="padding:4px 10px;font-size:.78rem">
+                                <i class="bi bi-journal-check"></i> جدول الامتحانات
+                            </a>
                             <form action="{{ route('admin.classes.destroy', $class->id) }}" method="POST"
                                   onsubmit="return confirm('حذف الصف {{ $class->name }}؟')">
                                 @csrf @method('DELETE')

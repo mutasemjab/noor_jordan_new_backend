@@ -15,6 +15,9 @@
         <a href="{{ route('admin.classes.videos', $class->id) }}" class="btn-outline-sm">
             <i class="bi bi-youtube"></i> الفيديوهات
         </a>
+        <a href="{{ route('admin.exam-schedules.index', ['class_id' => $class->id]) }}" class="btn-outline-sm">
+            <i class="bi bi-journal-check"></i> جدول الامتحانات
+        </a>
         <a href="{{ route('admin.classes.index') }}" class="btn-outline-sm">
             <i class="bi bi-arrow-left"></i> رجوع
         </a>

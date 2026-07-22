@@ -69,6 +69,15 @@
                     <span>{{ __('messages.student_grades') }}</span>
                 </a>
             </li>
+
+            {{-- Exam Schedules --}}
+            <li class="nav-item">
+                <a href="{{ route('admin.exam-schedules.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.exam-schedules.*') ? 'active' : '' }}">
+                    <i class="nav-icon bi bi-journal-check"></i>
+                    <span>{{ __('messages.exam_schedules') }}</span>
+                </a>
+            </li>
         </ul>
 
         <div class="nav-label">{{ __('messages.academic') }}</div>

@@ -9,15 +9,18 @@ use Illuminate\Http\Request;
 
 class ExamScheduleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $examSchedules = ExamSchedule::with('schoolClass')
+            ->when($request->filled('class_id'), fn ($q) => $q->where('class_id', $request->class_id))
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(12)
+            ->withQueryString();
 
         $classes = SchoolClass::where('is_active', true)->orderBy('name')->get();
+        $selectedClass = $request->filled('class_id') ? SchoolClass::find($request->class_id) : null;
 
-        return view('admin.exam_schedules.index', compact('examSchedules', 'classes'));
+        return view('admin.exam_schedules.index', compact('examSchedules', 'classes', 'selectedClass'));
     }
 
     public function store(Request $request)
@@ -35,7 +38,7 @@ class ExamScheduleController extends Controller
 
         $file     = $request->file('image');
         $filename = 'exam_schedule_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('assets/uploads/exam-schedules'), $filename);
+        $file->move(base_path('assets/uploads/exam-schedules'), $filename);
 
         ExamSchedule::create([
             'name'     => $request->name,
@@ -43,7 +46,7 @@ class ExamScheduleController extends Controller
             'image'    => $filename,
         ]);
 
-        return redirect()->route('admin.exam-schedules.index')
+        return redirect()->route('admin.exam-schedules.index', $request->only('class_id'))
             ->with('success', 'تم إضافة جدول الامتحانات بنجاح.');
     }
 
@@ -69,14 +72,14 @@ class ExamScheduleController extends Controller
         if ($request->hasFile('image')) {
             // Remove old image
             if ($examSchedule->image) {
-                $oldPath = public_path('assets/uploads/exam-schedules/' . $examSchedule->image);
+                $oldPath = base_path('assets/uploads/exam-schedules/' . $examSchedule->image);
                 if (file_exists($oldPath)) {
                     @unlink($oldPath);
                 }
             }
             $file     = $request->file('image');
             $filename = 'exam_schedule_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/uploads/exam-schedules'), $filename);
+            $file->move(base_path('assets/uploads/exam-schedules'), $filename);
             $data['image'] = $filename;
         }
 
@@ -89,7 +92,7 @@ class ExamScheduleController extends Controller
     public function destroy(ExamSchedule $examSchedule)
     {
         if ($examSchedule->image) {
-            $path = public_path('assets/uploads/exam-schedules/' . $examSchedule->image);
+            $path = base_path('assets/uploads/exam-schedules/' . $examSchedule->image);
             if (file_exists($path)) {
                 @unlink($path);
             }

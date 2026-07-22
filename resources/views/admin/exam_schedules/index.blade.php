@@ -5,13 +5,29 @@
 <div class="container-fluid px-4 py-3">
 
   {{-- Page Header --}}
-  <div class="d-flex align-items-center gap-3 mb-4">
+  <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
     <div style="width:48px;height:48px;background:linear-gradient(135deg,#233a77,#2d4d99);border-radius:12px;display:flex;align-items:center;justify-content:center;">
       <i class="bi bi-journal-check" style="color:#f4ae2d;font-size:22px;"></i>
     </div>
     <div>
       <h4 class="mb-0 fw-bold">جداول الامتحانات</h4>
-      <small class="text-muted">إدارة صور جداول الامتحانات</small>
+      <small class="text-muted">
+        @if($selectedClass)
+          عرض جداول: <strong>{{ $selectedClass->name }}</strong>
+        @else
+          إدارة صور جداول الامتحانات
+        @endif
+      </small>
+    </div>
+    <div class="ms-auto d-flex gap-2">
+      @if($selectedClass)
+        <a href="{{ route('admin.classes.show', $selectedClass->id) }}" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-right me-1"></i> العودة للصف
+        </a>
+        <a href="{{ route('admin.exam-schedules.index') }}" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-x-circle me-1"></i> إلغاء الفلتر
+        </a>
+      @endif
     </div>
   </div>
 
@@ -45,10 +61,10 @@
 
             <div class="mb-3">
               <label class="form-label fw-semibold">الصف (اختياري)</label>
-              <select name="class_id" class="form-select @error('class_id') is-invalid @enderror">
+              <select name="class_id" class="form-select select2 @error('class_id') is-invalid @enderror">
                 <option value="">— عام (لكل الصفوف) —</option>
                 @foreach($classes as $class)
-                  <option value="{{ $class->id }}" @selected(old('class_id') == $class->id)>
+                  <option value="{{ $class->id }}" @selected(old('class_id', $selectedClass?->id) == $class->id)>
                     {{ $class->name }}
                   </option>
                 @endforeach

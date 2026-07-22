@@ -855,4 +855,5 @@ return [
     'student_grades' => 'Student Grades',
     'class_schedule' => 'Class Schedule',
     'class_videos' => 'Class Videos',
+    'exam_schedules' => 'Exam Schedules',
 ];

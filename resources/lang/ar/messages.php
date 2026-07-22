@@ -855,4 +855,5 @@ return [
     'student_grades' => 'علامات الطلاب',
     'class_schedule' => 'الجدول الدراسي',
     'class_videos' => 'فيديوهات الصف',
+    'exam_schedules' => 'جداول الامتحانات',
 ];

@@ -53,7 +53,7 @@
 
             <div class="mb-3">
               <label class="form-label fw-semibold">الصف (اختياري)</label>
-              <select name="class_id" class="form-select @error('class_id') is-invalid @enderror">
+              <select name="class_id" class="form-select select2 @error('class_id') is-invalid @enderror">
                 <option value="">— عام (لكل الصفوف) —</option>
                 @foreach($classes as $class)
                   <option value="{{ $class->id }}"
