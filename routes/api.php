@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Student\BannerController;
 use App\Http\Controllers\Api\Student\AuthController;
 use App\Http\Controllers\Api\Student\EducationalNoteController;
 use App\Http\Controllers\Api\Student\ExamController;
+use App\Http\Controllers\Api\Student\FirebaseTokenController as StudentFirebaseTokenController;
 use App\Http\Controllers\Api\Student\GradeController as StudentGradeController;
 use App\Http\Controllers\Api\Student\HomeController;
 use App\Http\Controllers\Api\Student\NotificationController;
@@ -22,11 +23,16 @@ use App\Http\Controllers\Api\Student\WorksheetController;
 use App\Http\Controllers\Api\Teacher\AnnouncementController as TeacherAnnouncementController;
 use App\Http\Controllers\Api\Teacher\AuthController as TeacherAuthController;
 use App\Http\Controllers\Api\Teacher\AttendanceController as TeacherAttendanceController;
+use App\Http\Controllers\Api\Teacher\ChatController as TeacherChatController;
 use App\Http\Controllers\Api\Teacher\ClassController as TeacherClassController;
+use App\Http\Controllers\Api\Teacher\FirebaseTokenController as TeacherFirebaseTokenController;
 use App\Http\Controllers\Api\Teacher\GradeController as TeacherGradeController;
 use App\Http\Controllers\Api\Teacher\HomeController as TeacherHomeController;
 use App\Http\Controllers\Api\Teacher\ProfileController as TeacherProfileController;
 use App\Http\Controllers\Api\Teacher\ScheduleController as TeacherScheduleController;
+
+use App\Http\Controllers\Api\Chat\MediaController as ChatMediaController;
+use App\Http\Controllers\Api\Chat\NotifyController as ChatNotifyController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -48,10 +54,6 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
 
     // ── Banners ───────────────────────────────────────────────────────────
     Route::get('banners', [BannerController::class, 'index']);
-
-    // ── Teachers (public) ─────────────────────────────────────────────────
-    Route::get('teachers',      [TeacherController::class, 'index']);
-    Route::get('teachers/{id}', [TeacherController::class, 'show']);
 
     // ── Exams (public listing & detail) ───────────────────────────────────
     Route::get('exams',      [ExamController::class, 'index']);
@@ -83,11 +85,18 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
         Route::post('attempts/{attempt}/submit',  [ExamController::class, 'submit']);
         Route::get('attempts/{attempt}',          [ExamController::class, 'result']);
 
+        // Teachers (scoped to the student's own class/subjects)
+        Route::get('teachers',      [TeacherController::class, 'index']);
+        Route::get('teachers/{id}', [TeacherController::class, 'show']);
+
         // Class subjects, schedule & videos
         Route::get('my-subjects',                 [ClassController::class, 'mySubjects']);
         Route::get('subjects/{subjectId}/videos', [ClassController::class, 'subjectVideos']);
         Route::get('my-schedule',                 [StudentScheduleController::class, 'index']);
         Route::get('exam-schedules',              [StudentScheduleController::class, 'examSchedules']);
+
+        // Firebase (chat) custom token
+        Route::get('firebase-token', [StudentFirebaseTokenController::class, 'show']);
 
         // Attendance
         Route::get('my-attendance', [StudentAttendanceController::class, 'index']);
@@ -147,6 +156,12 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         Route::get('my-schedule',    [TeacherScheduleController::class, 'index']);
         Route::get('exam-schedules', [TeacherScheduleController::class, 'examSchedules']);
 
+        // Firebase (chat) custom token
+        Route::get('firebase-token', [TeacherFirebaseTokenController::class, 'show']);
+
+        // Broadcast a chat message to a whole class
+        Route::post('chat/broadcast', [TeacherChatController::class, 'broadcast']);
+
         // Classes & students
         Route::get('my-classes',               [TeacherClassController::class, 'myClasses']);
         Route::get('classes/{class}/students', [TeacherClassController::class, 'students']);
@@ -163,4 +178,14 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         Route::get('announcements',      [TeacherAnnouncementController::class, 'index']);
         Route::get('announcements/{id}', [TeacherAnnouncementController::class, 'show']);
     });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Chat API — v1 (shared between student & teacher accounts)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('v1/chat')->middleware(['api.locale', 'auth:sanctum'])->group(function () {
+    Route::post('media',  [ChatMediaController::class, 'store']);
+    Route::post('notify', [ChatNotifyController::class, 'notify']);
 });

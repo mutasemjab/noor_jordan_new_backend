@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Student;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponse;
+use App\Models\ClassSubject;
 use App\Models\Teacher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,32 +13,38 @@ class TeacherController extends Controller
 {
     use ApiResponse;
 
-    // GET /teachers
+    // GET /teachers — only the teachers who actually teach the current student's class
     public function index(Request $request): JsonResponse
     {
-        $query = Teacher::where('is_active', true)
-            ->orderByDesc('total_students');
+        $student = $request->user();
 
-        if ($request->filled('search')) {
-            $s = $request->search;
-            $query->where(fn ($q) => $q
-                ->where('name', 'like', "%{$s}%")
-            );
+        if (! $student->class_id) {
+            return $this->success([]);
         }
 
-        $paginated = $query->paginate(15);
+        $classSubjects = ClassSubject::where('class_id', $student->class_id)
+            ->whereNotNull('teacher_id')
+            ->with('subject')
+            ->get();
 
-        return response()->json([
-            'status'     => true,
-            'message'    => 'OK',
-            'data'       => collect($paginated->items())->map(fn ($t) => $this->teacherCard($t)),
-            'pagination' => [
-                'current_page' => $paginated->currentPage(),
-                'last_page'    => $paginated->lastPage(),
-                'per_page'     => $paginated->perPage(),
-                'total'        => $paginated->total(),
-            ],
-        ]);
+        $teachers = Teacher::whereIn('id', $classSubjects->pluck('teacher_id')->unique())
+            ->where('is_active', true)
+            ->get()
+            ->map(function (Teacher $teacher) use ($classSubjects) {
+                $subjectNames = $classSubjects
+                    ->where('teacher_id', $teacher->id)
+                    ->map(fn (ClassSubject $cs) => $cs->subject?->name)
+                    ->filter()
+                    ->unique()
+                    ->values();
+
+                return array_merge($this->teacherCard($teacher), [
+                    'subject_name' => $subjectNames->implode('، '),
+                ]);
+            })
+            ->values();
+
+        return $this->success($teachers);
     }
 
     // GET /teachers/{id}
