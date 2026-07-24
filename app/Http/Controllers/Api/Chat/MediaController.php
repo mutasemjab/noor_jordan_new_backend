@@ -14,11 +14,23 @@ class MediaController extends Controller
 {
     use ApiResponse;
 
+    private const IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    // Recorded voice notes (m4a/AAC-LC) get sniffed inconsistently across
+    // PHP/Symfony versions, and the Flutter FormData part often has no
+    // reliable filename extension for Laravel's extension-based `mimes` rule
+    // to key off — so we check the mime directly instead of relying on it.
+    private const VOICE_MIMES = [
+        'audio/mp4', 'audio/x-m4a', 'audio/m4a', 'audio/aac',
+        'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/ogg',
+    ];
+
     // POST /media — upload a chat image or voice note, get back its public URL
     public function store(Request $request): JsonResponse
     {
         $user         = $request->user();
         $uploaderType = $user instanceof Teacher ? 'teacher' : 'student';
+        $type         = $request->input('type');
 
         $validator = Validator::make($request->all(), [
             'type'             => ['required', 'in:image,voice'],
@@ -26,14 +38,19 @@ class MediaController extends Controller
             'file'             => [
                 'required',
                 'file',
-                $request->input('type') === 'voice'
-                    ? 'mimes:m4a,mp3,wav,aac,ogg|mimetypes:audio/mp4,audio/x-m4a,audio/aac,audio/mpeg,audio/wav,audio/ogg|max:15360'
-                    : 'mimes:jpg,jpeg,png,gif,webp|max:8192',
+                'max:' . ($type === 'voice' ? 15360 : 8192),
+                function ($attribute, $value, $fail) use ($type) {
+                    $allowed = $type === 'voice' ? self::VOICE_MIMES : self::IMAGE_MIMES;
+                    $mime    = $value->getMimeType() ?: $value->getClientMimeType();
+
+                    if (! in_array($mime, $allowed, true)) {
+                        $fail('صيغة الملف غير مدعومة.');
+                    }
+                },
             ],
         ], [
-            'file.mimes'             => 'صيغة الملف غير مدعومة.',
-            'file.max'               => 'حجم الملف أكبر من المسموح.',
-            'duration_seconds.max'   => 'أقصى مدة للتسجيل الصوتي 10 دقائق.',
+            'file.max'                     => 'حجم الملف أكبر من المسموح.',
+            'duration_seconds.max'         => 'أقصى مدة للتسجيل الصوتي 10 دقائق.',
             'duration_seconds.required_if' => 'يرجى إرسال مدة التسجيل الصوتي.',
         ]);
 
