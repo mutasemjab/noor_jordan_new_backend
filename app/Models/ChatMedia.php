@@ -13,6 +13,11 @@ class ChatMedia extends Model
         'path', 'type', 'duration_seconds', 'size_bytes',
     ];
 
+    protected $casts = [
+        'duration_seconds' => 'integer',
+        'size_bytes'       => 'integer',
+    ];
+
     public function getUrlAttribute(): string
     {
         return asset('assets/uploads/chat/' . $this->path);
