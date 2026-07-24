@@ -8,7 +8,6 @@ use App\Models\ChatMedia;
 use App\Models\Teacher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class MediaController extends Controller
@@ -21,9 +20,13 @@ class MediaController extends Controller
     // PHP/Symfony versions, and the Flutter FormData part often has no
     // reliable filename extension for Laravel's extension-based `mimes` rule
     // to key off — so we check the mime directly instead of relying on it.
+    // "video/mp4" is included deliberately: an m4a file is an MP4 container
+    // with no video track, and this server's fileinfo sniffs it at the
+    // container level as video/mp4 rather than audio/mp4.
     private const VOICE_MIMES = [
         'audio/mp4', 'audio/x-m4a', 'audio/m4a', 'audio/aac',
         'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/ogg',
+        'video/mp4',
     ];
 
     // POST /media — upload a chat image or voice note, get back its public URL
@@ -41,23 +44,11 @@ class MediaController extends Controller
                 'file',
                 'max:' . ($type === 'voice' ? 15360 : 8192),
                 function ($attribute, $value, $fail) use ($type) {
-                    $allowed      = $type === 'voice' ? self::VOICE_MIMES : self::IMAGE_MIMES;
-                    $sniffed      = $value->getMimeType();
-                    $clientClaim  = $value->getClientMimeType();
-                    $mime         = $sniffed ?: $clientClaim;
-
-                    Log::info('chat/media mime check', [
-                        'type'          => $type,
-                        'sniffed_mime'  => $sniffed,
-                        'client_mime'   => $clientClaim,
-                        'orig_filename' => $value->getClientOriginalName(),
-                        'extension'     => $value->getClientOriginalExtension(),
-                    ]);
+                    $allowed = $type === 'voice' ? self::VOICE_MIMES : self::IMAGE_MIMES;
+                    $mime    = $value->getMimeType() ?: $value->getClientMimeType();
 
                     if (! in_array($mime, $allowed, true)) {
-                        // TEMP diagnostic: surface the detected mime so we can
-                        // fix the allow-list precisely instead of guessing again.
-                        $fail("صيغة الملف غير مدعومة (detected: sniffed={$sniffed}, client={$clientClaim}).");
+                        $fail('صيغة الملف غير مدعومة.');
                     }
                 },
             ],
