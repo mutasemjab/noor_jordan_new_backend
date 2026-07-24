@@ -8,6 +8,7 @@ use App\Models\ChatMedia;
 use App\Models\Teacher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class MediaController extends Controller
@@ -40,11 +41,23 @@ class MediaController extends Controller
                 'file',
                 'max:' . ($type === 'voice' ? 15360 : 8192),
                 function ($attribute, $value, $fail) use ($type) {
-                    $allowed = $type === 'voice' ? self::VOICE_MIMES : self::IMAGE_MIMES;
-                    $mime    = $value->getMimeType() ?: $value->getClientMimeType();
+                    $allowed      = $type === 'voice' ? self::VOICE_MIMES : self::IMAGE_MIMES;
+                    $sniffed      = $value->getMimeType();
+                    $clientClaim  = $value->getClientMimeType();
+                    $mime         = $sniffed ?: $clientClaim;
+
+                    Log::info('chat/media mime check', [
+                        'type'          => $type,
+                        'sniffed_mime'  => $sniffed,
+                        'client_mime'   => $clientClaim,
+                        'orig_filename' => $value->getClientOriginalName(),
+                        'extension'     => $value->getClientOriginalExtension(),
+                    ]);
 
                     if (! in_array($mime, $allowed, true)) {
-                        $fail('صيغة الملف غير مدعومة.');
+                        // TEMP diagnostic: surface the detected mime so we can
+                        // fix the allow-list precisely instead of guessing again.
+                        $fail("صيغة الملف غير مدعومة (detected: sniffed={$sniffed}, client={$clientClaim}).");
                     }
                 },
             ],
