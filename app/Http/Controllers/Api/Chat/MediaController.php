@@ -27,7 +27,7 @@ class MediaController extends Controller
                 'required',
                 'file',
                 $request->input('type') === 'voice'
-                    ? 'mimes:m4a,aac,mp3,wav,ogg|max:15360'
+                    ? 'mimes:m4a,mp3,wav,aac,ogg|mimetypes:audio/mp4,audio/x-m4a,audio/aac,audio/mpeg,audio/wav,audio/ogg|max:15360'
                     : 'mimes:jpg,jpeg,png,gif,webp|max:8192',
             ],
         ], [
@@ -44,7 +44,10 @@ class MediaController extends Controller
         $data = $validator->validated();
         $file = $request->file('file');
 
-        $filename = uploadImage('assets/uploads/chat', $file);
+        // Must read the size before uploadImage() moves the file — the temp
+        // path backing this UploadedFile instance is gone once it's moved.
+        $sizeBytes = $file->getSize();
+        $filename  = uploadImage('assets/uploads/chat', $file);
 
         $media = ChatMedia::create([
             'uploader_type'    => $uploaderType,
@@ -52,7 +55,7 @@ class MediaController extends Controller
             'path'             => $filename,
             'type'             => $data['type'],
             'duration_seconds' => $data['duration_seconds'] ?? null,
-            'size_bytes'       => $file->getSize(),
+            'size_bytes'       => $sizeBytes,
         ]);
 
         return response()->json([
