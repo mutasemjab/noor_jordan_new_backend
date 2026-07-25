@@ -23,7 +23,7 @@ class ExamController extends Controller
     public function index(Request $request): JsonResponse
     {
         $filters = array_merge(
-            $request->only(['course_id', 'subject_id', 'exam_type', 'search']),
+            $request->only(['subject_id', 'exam_type', 'search']),
             ['is_published' => true]
         );
 
@@ -268,7 +268,6 @@ class ExamController extends Controller
             'pass_marks'              => $exam->pass_marks,
             'difficulty_level'        => $exam->difficulty_level,
             'show_result_immediately' => $exam->show_result_immediately,
-            'course'  => $exam->course?->only(['id', 'title_ar', 'title_en']),
             'subject' => ['id' => $exam->subject?->id, 'name' => $exam->subject?->name],
         ];
     }

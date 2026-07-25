@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->text('body');
-            $table->string('type')->default('general'); // general, announcement, course, exam
+            $table->string('type')->default('general'); // general, announcement, exam
             $table->json('data')->nullable();
             $table->boolean('is_read')->default(false);
             $table->timestamps();
