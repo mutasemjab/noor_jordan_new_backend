@@ -28,8 +28,8 @@
                     <label class="form-label">المادة <span class="text-danger">*</span></label>
                     <select name="subject_id" class="form-select select2" required>
                         <option value="">— اختر المادة —</option>
-                        @foreach($class->classSubjects as $cs)
-                        <option value="{{ $cs->subject_id }}">{{ $cs->subject->name_ar }}</option>
+                        @foreach($subjects as $subject)
+                        <option value="{{ $subject->id }}">{{ $subject->name_ar }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -53,16 +53,12 @@
 </div>
 
 {{-- Videos by subject --}}
-@foreach($class->classSubjects as $cs)
-@php $vids = $videosBySubject[$cs->subject_id] ?? collect(); @endphp
+@forelse($videosBySubject as $subjectId => $vids)
 <div class="panel-card mb-3">
     <div class="panel-card-header d-flex align-items-center justify-content-between">
-        <h2 class="panel-card-title">{{ $cs->subject->name_ar }}</h2>
+        <h2 class="panel-card-title">{{ $vids->first()->subject?->name_ar }}</h2>
         <span class="pill pill-neutral">{{ $vids->count() }} فيديو</span>
     </div>
-    @if($vids->isEmpty())
-    <div class="panel-card-body text-center py-3" style="color:var(--muted);font-size:.85rem">لا توجد فيديوهات لهذه المادة.</div>
-    @else
     <div class="panel-card-body">
         <div class="row g-3">
             @foreach($vids as $video)
@@ -93,8 +89,11 @@
             @endforeach
         </div>
     </div>
-    @endif
 </div>
-@endforeach
+@empty
+<div class="panel-card">
+    <div class="panel-card-body text-center py-4" style="color:var(--muted)">لا توجد فيديوهات لهذا الصف بعد.</div>
+</div>
+@endforelse
 
 @endsection

@@ -3,23 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClassSubject;
 use App\Models\ClassSubjectVideo;
 use App\Models\SchoolClass;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 
 class ClassSubjectVideoController extends Controller
 {
     public function index(SchoolClass $class)
     {
-        $class->load(['classSubjects.subject']);
+        $subjects = Subject::orderBy('name_ar')->get();
+
         $videosBySubject = ClassSubjectVideo::where('class_id', $class->id)
+            ->with('subject')
             ->orderBy('subject_id')
             ->orderBy('order_index')
             ->get()
             ->groupBy('subject_id');
 
-        return view('admin.classes.videos', compact('class', 'videosBySubject'));
+        return view('admin.classes.videos', compact('class', 'subjects', 'videosBySubject'));
     }
 
     public function store(Request $request, SchoolClass $class)
