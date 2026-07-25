@@ -17,6 +17,56 @@
     <div class="alert alert-success alert-dismissible fade show mb-3">{{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
 @endif
 
+{{-- Filters --}}
+<div class="panel-card mb-3">
+    <div class="panel-card-body">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label class="form-label">{{ __('messages.note_type') }}</label>
+                <select name="type" class="form-select select2">
+                    <option value="">{{ __('messages.All Status') }}</option>
+                    <option value="lesson" @selected(request('type') === 'lesson')>{{ __('messages.note_type_lesson') }}</option>
+                    <option value="homework" @selected(request('type') === 'homework')>{{ __('messages.note_type_homework') }}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">{{ __('messages.teacher') }}</label>
+                <select name="teacher_id" class="form-select select2">
+                    <option value="">— {{ __('messages.select_teacher') }} —</option>
+                    @foreach($teachers as $teacher)
+                        <option value="{{ $teacher->id }}" @selected(request('teacher_id') == $teacher->id)>{{ $teacher->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">{{ __('messages.class_label') }}</label>
+                <select name="class_id" class="form-select select2">
+                    <option value="">— {{ __('messages.select_class') }} —</option>
+                    @foreach($classes as $class)
+                        <option value="{{ $class->id }}" @selected(request('class_id') == $class->id)>{{ $class->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">{{ __('messages.date_from') }}</label>
+                <input type="date" name="date_from" value="{{ request('date_from') }}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">{{ __('messages.date_to') }}</label>
+                <input type="date" name="date_to" value="{{ request('date_to') }}" class="form-control">
+            </div>
+            <div class="col-md-12 d-flex gap-2">
+                <button type="submit" class="btn-primary-sm"><i class="bi bi-search"></i> {{ __('messages.filter') }}</button>
+                @if(request()->anyFilled(['type', 'teacher_id', 'class_id', 'date_from', 'date_to']))
+                    <a href="{{ route('admin.educational-notes.index') }}" class="btn-outline-sm">
+                        <i class="bi bi-x-circle"></i> {{ __('messages.clear_filters') }}
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="panel-card">
     <div class="panel-card-body p-0">
         <div class="table-responsive">
