@@ -55,44 +55,6 @@
                     @endforeach
                 </select>
             </div>
-            
-
-            {{-- ── Course Placement ── --}}
-            <div class="col-12" id="placementPanel" style="display:none;">
-                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;">
-                    <div class="fw-semibold mb-2" style="font-size:.85rem;color:var(--navy);">
-                        <i class="bi bi-pin-map me-1"></i> {{ __('messages.exam_placement') }}
-                    </div>
-                    <div class="d-flex flex-wrap gap-3 mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="placement_type" id="pt_course" value="course" @checked(old('placement_type','course')==='course') onchange="updatePlacementUI()">
-                            <label class="form-check-label" for="pt_course">{{ __('messages.placement_course_level') }}</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="placement_type" id="pt_unit" value="unit" @checked(old('placement_type')==='unit') onchange="updatePlacementUI()">
-                            <label class="form-check-label" for="pt_unit">{{ __('messages.placement_after_unit') }}</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="placement_type" id="pt_lesson" value="lesson" @checked(old('placement_type')==='lesson') onchange="updatePlacementUI()">
-                            <label class="form-check-label" for="pt_lesson">{{ __('messages.placement_after_lesson') }}</label>
-                        </div>
-                    </div>
-                    <div class="row g-2" id="placementSelects">
-                        <div class="col-md-6" id="unitSelectWrap" style="display:none;">
-                            <label class="form-label" style="font-size:.8rem;">{{ __('messages.select_unit') }}</label>
-                            <select name="unit_id" id="unitSelect" class="form-select form-select-sm select2" onchange="filterLessons()">
-                                <option value="">— {{ __('messages.select_unit') }} —</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6" id="lessonSelectWrap" style="display:none;">
-                            <label class="form-label" style="font-size:.8rem;">{{ __('messages.select_lesson') }}</label>
-                            <select name="lesson_id" id="lessonSelect" class="form-select form-select-sm select2">
-                                <option value="">— {{ __('messages.select_lesson') }} —</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-md-4">
                 <label class="form-label">{{ __('messages.duration_minutes_label') }} <span class="text-danger">*</span></label>

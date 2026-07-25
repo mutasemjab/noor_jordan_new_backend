@@ -53,7 +53,7 @@
                     <td style="color:var(--muted)">{{ $exam->id }}</td>
                     <td>
                         <div style="font-weight:500">{{ Str::limit($exam->title_en ?: $exam->title_ar, 35) }}</div>
-                        <div style="font-size:.75rem;color:var(--muted)">{{ $exam->course->title_en ?? __('messages.standalone') }}</div>
+                        <div style="font-size:.75rem;color:var(--muted)">{{ $exam->subject?->name }}</div>
                     </td>
                     <td><span class="pill pill-info">{{ __('messages.'.$exam->exam_type) }}</span></td>
                     <td>{{ $exam->questions_count }}</td>
