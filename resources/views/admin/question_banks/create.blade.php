@@ -22,7 +22,7 @@
                         @foreach ($subjects as $subject)
                             <option value="{{ $subject->id }}"
                                 {{ old('subject_id') == $subject->id ? 'selected' : '' }}>
-                                {{ $subject->grades_label ? $subject->grades_label.' - ' : '' }}{{ $subject->name_ar }}
+                                {{ $subject->name_ar }}
                             </option>
                         @endforeach
                     </select>
