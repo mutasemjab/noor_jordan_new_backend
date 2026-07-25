@@ -29,6 +29,20 @@
                 </div>
 
                 <div class="mb-3">
+                    <label>{{ __('messages.class_label') }}</label>
+
+                    <select name="class_id" class="form-control select2">
+                        <option value="">— {{ __('messages.select_class') }} —</option>
+                        @foreach ($classes as $class)
+                            <option value="{{ $class->id }}"
+                                {{ old('class_id') == $class->id ? 'selected' : '' }}>
+                                {{ $class->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-3">
                     <label>{{ __('messages.year_label') }}</label>
 
                     <input type="number" name="year" class="form-control">

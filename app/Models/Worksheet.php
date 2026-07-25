@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Worksheet extends Model
 {
     protected $fillable = [
-        'teacher_id', 'subject_id', 'title_ar', 'title_en',
+        'teacher_id', 'subject_id', 'class_id', 'title_ar', 'title_en',
         'year', 'pages', 'file_size', 'sort_order',
         'pdf_file', 'status',
     ];
@@ -24,5 +24,10 @@ class Worksheet extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 }

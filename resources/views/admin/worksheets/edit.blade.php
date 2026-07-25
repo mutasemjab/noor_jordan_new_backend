@@ -43,6 +43,17 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ __('messages.class_label') }}</label>
+                            <select name="class_id" class="form-control select2">
+                                <option value="">— {{ __('messages.select_class') }} —</option>
+                                @foreach($classes as $class)
+                                    <option value="{{ $class->id }}" {{ old('class_id', $worksheet->class_id) == $class->id ? 'selected' : '' }}>
+                                        {{ $class->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>

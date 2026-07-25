@@ -25,6 +25,7 @@
                     <tr>
                         <th>#</th>
                         <th>{{ __('messages.subject') }}</th>
+                        <th>{{ __('messages.class_label') }}</th>
                         <th>{{ __('messages.title_ar_short') }}</th>
                         <th>{{ __('messages.title_en_short') }}</th>
                         <th>{{ __('messages.year_label') }}</th>
@@ -38,6 +39,7 @@
                     <tr>
                         <td>{{ $ws->id }}</td>
                         <td>{{ $ws->subject?->name_ar ?? '—' }}</td>
+                        <td>{{ $ws->schoolClass?->name ?? '—' }}</td>
                         <td>{{ $ws->title_ar }}</td>
                         <td>{{ $ws->title_en ?? '—' }}</td>
                         <td>{{ $ws->year ?? '—' }}</td>
@@ -64,7 +66,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="8" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_records') }}</td></tr>
+                    <tr><td colspan="9" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_records') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

@@ -22,6 +22,7 @@
                     <th>#</th>
                     <th>{{ __('messages.year_label') }}</th>
                     <th>{{ __('messages.subject') }}</th>
+                    <th>{{ __('messages.class_label') }}</th>
                     <th>{{ __('messages.title_ar_short') }}</th>
                     <th>{{ __('messages.title_en_short') }}</th>
                     <th>{{ __('messages.pdf_file_label') }}</th>
@@ -43,6 +44,8 @@
                         <td>
                             {{ $exam->subject?->name_ar }}
                         </td>
+
+                        <td>{{ $exam->schoolClass?->name ?? '—' }}</td>
 
                         <td>{{ $exam->title_ar }}</td>
 

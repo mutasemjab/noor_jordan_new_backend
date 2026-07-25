@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Worksheet;
 use Illuminate\Http\Request;
@@ -11,20 +12,22 @@ class WorksheetController extends Controller
 {
     public function index()
     {
-        $worksheets = Worksheet::with('subject')->latest()->paginate(20);
+        $worksheets = Worksheet::with(['subject', 'schoolClass'])->latest()->paginate(20);
         return view('admin.worksheets.index', compact('worksheets'));
     }
 
     public function create()
     {
         $subjects = $this->subjectsWithPath();
-        return view('admin.worksheets.create', compact('subjects'));
+        $classes  = $this->classesList();
+        return view('admin.worksheets.create', compact('subjects', 'classes'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'subject_id' => 'nullable|exists:subjects,id',
+            'class_id'   => 'nullable|exists:classes,id',
             'title_ar'   => 'required|string|max:255',
             'title_en'   => 'nullable|string|max:255',
             'year'       => 'nullable|integer|min:1900|max:2100',
@@ -39,6 +42,7 @@ class WorksheetController extends Controller
 
         Worksheet::create([
             'subject_id' => $request->subject_id,
+            'class_id'   => $request->class_id,
             'title_ar'   => $request->title_ar,
             'title_en'   => $request->title_en,
             'year'       => $request->year,
@@ -55,13 +59,15 @@ class WorksheetController extends Controller
     public function edit(Worksheet $worksheet)
     {
         $subjects = $this->subjectsWithPath();
-        return view('admin.worksheets.edit', compact('worksheet', 'subjects'));
+        $classes  = $this->classesList();
+        return view('admin.worksheets.edit', compact('worksheet', 'subjects', 'classes'));
     }
 
     public function update(Request $request, Worksheet $worksheet)
     {
         $request->validate([
             'subject_id' => 'nullable|exists:subjects,id',
+            'class_id'   => 'nullable|exists:classes,id',
             'title_ar'   => 'required|string|max:255',
             'title_en'   => 'nullable|string|max:255',
             'year'       => 'nullable|integer|min:1900|max:2100',
@@ -78,6 +84,7 @@ class WorksheetController extends Controller
 
         $worksheet->update([
             'subject_id' => $request->subject_id,
+            'class_id'   => $request->class_id,
             'title_ar'   => $request->title_ar,
             'title_en'   => $request->title_en,
             'year'       => $request->year,
@@ -99,5 +106,10 @@ class WorksheetController extends Controller
     private function subjectsWithPath(): \Illuminate\Support\Collection
     {
         return Subject::with('classes')->orderBy('name_ar')->get();
+    }
+
+    private function classesList(): \Illuminate\Support\Collection
+    {
+        return SchoolClass::where('is_active', true)->orderBy('name')->get();
     }
 }

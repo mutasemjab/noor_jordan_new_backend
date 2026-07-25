@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PreviousYearExam;
+use App\Models\SchoolClass;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,7 @@ class PreviousYearExamController extends Controller
 {
     public function index()
     {
-        $exams = PreviousYearExam::with('subject')
+        $exams = PreviousYearExam::with(['subject', 'schoolClass'])
             ->latest()
             ->paginate(20);
 
@@ -21,14 +22,16 @@ class PreviousYearExamController extends Controller
     public function create()
     {
         $subjects = $this->subjectsWithPath();
+        $classes  = $this->classesList();
 
-        return view('admin.previous_year_exams.create', compact('subjects'));
+        return view('admin.previous_year_exams.create', compact('subjects', 'classes'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
+            'class_id'   => 'nullable|exists:classes,id',
             'year'       => 'required|integer',
             'title_ar'   => 'required|string|max:255',
             'title_en'   => 'required|string|max:255',
@@ -47,6 +50,7 @@ class PreviousYearExamController extends Controller
 
         PreviousYearExam::create([
             'subject_id' => $request->subject_id,
+            'class_id'   => $request->class_id,
             'year'       => $request->year,
             'title_ar'   => $request->title_ar,
             'title_en'   => $request->title_en,
@@ -65,14 +69,16 @@ class PreviousYearExamController extends Controller
     public function edit(PreviousYearExam $previousYearExam)
     {
         $subjects = $this->subjectsWithPath();
+        $classes  = $this->classesList();
 
-        return view('admin.previous_year_exams.edit', compact('previousYearExam', 'subjects'));
+        return view('admin.previous_year_exams.edit', compact('previousYearExam', 'subjects', 'classes'));
     }
 
     public function update(Request $request, PreviousYearExam $previousYearExam)
     {
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
+            'class_id'   => 'nullable|exists:classes,id',
             'year'       => 'required|integer',
             'title_ar'   => 'required|string|max:255',
             'title_en'   => 'required|string|max:255',
@@ -89,6 +95,7 @@ class PreviousYearExamController extends Controller
 
         $previousYearExam->update([
             'subject_id' => $request->subject_id,
+            'class_id'   => $request->class_id,
             'year'       => $request->year,
             'title_ar'   => $request->title_ar,
             'title_en'   => $request->title_en,
@@ -115,5 +122,10 @@ class PreviousYearExamController extends Controller
     private function subjectsWithPath(): \Illuminate\Support\Collection
     {
         return Subject::with('classes')->orderBy('name_ar')->get();
+    }
+
+    private function classesList(): \Illuminate\Support\Collection
+    {
+        return SchoolClass::where('is_active', true)->orderBy('name')->get();
     }
 }

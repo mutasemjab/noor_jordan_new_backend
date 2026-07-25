@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuestionBank;
+use App\Models\SchoolClass;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,7 @@ class QuestionBankController extends Controller
 {
     public function index()
     {
-        $questionBanks = QuestionBank::with('subject')
+        $questionBanks = QuestionBank::with(['subject', 'schoolClass'])
             ->latest()
             ->paginate(20);
 
@@ -21,14 +22,16 @@ class QuestionBankController extends Controller
     public function create()
     {
         $subjects = $this->subjectsWithPath();
+        $classes  = $this->classesList();
 
-        return view('admin.question_banks.create', compact('subjects'));
+        return view('admin.question_banks.create', compact('subjects', 'classes'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
+            'class_id'   => 'nullable|exists:classes,id',
             'title_ar'   => 'required',
             'title_en'   => 'required',
             'pages'      => 'nullable|integer',
@@ -42,6 +45,7 @@ class QuestionBankController extends Controller
 
         QuestionBank::create([
             'subject_id' => $request->subject_id,
+            'class_id'   => $request->class_id,
             'title_ar'   => $request->title_ar,
             'title_en'   => $request->title_en,
             'pdf_file'   => $pdf,
@@ -59,14 +63,16 @@ class QuestionBankController extends Controller
     public function edit(QuestionBank $questionBank)
     {
         $subjects = $this->subjectsWithPath();
+        $classes  = $this->classesList();
 
-        return view('admin.question_banks.edit', compact('questionBank', 'subjects'));
+        return view('admin.question_banks.edit', compact('questionBank', 'subjects', 'classes'));
     }
 
     public function update(Request $request, QuestionBank $questionBank)
     {
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
+            'class_id'   => 'nullable|exists:classes,id',
             'title_ar'   => 'required',
             'title_en'   => 'required',
             'pages'      => 'nullable|integer',
@@ -82,6 +88,7 @@ class QuestionBankController extends Controller
 
         $questionBank->update([
             'subject_id' => $request->subject_id,
+            'class_id'   => $request->class_id,
             'title_ar'   => $request->title_ar,
             'title_en'   => $request->title_en,
             'pages'      => $request->pages,
@@ -107,5 +114,10 @@ class QuestionBankController extends Controller
     private function subjectsWithPath(): \Illuminate\Support\Collection
     {
         return Subject::with('classes')->orderBy('name_ar')->get();
+    }
+
+    private function classesList(): \Illuminate\Support\Collection
+    {
+        return SchoolClass::where('is_active', true)->orderBy('name')->get();
     }
 }
