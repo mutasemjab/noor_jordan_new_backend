@@ -25,11 +25,17 @@ use App\Http\Controllers\Api\Teacher\AuthController as TeacherAuthController;
 use App\Http\Controllers\Api\Teacher\AttendanceController as TeacherAttendanceController;
 use App\Http\Controllers\Api\Teacher\ChatController as TeacherChatController;
 use App\Http\Controllers\Api\Teacher\ClassController as TeacherClassController;
+use App\Http\Controllers\Api\Teacher\ClassSubjectVideoController as TeacherClassSubjectVideoController;
+use App\Http\Controllers\Api\Teacher\EducationalNoteController as TeacherEducationalNoteController;
+use App\Http\Controllers\Api\Teacher\ExamController as TeacherExamController;
 use App\Http\Controllers\Api\Teacher\FirebaseTokenController as TeacherFirebaseTokenController;
 use App\Http\Controllers\Api\Teacher\GradeController as TeacherGradeController;
 use App\Http\Controllers\Api\Teacher\HomeController as TeacherHomeController;
+use App\Http\Controllers\Api\Teacher\PreviousYearExamController as TeacherPreviousYearExamController;
 use App\Http\Controllers\Api\Teacher\ProfileController as TeacherProfileController;
+use App\Http\Controllers\Api\Teacher\QuestionBankController as TeacherQuestionBankController;
 use App\Http\Controllers\Api\Teacher\ScheduleController as TeacherScheduleController;
+use App\Http\Controllers\Api\Teacher\WorksheetController as TeacherWorksheetController;
 
 use App\Http\Controllers\Api\Chat\MediaController as ChatMediaController;
 use App\Http\Controllers\Api\Chat\NotifyController as ChatNotifyController;
@@ -165,6 +171,47 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         // Classes & students
         Route::get('my-classes',               [TeacherClassController::class, 'myClasses']);
         Route::get('classes/{class}/students', [TeacherClassController::class, 'students']);
+
+        // Educational notes (المفكرة التعليمية)
+        Route::get('classes/{class}/educational-notes', [TeacherEducationalNoteController::class, 'index']);
+        Route::post('educational-notes',                [TeacherEducationalNoteController::class, 'store']);
+        Route::put('educational-notes/{educationalNote}', [TeacherEducationalNoteController::class, 'update']);
+        Route::delete('educational-notes/{educationalNote}', [TeacherEducationalNoteController::class, 'destroy']);
+
+        // Question banks
+        Route::get('question-banks',                     [TeacherQuestionBankController::class, 'index']);
+        Route::post('question-banks',                    [TeacherQuestionBankController::class, 'store']);
+        Route::put('question-banks/{questionBank}',       [TeacherQuestionBankController::class, 'update']);
+        Route::delete('question-banks/{questionBank}',    [TeacherQuestionBankController::class, 'destroy']);
+
+        // Previous year exams
+        Route::get('previous-year-exams',                          [TeacherPreviousYearExamController::class, 'index']);
+        Route::post('previous-year-exams',                         [TeacherPreviousYearExamController::class, 'store']);
+        Route::put('previous-year-exams/{previousYearExam}',       [TeacherPreviousYearExamController::class, 'update']);
+        Route::delete('previous-year-exams/{previousYearExam}',    [TeacherPreviousYearExamController::class, 'destroy']);
+
+        // Worksheets
+        Route::get('worksheets',                 [TeacherWorksheetController::class, 'index']);
+        Route::post('worksheets',                [TeacherWorksheetController::class, 'store']);
+        Route::put('worksheets/{worksheet}',      [TeacherWorksheetController::class, 'update']);
+        Route::delete('worksheets/{worksheet}',   [TeacherWorksheetController::class, 'destroy']);
+
+        // Exams
+        Route::get('exams',           [TeacherExamController::class, 'index']);
+        Route::post('exams',          [TeacherExamController::class, 'store']);
+        Route::get('exams/{exam}',    [TeacherExamController::class, 'show']);
+        Route::put('exams/{exam}',    [TeacherExamController::class, 'update']);
+        Route::delete('exams/{exam}', [TeacherExamController::class, 'destroy']);
+
+        // Exam questions (granular add/edit/delete after creation)
+        Route::post('exams/{exam}/questions',                     [TeacherExamController::class, 'storeQuestion']);
+        Route::put('exams/{exam}/questions/{question}',           [TeacherExamController::class, 'updateQuestion']);
+        Route::delete('exams/{exam}/questions/{question}',        [TeacherExamController::class, 'destroyQuestion']);
+
+        // Educational (YouTube) videos per class/subject
+        Route::get('classes/{class}/videos',           [TeacherClassSubjectVideoController::class, 'index']);
+        Route::post('classes/{class}/videos',          [TeacherClassSubjectVideoController::class, 'store']);
+        Route::delete('classes/{class}/videos/{video}', [TeacherClassSubjectVideoController::class, 'destroy']);
 
         // Attendance
         Route::get('attendance',  [TeacherAttendanceController::class, 'index']);

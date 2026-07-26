@@ -10,7 +10,7 @@ class Exam extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'subject_id',
+        'subject_id', 'class_id', 'teacher_id',
         'title_ar', 'title_en',
         'description_ar', 'description_en',
         'exam_type', 'total_questions', 'duration_minutes',
@@ -43,6 +43,16 @@ class Exam extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
     }
 
     public function questions()
