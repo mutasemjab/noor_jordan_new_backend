@@ -36,6 +36,26 @@ class ClassController extends Controller
         return $this->success($classes);
     }
 
+    // GET /classes/{class}/subjects — subjects this teacher teaches in this specific class
+    public function subjects(Request $request, SchoolClass $class): JsonResponse
+    {
+        $teacher = $request->user();
+
+        $subjects = ClassSubject::where('teacher_id', $teacher->id)
+            ->where('class_id', $class->id)
+            ->with('subject')
+            ->get()
+            ->map(fn (ClassSubject $cs) => ['id' => $cs->subject?->id, 'name' => $cs->subject?->name])
+            ->filter(fn ($s) => $s['id'] !== null)
+            ->values();
+
+        if ($subjects->isEmpty()) {
+            return $this->error('غير مصرح بالوصول لهذا الصف.', 403);
+        }
+
+        return $this->success($subjects);
+    }
+
     public function students(Request $request, SchoolClass $class): JsonResponse
     {
         $teacher = $request->user();

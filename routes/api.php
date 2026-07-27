@@ -171,6 +171,7 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         // Classes & students
         Route::get('my-classes',               [TeacherClassController::class, 'myClasses']);
         Route::get('classes/{class}/students', [TeacherClassController::class, 'students']);
+        Route::get('classes/{class}/subjects', [TeacherClassController::class, 'subjects']);
 
         // Educational notes (المفكرة التعليمية)
         Route::get('classes/{class}/educational-notes', [TeacherEducationalNoteController::class, 'index']);
