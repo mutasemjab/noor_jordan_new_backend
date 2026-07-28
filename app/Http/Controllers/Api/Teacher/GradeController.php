@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Teacher;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponse;
 use App\Models\ClassSubject;
-use App\Models\Student;
 use App\Models\StudentGrade;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

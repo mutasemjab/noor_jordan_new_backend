@@ -31,6 +31,9 @@ class ClassController extends Controller
                 'name'           => $c->name,
                 'students_count' => $c->students_count,
                 'is_homeroom'    => $c->homeroom_teacher_id === $teacher->id,
+                'schedule_image' => $c->schedule_image
+                    ? asset('assets/uploads/schedules/' . $c->schedule_image)
+                    : null,
             ]);
 
         return $this->success($classes);

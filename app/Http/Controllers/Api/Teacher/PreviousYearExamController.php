@@ -56,8 +56,9 @@ class PreviousYearExamController extends Controller
             return $this->error('أنت لا تُدرّس هذه المادة لهذا الصف.', 403);
         }
 
-        $file = $request->file('file');
-        $pdf  = uploadImage('assets/uploads/previousYearExam', $file);
+        $file      = $request->file('file');
+        $sizeBytes = $file->getSize();
+        $pdf       = uploadImage('assets/uploads/previousYearExam', $file);
 
         $item = PreviousYearExam::create([
             'teacher_id' => $teacher->id,
@@ -67,7 +68,7 @@ class PreviousYearExamController extends Controller
             'title_ar'   => $data['title'],
             'title_en'   => null,
             'pdf_file'   => $pdf,
-            'file_size'  => round($file->getSize() / 1024 / 1024, 2),
+            'file_size'  => round($sizeBytes / 1024 / 1024, 2),
             'sort_order' => 0,
             'status'     => 1,
         ]);
@@ -97,9 +98,10 @@ class PreviousYearExamController extends Controller
         $update = ['title_ar' => $data['title'], 'year' => $data['year']];
 
         if ($request->hasFile('file')) {
-            $file = $request->file('file');
+            $file                = $request->file('file');
+            $sizeBytes           = $file->getSize();
             $update['pdf_file']  = uploadImage('assets/uploads/previousYearExam', $file);
-            $update['file_size'] = round($file->getSize() / 1024 / 1024, 2);
+            $update['file_size'] = round($sizeBytes / 1024 / 1024, 2);
         }
 
         $previousYearExam->update($update);

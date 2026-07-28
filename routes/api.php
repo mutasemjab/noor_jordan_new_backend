@@ -215,8 +215,9 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         Route::delete('classes/{class}/videos/{video}', [TeacherClassSubjectVideoController::class, 'destroy']);
 
         // Attendance
-        Route::get('attendance',  [TeacherAttendanceController::class, 'index']);
-        Route::post('attendance', [TeacherAttendanceController::class, 'store']);
+        Route::get('attendance',         [TeacherAttendanceController::class, 'index']);
+        Route::post('attendance',        [TeacherAttendanceController::class, 'store']);
+        Route::post('attendance/submit', [TeacherAttendanceController::class, 'store']);
 
         // Grades
         Route::get('grades',  [TeacherGradeController::class, 'index']);
