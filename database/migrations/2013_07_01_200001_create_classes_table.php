@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('is_active')->default(true);
+            $table->string('schedule_image')->nullable();
+            $table->foreignId('homeroom_teacher_id')->nullable()->constrained('teachers')->nullOnDelete();
             $table->timestamps();
         });
     }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('pdf_file');
             $table->boolean('status')->default(true);
             $table->foreignId('teacher_id')->nullable()->constrained()->nullOnDelete();
+             $table->foreignId('class_id')->nullable()->constrained('classes')->nullOnDelete();
 
             $table->timestamps();
         });

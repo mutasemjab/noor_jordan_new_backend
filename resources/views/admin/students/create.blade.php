@@ -74,6 +74,17 @@
                 <input type="file" name="avatar" accept="image/*" class="form-control">
             </div>
             <div class="col-12">
+                <label class="form-label">رابط موقع السكن (خرائط جوجل)</label>
+                <input type="url" name="location_url" value="{{ old('location_url') }}"
+                       class="form-control @error('location_url') is-invalid @enderror"
+                       placeholder="https://maps.google.com/... أو https://maps.app.goo.gl/...">
+                @error('location_url')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <small class="text-muted" style="font-size:.75rem">
+                    افتح موقع منزل الطالب على خرائط جوجل، اضغط "مشاركة"، وألصق الرابط هنا — بيتم استخراج
+                    الإحداثيات تلقائياً (يُستخدم لتنظيم جولات الباص).
+                </small>
+            </div>
+            <div class="col-12">
                 <button type="submit" class="btn-primary-sm"><i class="bi bi-save"></i> {{ __('messages.create_student') }}</button>
             </div>
         </div>

@@ -83,6 +83,70 @@ class GoogleMapsService
     }
 
     /**
+     * Extract {lat, lng} from a Google Maps URL pasted by an admin. Handles:
+     *  - short links (maps.app.goo.gl, goo.gl/maps) — resolved via redirect first
+     *  - "!3d..!4d.." — the exact place-pin coordinates (preferred when present)
+     *  - "@lat,lng" — the map viewport center (most copy-pasted URLs)
+     *  - "?q=lat,lng" / "?ll=lat,lng" — older query-based formats
+     *
+     * Returns null (never throws) if nothing could be extracted, so callers
+     * can surface a clear validation message instead of a 500.
+     */
+    public static function extractLatLngFromUrl(string $url): ?array
+    {
+        $url = self::resolveShortUrl($url);
+
+        if (preg_match('/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/', $url, $m)) {
+            return ['lat' => (float) $m[1], 'lng' => (float) $m[2]];
+        }
+
+        if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $m)) {
+            return ['lat' => (float) $m[1], 'lng' => (float) $m[2]];
+        }
+
+        if (preg_match('/[?&](?:q|ll|query)=(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $m)) {
+            return ['lat' => (float) $m[1], 'lng' => (float) $m[2]];
+        }
+
+        return null;
+    }
+
+    /**
+     * Follows redirects for shortened Maps links (maps.app.goo.gl, goo.gl/maps)
+     * so the full URL (containing the coordinates) can be regex-matched.
+     * Returns the original URL unchanged if it isn't a known short-link host,
+     * or if resolution fails for any reason.
+     */
+    private static function resolveShortUrl(string $url): string
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+
+        if (! $host || ! str_contains($host, 'goo.gl')) {
+            return $url;
+        }
+
+        try {
+            $current = $url;
+
+            for ($i = 0; $i < 5; $i++) {
+                $response = Http::withOptions(['allow_redirects' => false])->get($current);
+                $location = $response->header('Location');
+
+                if (! $location) {
+                    return $current;
+                }
+
+                $current = $location;
+            }
+
+            return $current;
+        } catch (\Throwable $e) {
+            Log::warning('Failed to resolve short Google Maps URL', ['url' => $url, 'error' => $e->getMessage()]);
+            return $url;
+        }
+    }
+
+    /**
      * A shareable "Get Directions" link with stops already in optimized order.
      */
     private static function buildMapsUrl(array $origin, array $destination, array $waypoints, array $order): string

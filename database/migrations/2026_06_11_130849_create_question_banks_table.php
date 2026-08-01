@@ -30,7 +30,7 @@ return new class extends Migration
 
             $table->foreignId('teacher_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('subject_id')->nullable()->constrained()->nullOnDelete();
-
+             $table->foreignId('class_id')->nullable()->constrained('classes')->nullOnDelete();
             $table->timestamps();
         });
     }

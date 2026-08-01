@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('total_marks')->nullable();
             $table->decimal('percentage', 5, 2)->nullable();
             $table->boolean('is_passed')->nullable();
-            $table->unsignedSmallInteger('time_taken_seconds')->nullable();
+            $table->unsignedInteger('time_taken_seconds')->default(0);
             $table->timestamp('started_at')->useCurrent();
             $table->timestamp('submitted_at')->nullable();
             $table->timestamps();

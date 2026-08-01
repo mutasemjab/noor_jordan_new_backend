@@ -28,6 +28,12 @@ return new class extends Migration
             $table->boolean('shuffle_questions')->default(true);
             $table->boolean('shuffle_options')->default(true);
             $table->boolean('show_result_immediately')->default(true);
+
+            $table->foreignId('class_id')->nullable()
+                ->constrained('classes')->nullOnDelete();
+            $table->foreignId('teacher_id')->nullable()
+                ->constrained('teachers')->nullOnDelete();
+                
             $table->timestamps();
             $table->softDeletes();
         });

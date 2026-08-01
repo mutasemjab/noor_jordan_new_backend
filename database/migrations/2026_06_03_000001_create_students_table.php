@@ -23,6 +23,13 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('class_id')->nullable()->constrained('classes')->nullOnDelete();
             $table->string('fcm_token')->nullable();
+
+
+            $table->decimal('home_lat', 10, 7)->nullable();
+            $table->decimal('home_lng', 10, 7)->nullable();
+            $table->enum('transport_to_school', ['walk', 'bus'])->default('walk');
+            $table->enum('transport_from_school', ['walk', 'bus'])->default('walk');
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -88,6 +88,22 @@
                             <label class="form-check-label" for="is_active">{{ __('messages.active_account') }}</label>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <label class="form-label">رابط موقع السكن (خرائط جوجل)</label>
+                        <input type="url" name="location_url" value="{{ old('location_url') }}"
+                               class="form-control @error('location_url') is-invalid @enderror"
+                               placeholder="https://maps.google.com/... أو https://maps.app.goo.gl/...">
+                        @error('location_url')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <small class="text-muted d-block mt-1" style="font-size:.75rem">
+                            @if($student->home_lat && $student->home_lng)
+                                الموقع الحالي: {{ $student->home_lat }}, {{ $student->home_lng }} —
+                                <a href="https://www.google.com/maps?q={{ $student->home_lat }},{{ $student->home_lng }}" target="_blank">عرض على الخريطة</a>.
+                                ألصق رابطاً جديداً هنا لتحديثه، أو اتركه فارغاً للإبقاء على الموقع الحالي.
+                            @else
+                                لا يوجد موقع محدد بعد. افتح موقع منزل الطالب على خرائط جوجل، اضغط "مشاركة"، وألصق الرابط هنا.
+                            @endif
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>

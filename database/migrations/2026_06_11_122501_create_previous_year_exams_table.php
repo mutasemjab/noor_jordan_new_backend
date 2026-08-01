@@ -25,6 +25,8 @@ return new class extends Migration
             $table->boolean('status')->default(true);
             $table->foreignId('teacher_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('subject_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('class_id')->nullable()->constrained('classes')->nullOnDelete();
+
             $table->timestamps();
         });
     }

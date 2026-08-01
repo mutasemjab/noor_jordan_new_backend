@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Imports\StudentsImport;
 use App\Models\SchoolClass;
 use App\Models\Student;
+use App\Services\GoogleMapsService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
@@ -37,16 +39,19 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:200',
-            'national_id' => 'nullable|string|max:50|unique:students,national_id',
-            'email'       => 'nullable|email|unique:students,email',
-            'phone'       => 'nullable|string|max:20',
-            'password'    => 'required|string|min:8|confirmed',
-            'gender'      => 'nullable|in:male,female',
-            'nationality' => 'nullable|string|max:100',
-            'class_id'    => 'nullable|exists:classes,id',
-            'avatar'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'name'         => 'required|string|max:200',
+            'national_id'  => 'nullable|string|max:50|unique:students,national_id',
+            'email'        => 'nullable|email|unique:students,email',
+            'phone'        => 'nullable|string|max:20',
+            'password'     => 'required|string|min:8|confirmed',
+            'gender'       => 'nullable|in:male,female',
+            'nationality'  => 'nullable|string|max:100',
+            'class_id'     => 'nullable|exists:classes,id',
+            'avatar'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'location_url' => 'nullable|url|max:2048',
         ]);
+
+        $this->applyLocationFromUrl($request, $data);
 
         if ($request->hasFile('avatar')) {
             $data['avatar'] = uploadImage('public/uploads/students', $request->file('avatar'));
@@ -77,19 +82,22 @@ class StudentController extends Controller
     public function update(Request $request, Student $student)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:200',
-            'national_id' => 'nullable|string|max:50|unique:students,national_id,' . $student->id,
-            'email'       => 'nullable|email|unique:students,email,' . $student->id,
-            'phone'       => 'nullable|string|max:20',
-            'password'    => 'nullable|string|min:8|confirmed',
-            'gender'      => 'nullable|in:male,female',
-            'nationality' => 'nullable|string|max:100',
-            'class_id'    => 'nullable|exists:classes,id',
-            'is_active'   => 'boolean',
-            'avatar'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
-            'siblings'    => 'nullable|array',
-            'siblings.*'  => 'exists:students,id',
+            'name'         => 'required|string|max:200',
+            'national_id'  => 'nullable|string|max:50|unique:students,national_id,' . $student->id,
+            'email'        => 'nullable|email|unique:students,email,' . $student->id,
+            'phone'        => 'nullable|string|max:20',
+            'password'     => 'nullable|string|min:8|confirmed',
+            'gender'       => 'nullable|in:male,female',
+            'nationality'  => 'nullable|string|max:100',
+            'class_id'     => 'nullable|exists:classes,id',
+            'is_active'    => 'boolean',
+            'avatar'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'siblings'     => 'nullable|array',
+            'siblings.*'   => 'exists:students,id',
+            'location_url' => 'nullable|url|max:2048',
         ]);
+
+        $this->applyLocationFromUrl($request, $data);
 
         $data['is_active'] = $request->boolean('is_active');
 
@@ -107,6 +115,32 @@ class StudentController extends Controller
 
         return redirect()->route('admin.students.index')
             ->with('success', 'تم تحديث بيانات الطالب بنجاح.');
+    }
+
+    /**
+     * Turn a pasted Google Maps link into home_lat/home_lng on $data, and
+     * drop location_url itself (it isn't a real column). Leaves any existing
+     * home_lat/home_lng untouched if no link was pasted this time.
+     */
+    private function applyLocationFromUrl(Request $request, array &$data): void
+    {
+        $url = $data['location_url'] ?? null;
+        unset($data['location_url']);
+
+        if (! $url) {
+            return;
+        }
+
+        $coords = GoogleMapsService::extractLatLngFromUrl($url);
+
+        if (! $coords) {
+            throw ValidationException::withMessages([
+                'location_url' => 'تعذر استخراج الموقع من هذا الرابط، تأكد أنه رابط صحيح من خرائط جوجل.',
+            ]);
+        }
+
+        $data['home_lat'] = $coords['lat'];
+        $data['home_lng'] = $coords['lng'];
     }
 
     public function destroy(Student $student)

@@ -16,7 +16,11 @@ class DatabaseSeeder extends Seeder
             ExamSeeder::class,
             SiteSettingSeeder::class,
 
-
+            // Bus trip planning demo data — order matters: buses + located
+            // students must exist before trips can be generated.
+            BusSeeder::class,
+            StudentLocationSeeder::class,
+            TripDemoSeeder::class,
         ]);
     }
 }
