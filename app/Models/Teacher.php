@@ -48,6 +48,11 @@ class Teacher extends Authenticatable
         return $this->hasMany(SchoolClass::class, 'homeroom_teacher_id');
     }
 
+    public function companionTrips()
+    {
+        return $this->hasMany(Trip::class, 'companion_teacher_id');
+    }
+
     public function schedules()
     {
         return $this->hasMany(ClassSchedule::class);

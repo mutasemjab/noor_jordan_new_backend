@@ -80,6 +80,24 @@
             </li>
         </ul>
 
+        <div class="nav-label">الجولات</div>
+        <ul>
+            <li class="nav-item">
+                <a href="{{ route('admin.trips.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.trips.*') ? 'active' : '' }}">
+                    <i class="nav-icon bi bi-signpost-split"></i>
+                    <span>الجولات</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('admin.buses.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.buses.*') ? 'active' : '' }}">
+                    <i class="nav-icon bi bi-truck-front"></i>
+                    <span>الباصات</span>
+                </a>
+            </li>
+        </ul>
+
         <div class="nav-label">{{ __('messages.academic') }}</div>
         <ul>
 

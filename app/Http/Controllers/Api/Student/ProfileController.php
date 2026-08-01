@@ -36,6 +36,10 @@ class ProfileController extends Controller
             'is_active'      => $student->is_active,
             'created_at'     => $student->created_at?->format('Y-m-d'),
             'stats'          => $this->stats->studentStats($student->id),
+            'home_lat'              => $student->home_lat ? (float) $student->home_lat : null,
+            'home_lng'              => $student->home_lng ? (float) $student->home_lng : null,
+            'transport_to_school'   => $student->transport_to_school,
+            'transport_from_school' => $student->transport_from_school,
         ]);
     }
 
@@ -56,6 +60,10 @@ class ProfileController extends Controller
             'avatar'        => ['sometimes', 'nullable', 'image', 'max:2048'],
             'password'      => ['sometimes', 'confirmed', Password::min(8)],
             'current_password' => ['required_with:password'],
+            'home_lat'              => ['sometimes', 'nullable', 'numeric', 'between:-90,90'],
+            'home_lng'              => ['sometimes', 'nullable', 'numeric', 'between:-180,180'],
+            'transport_to_school'   => ['sometimes', 'nullable', 'in:walk,bus'],
+            'transport_from_school' => ['sometimes', 'nullable', 'in:walk,bus'],
         ]);
 
         if (isset($validated['password'])) {
@@ -82,6 +90,10 @@ class ProfileController extends Controller
             'nationality'   => $student->nationality,
             'avatar'        => $student->avatar ? asset('assets/uploads/' . $student->avatar) : null,
             'class_id'      => $student->class_id,
+            'home_lat'              => $student->home_lat ? (float) $student->home_lat : null,
+            'home_lng'              => $student->home_lng ? (float) $student->home_lng : null,
+            'transport_to_school'   => $student->transport_to_school,
+            'transport_from_school' => $student->transport_from_school,
         ], 'تم تحديث البيانات');
     }
 

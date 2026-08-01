@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\ExamScheduleController;
 use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\BusController;
 use App\Http\Controllers\Admin\ClassSubjectVideoController;
 use App\Http\Controllers\Admin\GradeController;
 use App\Http\Controllers\Admin\PeriodSettingController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Admin\TripController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Spatie\Permission\Models\Permission;
@@ -103,6 +105,18 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         // ── Attendance ────────────────────────────────────────────────
         Route::get('attendance',  [AttendanceController::class, 'index'])->name('admin.attendance.index');
         Route::post('attendance', [AttendanceController::class, 'store'])->name('admin.attendance.store');
+
+        // ── Buses & Trips (bus route planning) ────────────────────────
+        Route::resource('buses', BusController::class, ['as' => 'admin']);
+
+        Route::get('trips',                                    [TripController::class, 'index'])->name('admin.trips.index');
+        Route::post('trips/generate',                          [TripController::class, 'generate'])->name('admin.trips.generate');
+        Route::put('trips/school-location',                    [TripController::class, 'updateSchoolLocation'])->name('admin.trips.school-location');
+        Route::get('trips/{trip}/edit',                        [TripController::class, 'edit'])->name('admin.trips.edit');
+        Route::put('trips/{trip}',                             [TripController::class, 'update'])->name('admin.trips.update');
+        Route::put('trips/{trip}/order',                       [TripController::class, 'updateOrder'])->name('admin.trips.order');
+        Route::delete('trips/{trip}/students/{student}',       [TripController::class, 'removeStudent'])->name('admin.trips.students.remove');
+        Route::delete('trips/{trip}',                          [TripController::class, 'destroy'])->name('admin.trips.destroy');
 
         // ── Grades ────────────────────────────────────────────────────
         Route::get('grades',  [GradeController::class, 'index'])->name('admin.grades.index');

@@ -18,6 +18,7 @@ class Student extends Authenticatable
         'name', 'email', 'phone', 'national_id', 'fcm_token', 'password', 'avatar',
         'date_of_birth', 'nationality', 'gender',
         'class_id', 'is_active',
+        'home_lat', 'home_lng', 'transport_to_school', 'transport_from_school',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -26,6 +27,8 @@ class Student extends Authenticatable
         'email_verified_at' => 'datetime',
         'date_of_birth'     => 'date',
         'is_active'         => 'boolean',
+        'home_lat'          => 'decimal:7',
+        'home_lng'          => 'decimal:7',
     ];
 
     public function setPasswordAttribute(string $value): void
@@ -36,6 +39,13 @@ class Student extends Authenticatable
     public function schoolClass()
     {
         return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
+
+    public function trips()
+    {
+        return $this->belongsToMany(Trip::class, 'trip_students')
+                    ->withPivot('stop_order', 'eta_minutes')
+                    ->withTimestamps();
     }
 
     public function examAttempts()

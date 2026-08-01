@@ -35,6 +35,7 @@ use App\Http\Controllers\Api\Teacher\PreviousYearExamController as TeacherPrevio
 use App\Http\Controllers\Api\Teacher\ProfileController as TeacherProfileController;
 use App\Http\Controllers\Api\Teacher\QuestionBankController as TeacherQuestionBankController;
 use App\Http\Controllers\Api\Teacher\ScheduleController as TeacherScheduleController;
+use App\Http\Controllers\Api\Teacher\TripController as TeacherTripController;
 use App\Http\Controllers\Api\Teacher\WorksheetController as TeacherWorksheetController;
 
 use App\Http\Controllers\Api\Chat\MediaController as ChatMediaController;
@@ -213,6 +214,9 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         Route::get('classes/{class}/videos',           [TeacherClassSubjectVideoController::class, 'index']);
         Route::post('classes/{class}/videos',          [TeacherClassSubjectVideoController::class, 'store']);
         Route::delete('classes/{class}/videos/{video}', [TeacherClassSubjectVideoController::class, 'destroy']);
+
+        // Bus trips (companion teacher view)
+        Route::get('my-trips', [TeacherTripController::class, 'index']);
 
         // Attendance
         Route::get('attendance',         [TeacherAttendanceController::class, 'index']);
