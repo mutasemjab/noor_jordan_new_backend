@@ -54,7 +54,18 @@ class GoogleMapsService
 
         if (($data['status'] ?? null) !== 'OK') {
             Log::error('Google Directions API error', ['status' => $data['status'] ?? null, 'body' => $data]);
-            throw new \RuntimeException('تعذر الحصول على مسار من خرائط جوجل (' . ($data['status'] ?? 'unknown') . ').');
+
+            $status  = $data['status'] ?? 'unknown';
+            $message = "تعذر الحصول على مسار من خرائط جوجل ({$status}).";
+
+            // Google usually includes the exact reason here (key restrictions,
+            // billing not enabled, API not enabled, etc.) — surface it instead
+            // of forcing a trip to the server logs to find out why.
+            if (! empty($data['error_message'])) {
+                $message .= ' — ' . $data['error_message'];
+            }
+
+            throw new \RuntimeException($message);
         }
 
         $route = $data['routes'][0];
