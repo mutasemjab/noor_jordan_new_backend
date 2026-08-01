@@ -187,21 +187,22 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">الاتجاه <span class="text-danger">*</span></label>
-                        <select name="type" class="form-select select2" required>
+                        <select name="type" class="form-select" required>
                             <option value="pickup">صباحاً (ذهاب للمدرسة)</option>
                             <option value="dropoff">عصراً (إياب للمنزل)</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">الباصات المستخدمة <span class="text-danger">*</span></label>
-                        <select name="bus_ids[]" class="form-select select2" multiple required data-placeholder="اختر باص أو أكثر">
+                        <select name="bus_ids[]" class="form-select" multiple required size="{{ max(count($buses), 4) }}">
                             @foreach($buses as $bus)
                                 <option value="{{ $bus->id }}">{{ $bus->name }} (سعة {{ $bus->capacity }})</option>
                             @endforeach
                         </select>
                         <small class="text-muted" style="font-size:.75rem">
-                            سيتم توزيع الطلاب على الباصات المختارة حسب موقعهم الجغرافي وسعة كل باص، وقد يتكرر
-                            استخدام نفس الباص لأكثر من جولة إذا زاد عدد الطلاب عن السعة الكلية.
+                            اضغط باص واحد لاختياره لحاله، أو اضغط مع الاستمرار على Ctrl (أو Cmd على ماك) لاختيار أكثر
+                            من باص. سيتم توزيع الطلاب على الباصات المختارة حسب موقعهم الجغرافي وسعة كل باص، وقد
+                            يتكرر استخدام نفس الباص لأكثر من جولة إذا زاد عدد الطلاب عن السعة الكلية.
                         </small>
                     </div>
                 </div>
