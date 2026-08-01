@@ -16,11 +16,19 @@
                 var $el = $(this);
                 if ($el.hasClass('select2-hidden-accessible')) return;
 
+                // Inside a Bootstrap modal, Select2's dropdown must be appended
+                // to the modal itself — otherwise it renders in <body> outside
+                // the modal's stacking context (clicks don't register) and
+                // Bootstrap's aria-hidden handling on the modal fights with the
+                // dropdown's focus.
+                var $modal = $el.closest('.modal');
+
                 $el.select2({
                     dir: dir,
                     width: '100%',
                     allowClear: $el.data('allow-clear') === true,
                     placeholder: $el.data('placeholder') || $el.find('option[value=""]').first().text() || null,
+                    dropdownParent: $modal.length ? $modal : $(document.body),
                 });
 
                 // Select2's own change trigger doesn't fire native events, so plain
