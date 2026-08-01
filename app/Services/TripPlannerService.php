@@ -90,7 +90,7 @@ class TripPlannerService
      */
     private function groupByCapacity(Collection $sortedStudents, Collection $orderedBuses): array
     {
-        $sequenceForBus = $orderedBuses->mapWithKeys(fn (Bus $b) => [$b->id => 1]);
+        $sequenceForBus = $orderedBuses->mapWithKeys(fn (Bus $b) => [$b->id => 1])->all();
         $busIndex        = 0;
         $currentBus      = $orderedBuses[$busIndex];
         $currentGroup    = collect();
