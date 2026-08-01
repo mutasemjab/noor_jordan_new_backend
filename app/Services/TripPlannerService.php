@@ -22,14 +22,38 @@ use Illuminate\Support\Facades\DB;
 class TripPlannerService
 {
     /**
+     * Google's Directions API allows at most 25 intermediate waypoints per
+     * request (plus origin + destination). One student in each trip is used
+     * directly as the origin/destination rather than a waypoint (see
+     * createTrip()), so the real cap on students-per-trip is 25 + 1 = 26 —
+     * regardless of how many seats the bus actually has. A bus seating more
+     * than this just needs an extra trip (sequence_number) to carry the rest.
+     */
+    private const MAX_STUDENTS_PER_TRIP = 26;
+
+    /**
      * @param  string  $type  'pickup' (morning, to school) or 'dropoff' (afternoon, from school)
      * @param  int[]  $busIds  buses to distribute students across, in the order given
+     * @param  bool  $replaceExisting  must be explicitly true to regenerate over existing
+     *               trips of this type — prevents an accidental repeat click (or a slow
+     *               request retried) from silently piling up duplicate trips and duplicate
+     *               Google Directions calls/charges on top of what's already there.
      * @return Collection<int, Trip>
+     *
+     * @throws \RuntimeException if trips of this type already exist and $replaceExisting is false
      */
-    public function generate(string $type, array $busIds): Collection
+    public function generate(string $type, array $busIds, bool $replaceExisting = false): Collection
     {
         if (! in_array($type, ['pickup', 'dropoff'], true)) {
             throw new \InvalidArgumentException('type must be pickup or dropoff.');
+        }
+
+        $existingCount = Trip::where('type', $type)->count();
+
+        if ($existingCount > 0 && ! $replaceExisting) {
+            throw new \RuntimeException(
+                "يوجد {$existingCount} جولة بهذا الاتجاه أصلاً. أكّد الاستبدال لتوليدها من جديد (سيتم حذف الجولات الحالية وأي تعديل يدوي عليها)."
+            );
         }
 
         $buses = Bus::whereIn('id', $busIds)->where('is_active', true)->get()->keyBy('id');
@@ -70,7 +94,16 @@ class TripPlannerService
 
         $school = ['lat' => $schoolLat, 'lng' => $schoolLng];
 
-        return DB::transaction(function () use ($groups, $type, $school) {
+        return DB::transaction(function () use ($groups, $type, $school, $replaceExisting) {
+            // Only clear old trips once we're actually about to commit new ones —
+            // if Google errors out mid-way, the transaction rolls back and the
+            // previous trips (and any manual edits on them) are left intact.
+            if ($replaceExisting) {
+                // trip_students cascades at the DB level (see its migration),
+                // so a plain bulk delete is sufficient here.
+                Trip::where('type', $type)->delete();
+            }
+
             $created = collect();
 
             foreach ($groups as $group) {
@@ -82,9 +115,11 @@ class TripPlannerService
     }
 
     /**
-     * Round-robins groups of up to each bus's capacity across the given buses,
-     * in sweep (bearing) order. A bus is reused (sequence_number++) once every
-     * bus has taken a turn and students remain.
+     * Round-robins groups of up to each bus's capacity (capped at
+     * MAX_STUDENTS_PER_TRIP — Google's waypoint limit, which can be lower than
+     * the bus's actual seat count) across the given buses, in sweep (bearing)
+     * order. A bus is reused (sequence_number++) once every bus has taken a
+     * turn and students remain.
      *
      * @return array<int, array{bus: Bus, sequence: int, students: Collection}>
      */
@@ -97,7 +132,9 @@ class TripPlannerService
         $groups          = [];
 
         foreach ($sortedStudents as $student) {
-            if ($currentGroup->count() >= $currentBus->capacity) {
+            $effectiveCapacity = min($currentBus->capacity, self::MAX_STUDENTS_PER_TRIP);
+
+            if ($currentGroup->count() >= $effectiveCapacity) {
                 $groups[] = ['bus' => $currentBus, 'sequence' => $sequenceForBus[$currentBus->id], 'students' => $currentGroup];
                 $sequenceForBus[$currentBus->id]++;
 

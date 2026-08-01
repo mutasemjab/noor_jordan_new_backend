@@ -178,7 +178,7 @@
 <div class="modal fade" id="generateModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.trips.generate') }}" method="POST">
+            <form action="{{ route('admin.trips.generate') }}" method="POST" onsubmit="return onGenerateSubmit(this)">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title">توليد جولات جديدة</h5>
@@ -205,14 +205,46 @@
                             يتكرر استخدام نفس الباص لأكثر من جولة إذا زاد عدد الطلاب عن السعة الكلية.
                         </small>
                     </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="replace_existing" value="1" id="replace_existing">
+                        <label class="form-check-label" for="replace_existing" style="font-size:.85rem">
+                            استبدال الجولات الحالية لهذا الاتجاه (إن وجدت)
+                        </label>
+                    </div>
+                    <div class="alert alert-warning mt-3 mb-0" style="font-size:.78rem;padding:.6rem .8rem">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        كل عملية توليد تستدعي خرائط جوجل مرة واحدة تقريباً لكل جولة ناتجة (وليس لكل طالب) — تكلفة
+                        بسيطة جداً، بس تجنّب الضغط على "توليد" أكتر من مرة بدون داعي. إذا كانت الجولات موجودة أصلاً
+                        ولم تُفعّل "استبدال"، ما رح يصير أي شي وما رح يتم استدعاء جوجل نهائياً.
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-outline-sm" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn-primary-sm"><i class="bi bi-magic"></i> توليد</button>
+                    <button type="submit" class="btn-primary-sm" id="generateSubmitBtn"><i class="bi bi-magic"></i> توليد</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+function onGenerateSubmit(form) {
+    var replacing = form.querySelector('#replace_existing').checked;
+
+    if (replacing && !confirm('سيتم حذف كل الجولات الحالية بنفس الاتجاه، وأي تعديل يدوي عليها (مرافق، ترتيب، طلاب مُزالين). متابعة؟')) {
+        return false;
+    }
+
+    // Prevent double-submit (double-click, slow network) from firing a second
+    // Google Directions batch on top of the first.
+    var btn = document.getElementById('generateSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> جارٍ التوليد...';
+
+    return true;
+}
+</script>
+@endpush
 
 @endsection

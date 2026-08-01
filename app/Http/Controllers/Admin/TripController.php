@@ -41,13 +41,14 @@ class TripController extends Controller
     public function generate(Request $request)
     {
         $data = $request->validate([
-            'type'       => 'required|in:pickup,dropoff',
-            'bus_ids'    => 'required|array|min:1',
-            'bus_ids.*'  => 'exists:buses,id',
+            'type'             => 'required|in:pickup,dropoff',
+            'bus_ids'          => 'required|array|min:1',
+            'bus_ids.*'        => 'exists:buses,id',
+            'replace_existing' => 'boolean',
         ]);
 
         try {
-            $trips = $this->planner->generate($data['type'], $data['bus_ids']);
+            $trips = $this->planner->generate($data['type'], $data['bus_ids'], $request->boolean('replace_existing'));
         } catch (\Throwable $e) {
             return back()->with('error', $e->getMessage());
         }
