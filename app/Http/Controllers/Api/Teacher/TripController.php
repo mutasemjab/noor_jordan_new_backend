@@ -203,7 +203,7 @@ class TripController extends Controller
                 'home_lng'    => (float) $s->home_lng,
                 'stop_order'  => $s->pivot->stop_order,
                 'eta_minutes' => $s->pivot->eta_minutes,
-                'arrived_at'  => $s->pivot->arrived_at,
+                'arrived_at'  => $s->pivot->arrived_at ? \Carbon\Carbon::parse($s->pivot->arrived_at)->toIso8601String() : null,
             ])->values(),
         ];
     }

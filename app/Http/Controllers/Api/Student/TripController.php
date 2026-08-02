@@ -42,7 +42,7 @@ class TripController extends Controller
                 ] : null,
                 'my_stop_order'    => $pivot->stop_order,
                 'my_eta_minutes'   => $pivot->eta_minutes,
-                'arrived_at_me'    => $pivot->arrived_at,
+                'arrived_at_me'    => $pivot->arrived_at ? \Carbon\Carbon::parse($pivot->arrived_at)->toIso8601String() : null,
             ],
             'school' => [
                 'lat' => (float) SiteSetting::raw('school_lat'),
