@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\Student\ProfileController;
 use App\Http\Controllers\Api\Student\QuestionBankController;
 use App\Http\Controllers\Api\Student\ScheduleController as StudentScheduleController;
 use App\Http\Controllers\Api\Student\TeacherController;
+use App\Http\Controllers\Api\Student\TripController as StudentTripController;
 use App\Http\Controllers\Api\Student\WorksheetController;
 
 use App\Http\Controllers\Api\Teacher\AnnouncementController as TeacherAnnouncementController;
@@ -104,6 +105,9 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
 
         // Firebase (chat) custom token
         Route::get('firebase-token', [StudentFirebaseTokenController::class, 'show']);
+
+        // Live bus trip (companion teacher's location + "bus is close" tracking)
+        Route::get('my-trip', [StudentTripController::class, 'show']);
 
         // Attendance
         Route::get('my-attendance', [StudentAttendanceController::class, 'index']);
@@ -216,7 +220,11 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         Route::delete('classes/{class}/videos/{video}', [TeacherClassSubjectVideoController::class, 'destroy']);
 
         // Bus trips (companion teacher view)
-        Route::get('my-trips', [TeacherTripController::class, 'index']);
+        Route::get('my-trips',                          [TeacherTripController::class, 'index']);
+        Route::post('trips/{trip}/start',                [TeacherTripController::class, 'start']);
+        Route::post('trips/{trip}/location',              [TeacherTripController::class, 'location']);
+        Route::post('trips/{trip}/students/{student}/arrived', [TeacherTripController::class, 'markArrived']);
+        Route::post('trips/{trip}/complete',              [TeacherTripController::class, 'complete']);
 
         // Attendance
         Route::get('attendance',         [TeacherAttendanceController::class, 'index']);

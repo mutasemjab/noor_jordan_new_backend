@@ -158,6 +158,25 @@ class GoogleMapsService
     }
 
     /**
+     * Straight-line distance in meters between two points (haversine). Good
+     * enough for "is the bus close to this house" proximity checks — cheap,
+     * no API call, no cost — even though it under-counts actual road distance.
+     */
+    public static function distanceMeters(float $lat1, float $lng1, float $lat2, float $lng2): float
+    {
+        $earthRadius = 6371000;
+
+        $lat1r = deg2rad($lat1);
+        $lat2r = deg2rad($lat2);
+        $dLat  = deg2rad($lat2 - $lat1);
+        $dLng  = deg2rad($lng2 - $lng1);
+
+        $a = sin($dLat / 2) ** 2 + cos($lat1r) * cos($lat2r) * sin($dLng / 2) ** 2;
+
+        return $earthRadius * 2 * atan2(sqrt($a), sqrt(1 - $a));
+    }
+
+    /**
      * A shareable "Get Directions" link with stops already in optimized order.
      */
     private static function buildMapsUrl(array $origin, array $destination, array $waypoints, array $order): string
