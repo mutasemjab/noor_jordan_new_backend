@@ -34,10 +34,23 @@ class FCMController
                     'token'        => $fcmToken,
                     'notification' => ['title' => $title, 'body' => $body],
                     'data'         => ['screen' => $screen, 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'],
-                    'android'      => ['priority' => 'high'],
-                    'apns'         => [
+                    'android'      => [
+                        'priority'     => 'high',
+                        'notification' => [
+                            'sound'        => 'custom_sound',
+                            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                            'channel_id'   => 'high_importance_channel',
+                        ],
+                    ],
+                    'apns' => [
                         'headers' => ['apns-priority' => '10'],
-                        'payload' => ['aps' => ['sound' => 'default', 'badge' => 1]],
+                        'payload' => [
+                            'aps' => [
+                                'sound'              => 'custom_sound.caf',
+                                'badge'              => 1,
+                                'content-available'  => 1,
+                            ],
+                        ],
                     ],
                 ],
             ]);
