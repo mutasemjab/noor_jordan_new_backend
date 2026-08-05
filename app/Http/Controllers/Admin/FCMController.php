@@ -16,7 +16,7 @@ class FCMController
     public static function sendToToken(string $title, string $body, string $fcmToken, string $screen = 'home'): bool
     {
         $credentialsPath = base_path(env('FIREBASE_CREDENTIALS_PATH', ''));
-        if (! $credentialsPath || ! file_exists($credentialsPath)) {
+        if (! $credentialsPath || ! is_file($credentialsPath)) {
             Log::warning('FCM: credentials file not found');
             return false;
         }
@@ -129,6 +129,9 @@ class FCMController
             // Push via FCM if token exists
             if ($student->fcm_token) {
                 self::sendToToken($title, $body, $student->fcm_token, $screen) ? $sent++ : $failed++;
+            } else {
+                Log::warning("FCM: skipped student {$student->id}, no fcm_token on file");
+                $failed++;
             }
         }
 
