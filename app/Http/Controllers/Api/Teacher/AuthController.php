@@ -16,8 +16,9 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $request->validate([
-            'national_id'    => ['required', 'string'],
-            'password' => ['required'],
+            'national_id' => ['required', 'string'],
+            'password'    => ['required'],
+            'fcm_token'   => ['nullable', 'string'],
         ]);
 
         $teacher = Teacher::where('national_id', $request->national_id)->first();
@@ -28,6 +29,12 @@ class AuthController extends Controller
 
         if (! $teacher->is_active) {
             return $this->error('الحساب موقوف، تواصل مع الإدارة', 403);
+        }
+
+        // Save FCM token if sent from mobile
+        if ($request->filled('fcm_token')) {
+            $teacher->fcm_token = $request->fcm_token;
+            $teacher->save();
         }
 
         $token = $teacher->createToken('teacher-app')->plainTextToken;

@@ -18,6 +18,7 @@ class AuthController extends Controller
         $request->validate([
             'national_id' => ['required', 'string'],
             'password'    => ['required'],
+            'fcm_token'   => ['nullable', 'string'],
         ]);
 
         $student = Student::where('national_id', $request->national_id)->first();
@@ -28,6 +29,12 @@ class AuthController extends Controller
 
         if (! $student->is_active) {
             return $this->error('الحساب موقوف، تواصل مع الإدارة', 403);
+        }
+
+        // Save FCM token
+        if ($request->filled('fcm_token')) {
+            $student->fcm_token = $request->fcm_token;
+            $student->save();
         }
 
         $token = $student->createToken('student-app')->plainTextToken;
@@ -94,7 +101,7 @@ class AuthController extends Controller
             'class_id'    => $student->class_id,
             'gender'      => $student->gender,
             'is_active'   => $student->is_active,
-            'siblings'    => $student->siblings->map(fn ($s) => [
+            'siblings'    => $student->siblings->map(fn($s) => [
                 'id'     => $s->id,
                 'name'   => $s->name,
                 'avatar' => $s->avatar ? asset('assets/uploads/students/' . $s->avatar) : null,
