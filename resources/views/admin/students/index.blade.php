@@ -66,24 +66,24 @@
 </div>
 
 <div class="panel-card">
-    <div class="panel-card-body p-0">
-        <table class="data-table">
+    <div class="panel-card-body p-0" style="overflow-x:auto">
+        <table class="data-table" style="min-width:600px">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th class="d-none d-md-table-cell">#</th>
                     <th>{{ __('messages.student') }}</th>
-                    <th>{{ __('messages.phone_label') }}</th>
-                    <th>العقد</th>
+                    <th class="d-none d-sm-table-cell">{{ __('messages.phone_label') }}</th>
+                    <th class="d-none d-lg-table-cell">العقد</th>
                     <th>{{ __('messages.Status') }}</th>
-                    <th>الرقم الوطني</th>
-                    <th>الصف</th>
+                    <th class="d-none d-md-table-cell">الرقم الوطني</th>
+                    <th class="d-none d-sm-table-cell">الصف</th>
                     <th>{{ __('messages.Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($students as $student)
                 <tr>
-                    <td style="color:var(--muted)">{{ $student->id }}</td>
+                    <td class="d-none d-md-table-cell" style="color:var(--muted)">{{ $student->id }}</td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
                             @if($student->avatar)
@@ -94,18 +94,19 @@
                             <div>
                                 <div style="font-weight:500">{{ $student->name }}</div>
                                 <div style="font-size:.75rem;color:var(--muted)">{{ $student->email }}</div>
+                                <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $student->schoolClass->name ?? '' }}</div>
                             </div>
                         </div>
                     </td>
-                    <td style="color:var(--muted)">{{ $student->phone ?: '—' }}</td>
-                    <td>
+                    <td class="d-none d-sm-table-cell" style="color:var(--muted)">{{ $student->phone ?: '—' }}</td>
+                    <td class="d-none d-lg-table-cell">
                         <a href="{{ route('admin.students.contract', $student->id) }}" class="btn-outline-sm" style="padding:4px 10px;font-size:.78rem">
                             <i class="bi bi-file-earmark-text"></i> عقد
                         </a>
                     </td>
                     <td><span class="pill {{ $student->is_active ? 'pill-success' : 'pill-neutral' }}">{{ $student->is_active ? __('messages.Active') : __('messages.Inactive') }}</span></td>
-                    <td style="color:var(--muted)">{{ $student->national_id ?: '—' }}</td>
-                    <td style="color:var(--muted)">{{ $student->schoolClass->name ?? '—' }}</td>
+                    <td class="d-none d-md-table-cell" style="color:var(--muted)">{{ $student->national_id ?: '—' }}</td>
+                    <td class="d-none d-sm-table-cell" style="color:var(--muted)">{{ $student->schoolClass->name ?? '—' }}</td>
                     <td>
                         <div class="d-flex gap-1">
                             <button type="button"
@@ -126,7 +127,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_students_found') }}</td></tr>
+                <tr><td colspan="8" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_students_found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
