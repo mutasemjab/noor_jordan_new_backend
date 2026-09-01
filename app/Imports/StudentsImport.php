@@ -34,7 +34,7 @@ class StudentsImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
             $rowNum = $index + 2; // +2 because row 1 is headers
 
             $name       = trim($row['الاسم']          ?? $row['name']        ?? '');
-            $nationalId = trim($row['الرقم_الوطني']   ?? $row['national_id'] ?? '');
+            $nationalId = trim($row['الرقم_الوطني'] ?? $row['national_id'] ?? $row['identity_number'] ?? '');
             $email      = trim($row['البريد_الإلكتروني'] ?? $row['email']    ?? '');
             $phone      = trim($row['الهاتف']          ?? $row['phone']      ?? '');
             $password        = trim($row['كلمة_المرور']     ?? $row['password']   ?? 'Pass@1234');
