@@ -5,10 +5,8 @@ namespace App\Imports;
 use App\Models\SchoolClass;
 use App\Models\Student;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
 class StudentsImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
@@ -39,8 +37,9 @@ class StudentsImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
             $nationalId = trim($row['الرقم_الوطني']   ?? $row['national_id'] ?? '');
             $email      = trim($row['البريد_الإلكتروني'] ?? $row['email']    ?? '');
             $phone      = trim($row['الهاتف']          ?? $row['phone']      ?? '');
-            $password   = trim($row['كلمة_المرور']     ?? $row['password']   ?? 'Pass@1234');
-            $className  = trim($row['الصف']            ?? $row['class']      ?? '');
+            $password        = trim($row['كلمة_المرور']     ?? $row['password']   ?? 'Pass@1234');
+            $className       = trim($row['الصف']            ?? $row['class']      ?? '');
+            $rowClassId      = isset($row['class_id']) && $row['class_id'] !== '' ? (int) $row['class_id'] : null;
 
             if (empty($name)) {
                 $this->skipped++;
@@ -61,8 +60,8 @@ class StudentsImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
                 continue;
             }
 
-            // Injected class_id takes priority; fallback to class name from the row
-            $classId = $this->classId ?? ($className ? ($this->classMap[$className] ?? null) : null);
+            // Priority: injected class_id → row's class_id column → class name lookup
+            $classId = $this->classId ?? $rowClassId ?? ($className ? ($this->classMap[$className] ?? null) : null);
 
             Student::create([
                 'name'        => $name,
