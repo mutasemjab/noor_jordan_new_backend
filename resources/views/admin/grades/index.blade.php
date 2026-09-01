@@ -84,14 +84,14 @@
                 علامات {{ $selectedClass->name }} — {{ $selectedSubject->name_ar }}
             </h2>
         </div>
-        <div class="panel-card-body p-0">
-            <table class="data-table">
+        <div class="panel-card-body p-0" style="overflow-x:auto">
+            <table class="data-table" style="min-width:480px">
                 <thead>
                     <tr>
                         <th>الطالب</th>
                         <th>العلامة</th>
-                        <th>النسبة %</th>
-                        <th>اختبارات سابقة</th>
+                        <th class="d-none d-sm-table-cell">النسبة %</th>
+                        <th class="d-none d-md-table-cell">اختبارات سابقة</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,13 +109,13 @@
                                    class="form-control form-control-sm"
                                    min="0" step="0.5" placeholder="—">
                         </td>
-                        <td id="pct-{{ $student->id }}" style="color:var(--muted);font-size:.82rem">
+                        <td class="d-none d-sm-table-cell" id="pct-{{ $student->id }}" style="color:var(--muted);font-size:.82rem">
                             @if($lastGrade)
                                 {{ $lastGrade->percentage }}%
                             @else —
                             @endif
                         </td>
-                        <td style="font-size:.78rem;color:var(--muted)">
+                        <td class="d-none d-md-table-cell" style="font-size:.78rem;color:var(--muted)">
                             @foreach($studentGrades as $g)
                                 <span class="pill pill-neutral" style="font-size:.68rem">{{ $g->title }}: {{ $g->score }}/{{ $g->max_score }}</span>
                             @endforeach

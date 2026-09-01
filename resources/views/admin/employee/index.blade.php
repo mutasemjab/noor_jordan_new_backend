@@ -46,14 +46,14 @@
                         </div>
 
                         @can('employee-table')
-                            <div class="table-responsive">
-                                <table class="table table-centered table-nowrap table-hover mb-0">
+                            <div style="overflow-x:auto">
+                                <table class="table table-centered table-nowrap table-hover mb-0" style="min-width:480px">
                                     <thead class="thead-light">
 
                                         <tr>
 
                                             <th>{{ __('messages.name_field') }}</th>
-                                            <th>{{ __('messages.user_name_col') }}</th>
+                                            <th class="d-none d-sm-table-cell">{{ __('messages.user_name_col') }}</th>
                                             <th style="width: 82px;">{{ __('messages.action') }}</th>
                                         </tr>
                                     </thead>
@@ -61,8 +61,11 @@
                                         @foreach ($data as $value)
                                             <tr>
 
-                                                <td><span class="font-weight-bold">{{ $value->name }}</span></td>
-                                                <td><span class="font-weight-bold">{{ $value->username }}</span></td>
+                                                <td>
+                                                    <span class="font-weight-bold">{{ $value->name }}</span>
+                                                    <div class="d-sm-none" style="font-size:.72rem;color:#888">{{ $value->username }}</div>
+                                                </td>
+                                                <td class="d-none d-sm-table-cell"><span class="font-weight-bold">{{ $value->username }}</span></td>
                                                 <td>
                                                     @can('employee-edit')
                                                         <a class="btn btn-sm btn-outline-info"

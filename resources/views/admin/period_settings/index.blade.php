@@ -20,19 +20,19 @@
     <div class="col-12 col-xl-8">
         <div class="panel-card">
             <div class="panel-card-header"><h2 class="panel-card-title">الحصص الحالية ({{ $periods->count() }})</h2></div>
-            <div class="panel-card-body p-0">
-                <table class="data-table">
+            <div class="panel-card-body p-0" style="overflow-x:auto">
+                <table class="data-table" style="min-width:520px">
                     <thead>
-                        <tr><th>رقم الحصة</th><th>الاسم</th><th>من</th><th>إلى</th><th>المدة</th><th></th></tr>
+                        <tr><th>رقم الحصة</th><th>الاسم</th><th class="d-none d-sm-table-cell">من</th><th class="d-none d-sm-table-cell">إلى</th><th class="d-none d-md-table-cell">المدة</th><th></th></tr>
                     </thead>
                     <tbody>
                         @forelse($periods as $period)
                         <tr>
                             <td><span class="pill pill-neutral">{{ $period->period_number }}</span></td>
                             <td style="font-weight:600">{{ $period->label }}</td>
-                            <td style="font-family:monospace">{{ \Carbon\Carbon::parse($period->start_time)->format('H:i') }}</td>
-                            <td style="font-family:monospace">{{ \Carbon\Carbon::parse($period->end_time)->format('H:i') }}</td>
-                            <td style="color:var(--muted);font-size:.82rem">
+                            <td class="d-none d-sm-table-cell" style="font-family:monospace">{{ \Carbon\Carbon::parse($period->start_time)->format('H:i') }}</td>
+                            <td class="d-none d-sm-table-cell" style="font-family:monospace">{{ \Carbon\Carbon::parse($period->end_time)->format('H:i') }}</td>
+                            <td class="d-none d-md-table-cell" style="color:var(--muted);font-size:.82rem">
                                 @php
                                     $start = \Carbon\Carbon::parse($period->start_time);
                                     $end   = \Carbon\Carbon::parse($period->end_time);
@@ -80,7 +80,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6" class="text-center py-4" style="color:var(--muted)">لم تُضف أي حصص بعد.</td></tr>
+                        <tr><td colspan="3" class="text-center py-4" style="color:var(--muted)">لم تُضف أي حصص بعد.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

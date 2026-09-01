@@ -18,18 +18,17 @@
 @endif
 
 <div class="panel-card">
-    <div class="panel-card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered mb-0">
+    <div class="panel-card-body p-0" style="overflow-x:auto">
+        <table class="table table-bordered mb-0" style="min-width:580px">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>{{ __('messages.subject') }}</th>
-                        <th>{{ __('messages.class_label') }}</th>
+                        <th class="d-none d-md-table-cell">#</th>
+                        <th class="d-none d-sm-table-cell">{{ __('messages.subject') }}</th>
+                        <th class="d-none d-sm-table-cell">{{ __('messages.class_label') }}</th>
                         <th>{{ __('messages.title_ar_short') }}</th>
-                        <th>{{ __('messages.title_en_short') }}</th>
-                        <th>{{ __('messages.year_label') }}</th>
-                        <th>{{ __('messages.pdf_file_label') }}</th>
+                        <th class="d-none d-lg-table-cell">{{ __('messages.title_en_short') }}</th>
+                        <th class="d-none d-md-table-cell">{{ __('messages.year_label') }}</th>
+                        <th class="d-none d-md-table-cell">{{ __('messages.pdf_file_label') }}</th>
                         <th>{{ __('messages.Status') }}</th>
                         <th width="150">{{ __('messages.Actions') }}</th>
                     </tr>
@@ -37,13 +36,16 @@
                 <tbody>
                     @forelse($worksheets as $ws)
                     <tr>
-                        <td>{{ $ws->id }}</td>
-                        <td>{{ $ws->subject?->name_ar ?? '—' }}</td>
-                        <td>{{ $ws->schoolClass?->name ?? '—' }}</td>
-                        <td>{{ $ws->title_ar }}</td>
-                        <td>{{ $ws->title_en ?? '—' }}</td>
-                        <td>{{ $ws->year ?? '—' }}</td>
+                        <td class="d-none d-md-table-cell">{{ $ws->id }}</td>
+                        <td class="d-none d-sm-table-cell">{{ $ws->subject?->name_ar ?? '—' }}</td>
+                        <td class="d-none d-sm-table-cell">{{ $ws->schoolClass?->name ?? '—' }}</td>
                         <td>
+                            {{ $ws->title_ar }}
+                            <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $ws->subject?->name_ar ?? '' }} — {{ $ws->schoolClass?->name ?? '' }}</div>
+                        </td>
+                        <td class="d-none d-lg-table-cell">{{ $ws->title_en ?? '—' }}</td>
+                        <td class="d-none d-md-table-cell">{{ $ws->year ?? '—' }}</td>
+                        <td class="d-none d-md-table-cell">
                             <a href="{{ asset('assets/uploads/worksheets/'.$ws->pdf_file) }}" target="_blank">
                                 <i class="bi bi-file-earmark-pdf text-danger"></i> {{ __('messages.view_pdf') }}
                             </a>
@@ -66,11 +68,10 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="9" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_records') }}</td></tr>
+                    <tr><td colspan="3" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_records') }}</td></tr>
                     @endforelse
                 </tbody>
-            </table>
-        </div>
+        </table>
         <div class="p-3">{{ $worksheets->links() }}</div>
     </div>
 </div>

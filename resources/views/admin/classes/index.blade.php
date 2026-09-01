@@ -18,14 +18,14 @@
 @endif
 
 <div class="panel-card">
-    <div class="panel-card-body p-0">
-        <table class="data-table">
+    <div class="panel-card-body p-0" style="overflow-x:auto">
+        <table class="data-table" style="min-width:560px">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th class="d-none d-md-table-cell">#</th>
                     <th>اسم الصف</th>
-                    <th>مربي الصف</th>
-                    <th>عدد الطلاب</th>
+                    <th class="d-none d-sm-table-cell">مربي الصف</th>
+                    <th class="d-none d-md-table-cell">عدد الطلاب</th>
                     <th>الحالة</th>
                     <th>إجراءات</th>
                 </tr>
@@ -33,16 +33,20 @@
             <tbody>
                 @forelse($classes as $class)
                 <tr>
-                    <td style="color:var(--muted)">{{ $class->id }}</td>
-                    <td style="font-weight:600">{{ $class->name }}</td>
-                    <td>
+                    <td class="d-none d-md-table-cell" style="color:var(--muted)">{{ $class->id }}</td>
+                    <td style="font-weight:600">{{ $class->name }}
+                        <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">
+                            {{ $class->homeroomTeacher->name ?? 'غير محدد' }}
+                        </div>
+                    </td>
+                    <td class="d-none d-sm-table-cell">
                         @if($class->homeroomTeacher)
                             <span style="font-size:.88rem">{{ $class->homeroomTeacher->name }}</span>
                         @else
                             <span style="color:var(--muted);font-size:.82rem">غير محدد</span>
                         @endif
                     </td>
-                    <td>
+                    <td class="d-none d-md-table-cell">
                         <span class="pill pill-neutral">{{ $class->students_count }} طالب</span>
                     </td>
                     <td>
@@ -75,7 +79,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="text-center py-4" style="color:var(--muted)">لا توجد صفوف دراسية. أضف صفاً جديداً.</td></tr>
+                <tr><td colspan="3" class="text-center py-4" style="color:var(--muted)">لا توجد صفوف دراسية. أضف صفاً جديداً.</td></tr>
                 @endforelse
             </tbody>
         </table>

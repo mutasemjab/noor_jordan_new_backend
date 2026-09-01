@@ -13,19 +13,19 @@
         </a>
     </div>
 
-    <div class="card-body">
+    <div class="card-body" style="overflow-x:auto">
 
-        <table class="table table-bordered">
+        <table class="table table-bordered" style="min-width:600px">
 
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>{{ __('messages.year_label') }}</th>
-                    <th>{{ __('messages.subject') }}</th>
-                    <th>{{ __('messages.class_label') }}</th>
+                    <th class="d-none d-md-table-cell">#</th>
+                    <th class="d-none d-sm-table-cell">{{ __('messages.year_label') }}</th>
+                    <th class="d-none d-sm-table-cell">{{ __('messages.subject') }}</th>
+                    <th class="d-none d-md-table-cell">{{ __('messages.class_label') }}</th>
                     <th>{{ __('messages.title_ar_short') }}</th>
-                    <th>{{ __('messages.title_en_short') }}</th>
-                    <th>{{ __('messages.pdf_file_label') }}</th>
+                    <th class="d-none d-lg-table-cell">{{ __('messages.title_en_short') }}</th>
+                    <th class="d-none d-md-table-cell">{{ __('messages.pdf_file_label') }}</th>
                     <th>{{ __('messages.Status') }}</th>
                     <th width="180">{{ __('messages.Actions') }}</th>
                 </tr>
@@ -37,21 +37,24 @@
 
                     <tr>
 
-                        <td>{{ $exam->id }}</td>
+                        <td class="d-none d-md-table-cell">{{ $exam->id }}</td>
 
-                        <td>{{ $exam->year }}</td>
+                        <td class="d-none d-sm-table-cell">{{ $exam->year }}</td>
 
-                        <td>
+                        <td class="d-none d-sm-table-cell">
                             {{ $exam->subject?->name_ar }}
                         </td>
 
-                        <td>{{ $exam->schoolClass?->name ?? '—' }}</td>
-
-                        <td>{{ $exam->title_ar }}</td>
-
-                        <td>{{ $exam->title_en }}</td>
+                        <td class="d-none d-md-table-cell">{{ $exam->schoolClass?->name ?? '—' }}</td>
 
                         <td>
+                            {{ $exam->title_ar }}
+                            <div class="d-sm-none" style="font-size:.72rem;color:#888">{{ $exam->subject?->name_ar }} — {{ $exam->year }}</div>
+                        </td>
+
+                        <td class="d-none d-lg-table-cell">{{ $exam->title_en }}</td>
+
+                        <td class="d-none d-md-table-cell">
                             <a href="{{ asset('assets/uploads/previousYearExam/'.$exam->pdf_file) }}"
                                target="_blank">
                                 {{ __('messages.view_pdf') }}

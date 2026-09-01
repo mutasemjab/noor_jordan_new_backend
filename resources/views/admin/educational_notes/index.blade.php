@@ -69,36 +69,39 @@
 
 <div class="panel-card">
     <div class="panel-card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered mb-0">
+        <div style="overflow-x:auto">
+            <table class="table table-bordered mb-0" style="min-width:600px">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>{{ __('messages.note_type') }}</th>
+                        <th class="d-none d-md-table-cell">#</th>
+                        <th class="d-none d-sm-table-cell">{{ __('messages.note_type') }}</th>
                         <th>{{ __('messages.title') }}</th>
-                        <th>{{ __('messages.teacher') }}</th>
-                        <th>{{ __('messages.class_label') }}</th>
-                        <th>{{ __('messages.date_label') }}</th>
-                        <th>{{ __('messages.attachment_label') }}</th>
+                        <th class="d-none d-md-table-cell">{{ __('messages.teacher') }}</th>
+                        <th class="d-none d-sm-table-cell">{{ __('messages.class_label') }}</th>
+                        <th class="d-none d-lg-table-cell">{{ __('messages.date_label') }}</th>
+                        <th class="d-none d-lg-table-cell">{{ __('messages.attachment_label') }}</th>
                         <th width="150">{{ __('messages.Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($notes as $note)
                     <tr>
-                        <td>{{ $note->id }}</td>
-                        <td>
+                        <td class="d-none d-md-table-cell">{{ $note->id }}</td>
+                        <td class="d-none d-sm-table-cell">
                             @if($note->type === 'lesson')
                                 <span class="pill pill-info">{{ __('messages.note_type_lesson') }}</span>
                             @else
                                 <span class="pill pill-warning">{{ __('messages.note_type_homework') }}</span>
                             @endif
                         </td>
-                        <td>{{ $note->title }}</td>
-                        <td>{{ $note->teacher?->name ?? '—' }}</td>
-                        <td>{{ $note->schoolClass?->name ?? '—' }}</td>
-                        <td>{{ $note->date?->format('Y-m-d') }}</td>
                         <td>
+                            {{ $note->title }}
+                            <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $note->schoolClass?->name ?? '' }}</div>
+                        </td>
+                        <td class="d-none d-md-table-cell">{{ $note->teacher?->name ?? '—' }}</td>
+                        <td class="d-none d-sm-table-cell">{{ $note->schoolClass?->name ?? '—' }}</td>
+                        <td class="d-none d-lg-table-cell">{{ $note->date?->format('Y-m-d') }}</td>
+                        <td class="d-none d-lg-table-cell">
                             @if($note->attachment)
                                 <a href="{{ asset('assets/uploads/educational_notes/'.$note->attachment) }}" target="_blank">
                                     <i class="bi bi-paperclip"></i> {{ __('messages.view_attachment') }}
@@ -120,7 +123,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="8" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_records') }}</td></tr>
+                    <tr><td colspan="2" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_records') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

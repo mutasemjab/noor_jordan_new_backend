@@ -32,14 +32,14 @@
 </div>
 
 <div class="panel-card">
-    <div class="panel-card-body p-0">
-        <table class="data-table">
+    <div class="panel-card-body p-0" style="overflow-x:auto">
+        <table class="data-table" style="min-width:480px">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th class="d-none d-md-table-cell">#</th>
                     <th>اسم الباص</th>
-                    <th>السعة</th>
-                    <th>عدد الجولات</th>
+                    <th class="d-none d-sm-table-cell">السعة</th>
+                    <th class="d-none d-md-table-cell">عدد الجولات</th>
                     <th>الحالة</th>
                     <th>إجراءات</th>
                 </tr>
@@ -47,10 +47,12 @@
             <tbody>
                 @forelse($buses as $bus)
                 <tr>
-                    <td style="color:var(--muted)">{{ $bus->id }}</td>
-                    <td style="font-weight:600">{{ $bus->name }}</td>
-                    <td>{{ $bus->capacity }} طالب</td>
-                    <td><span class="pill pill-neutral">{{ $bus->trips_count }}</span></td>
+                    <td class="d-none d-md-table-cell" style="color:var(--muted)">{{ $bus->id }}</td>
+                    <td style="font-weight:600">{{ $bus->name }}
+                        <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $bus->capacity }} طالب</div>
+                    </td>
+                    <td class="d-none d-sm-table-cell">{{ $bus->capacity }} طالب</td>
+                    <td class="d-none d-md-table-cell"><span class="pill pill-neutral">{{ $bus->trips_count }}</span></td>
                     <td>
                         <span class="pill {{ $bus->is_active ? 'pill-success' : 'pill-neutral' }}">
                             {{ $bus->is_active ? 'نشط' : 'معطل' }}
@@ -72,7 +74,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="text-center py-4" style="color:var(--muted)">لا توجد باصات مضافة بعد.</td></tr>
+                <tr><td colspan="3" class="text-center py-4" style="color:var(--muted)">لا توجد باصات مضافة بعد.</td></tr>
                 @endforelse
             </tbody>
         </table>

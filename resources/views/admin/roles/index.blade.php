@@ -42,13 +42,13 @@
                             </div><!-- end col-->
                         </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-centered table-nowrap table-hover mb-0">
+                        <div style="overflow-x:auto">
+                            <table class="table table-centered table-nowrap table-hover mb-0" style="min-width:480px">
                                 <thead class="thead-light">
 
                                     <tr>
                                          <th>{{ __('messages.name_field') }}</th>
-                                        <th>{{ __('messages.permissions') }}</th>
+                                        <th class="d-none d-md-table-cell">{{ __('messages.permissions') }}</th>
                                          <th style="width: 82px;">{{ __('messages.action') }}</th>
                                     </tr>
                                 </thead>
@@ -56,7 +56,7 @@
                                     @foreach ($data as $value)
                                         <tr>
                                             <td><span class="font-weight-bold">{{ $value->name }}</span></td>
-                                            <td>
+                                            <td class="d-none d-md-table-cell">
                                                 @foreach ($value->permissions as $permission)
                                                     {{ $permission->name }}<br>
                                                 @endforeach

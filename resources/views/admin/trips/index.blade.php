@@ -106,40 +106,43 @@
 </div>
 
 <div class="panel-card">
-    <div class="panel-card-body p-0">
-        <table class="data-table">
+    <div class="panel-card-body p-0" style="overflow-x:auto">
+        <table class="data-table" style="min-width:540px">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th class="d-none d-md-table-cell">#</th>
                     <th>الجولة</th>
                     <th>الاتجاه</th>
-                    <th>الباص</th>
-                    <th>المرافق</th>
-                    <th>عدد الطلاب</th>
-                    <th>المسافة/المدة</th>
+                    <th class="d-none d-sm-table-cell">الباص</th>
+                    <th class="d-none d-lg-table-cell">المرافق</th>
+                    <th class="d-none d-sm-table-cell">عدد الطلاب</th>
+                    <th class="d-none d-lg-table-cell">المسافة/المدة</th>
                     <th>إجراءات</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($trips as $trip)
                 <tr>
-                    <td style="color:var(--muted)">{{ $trip->id }}</td>
-                    <td style="font-weight:600">{{ $trip->name }}</td>
+                    <td class="d-none d-md-table-cell" style="color:var(--muted)">{{ $trip->id }}</td>
+                    <td style="font-weight:600">
+                        {{ $trip->name }}
+                        <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $trip->bus->name }}</div>
+                    </td>
                     <td>
                         <span class="pill {{ $trip->type === 'pickup' ? 'pill-info' : 'pill-warning' }}">
                             {{ $trip->type === 'pickup' ? 'صباحاً' : 'عصراً' }}
                         </span>
                     </td>
-                    <td>{{ $trip->bus->name }} <span style="color:var(--muted);font-size:.78rem">(جولة {{ $trip->sequence_number }})</span></td>
-                    <td>
+                    <td class="d-none d-sm-table-cell">{{ $trip->bus->name }} <span style="color:var(--muted);font-size:.78rem">(جولة {{ $trip->sequence_number }})</span></td>
+                    <td class="d-none d-lg-table-cell">
                         @if($trip->companionTeacher)
                             <span style="font-size:.88rem">{{ $trip->companionTeacher->name }}</span>
                         @else
                             <span style="color:var(--muted);font-size:.82rem">— غير معيّن —</span>
                         @endif
                     </td>
-                    <td><span class="pill pill-neutral">{{ $trip->students_count }} طالب</span></td>
-                    <td style="font-size:.82rem">
+                    <td class="d-none d-sm-table-cell"><span class="pill pill-neutral">{{ $trip->students_count }} طالب</span></td>
+                    <td class="d-none d-lg-table-cell" style="font-size:.82rem">
                         @if($trip->total_distance_km)
                             {{ $trip->total_distance_km }} كم — {{ $trip->total_duration_minutes }} د
                         @else
@@ -167,7 +170,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="8" class="text-center py-4" style="color:var(--muted)">لا توجد جولات بعد. استخدم "توليد جولات" بالأعلى.</td></tr>
+                <tr><td colspan="3" class="text-center py-4" style="color:var(--muted)">لا توجد جولات بعد. استخدم "توليد جولات" بالأعلى.</td></tr>
                 @endforelse
             </tbody>
         </table>

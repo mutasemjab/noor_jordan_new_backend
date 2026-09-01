@@ -69,14 +69,14 @@
     </div>
 
     <div class="panel-card">
-        <div class="panel-card-body p-0">
-            <table class="data-table">
+        <div class="panel-card-body p-0" style="overflow-x:auto">
+            <table class="data-table" style="min-width:540px">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th class="d-none d-md-table-cell">#</th>
                         <th>{{ __('messages.teacher') }}</th>
-                        <th>{{ __('messages.phone_label') }}</th>
-                        <th>{{ __('messages.total_students') }}</th>
+                        <th class="d-none d-sm-table-cell">{{ __('messages.phone_label') }}</th>
+                        <th class="d-none d-md-table-cell">{{ __('messages.total_students') }}</th>
                         <th>{{ __('messages.Status') }}</th>
                         <th>{{ __('messages.Actions') }}</th>
                     </tr>
@@ -84,7 +84,7 @@
                 <tbody>
                     @forelse($teachers as $teacher)
                         <tr>
-                            <td style="color:var(--muted)">{{ $teacher->id }}</td>
+                            <td class="d-none d-md-table-cell" style="color:var(--muted)">{{ $teacher->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     @if ($teacher->avatar)
@@ -97,11 +97,12 @@
                                     <div>
                                         <div style="font-weight:500">{{ $teacher->name }}</div>
                                         <div style="font-size:.75rem;color:var(--muted)">{{ $teacher->national_id }}</div>
+                                        <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $teacher->phone ?: '' }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td style="color:var(--muted)">{{ $teacher->phone ?: '—' }}</td>
-                            <td>{{ $teacher->total_students ?? 0 }}</td>
+                            <td class="d-none d-sm-table-cell" style="color:var(--muted)">{{ $teacher->phone ?: '—' }}</td>
+                            <td class="d-none d-md-table-cell">{{ $teacher->total_students ?? 0 }}</td>
                             <td>
                                 <span class="pill {{ $teacher->is_active ? 'pill-success' : 'pill-neutral' }}">
                                     {{ $teacher->is_active ? __('messages.Active') : __('messages.Inactive') }}
@@ -125,7 +126,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-4" style="color:var(--muted)">
+                            <td colspan="3" class="text-center py-4" style="color:var(--muted)">
                                 {{ __('messages.no_teachers_found') }}</td>
                         </tr>
                     @endforelse
