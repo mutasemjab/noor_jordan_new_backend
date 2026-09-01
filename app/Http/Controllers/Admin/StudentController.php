@@ -18,7 +18,7 @@ class StudentController extends Controller
     {
         $classes = SchoolClass::orderBy('name')->get();
 
-        $students = Student::when($request->search, function ($q, $s) {
+        $students = Student::with('schoolClass')->when($request->search, function ($q, $s) {
                 $q->where(function ($q) use ($s) {
                     $q->where('name', 'like', "%{$s}%")
                       ->orWhere('email', 'like', "%{$s}%")

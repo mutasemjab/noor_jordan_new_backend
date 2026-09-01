@@ -75,7 +75,8 @@
                     <th>{{ __('messages.phone_label') }}</th>
                     <th>العقد</th>
                     <th>{{ __('messages.Status') }}</th>
-                    <th>{{ __('messages.joined') }}</th>
+                    <th>الرقم الوطني</th>
+                    <th>الصف</th>
                     <th>{{ __('messages.Actions') }}</th>
                 </tr>
             </thead>
@@ -103,7 +104,8 @@
                         </a>
                     </td>
                     <td><span class="pill {{ $student->is_active ? 'pill-success' : 'pill-neutral' }}">{{ $student->is_active ? __('messages.Active') : __('messages.Inactive') }}</span></td>
-                    <td style="color:var(--muted)">{{ $student->created_at->format('M d, Y') }}</td>
+                    <td style="color:var(--muted)">{{ $student->national_id ?: '—' }}</td>
+                    <td style="color:var(--muted)">{{ $student->schoolClass->name ?? '—' }}</td>
                     <td>
                         <div class="d-flex gap-1">
                             <button type="button"
