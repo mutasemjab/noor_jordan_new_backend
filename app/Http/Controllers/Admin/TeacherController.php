@@ -37,7 +37,7 @@ class TeacherController extends Controller
         $data = $request->validate([
             'name'        => 'required|string|max:200',
             'national_id'       => 'required|unique:teachers,national_id',
-            'email'       => 'required|email|unique:teachers,email',
+            'email'       => 'nullable|email|unique:teachers,email',
             'phone'       => 'nullable|string|max:20',
             'password'    => 'required|string|min:8|confirmed',
             'gender'      => 'nullable|in:male,female',
@@ -72,7 +72,7 @@ class TeacherController extends Controller
         $data = $request->validate([
             'name'        => 'required|string|max:200',
             'national_id'       => 'required|unique:teachers,national_id,' . $teacher->id,
-            'email'       => 'required|email|unique:teachers,email,' . $teacher->id,
+            'email'       => 'nullable|email|unique:teachers,email,' . $teacher->id,
             'phone'       => 'nullable|string|max:20',
             'password'    => 'nullable|string|min:8|confirmed',
             'gender'      => 'nullable|in:male,female',
