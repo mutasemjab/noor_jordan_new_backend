@@ -18,9 +18,12 @@ class StudentsImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
     public int   $skipped  = 0;
 
     private array $classMap = [];
+    private ?int  $classId  = null;
 
-    public function __construct()
+    public function __construct(?int $classId = null)
     {
+        $this->classId = $classId;
+
         // Build class name → id map for fast lookup
         SchoolClass::all()->each(function ($c) {
             $this->classMap[trim($c->name)] = $c->id;
@@ -58,7 +61,8 @@ class StudentsImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
                 continue;
             }
 
-            $classId = $className ? ($this->classMap[$className] ?? null) : null;
+            // Injected class_id takes priority; fallback to class name from the row
+            $classId = $this->classId ?? ($className ? ($this->classMap[$className] ?? null) : null);
 
             Student::create([
                 'name'        => $name,
