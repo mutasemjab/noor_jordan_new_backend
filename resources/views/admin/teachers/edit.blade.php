@@ -34,8 +34,8 @@
                     </div>
                
                     <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.email_label') }} <span class="text-danger">*</span></label>
-                        <input type="email" name="email" value="{{ old('email', $teacher->email) }}" class="form-control" required>
+                        <label class="form-label">{{ __('messages.email_label') }} </label>
+                        <input type="email" name="email" value="{{ old('email', $teacher->email) }}" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">{{ __('messages.new_password') }}</label>
