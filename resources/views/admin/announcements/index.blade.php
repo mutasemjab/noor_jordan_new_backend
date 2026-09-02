@@ -27,27 +27,28 @@
             <a href="{{ route('admin.announcements.index') }}" class="btn-outline-sm">إعادة تعيين</a>
         </form>
 
-        <div class="table-responsive">
-            <table class="data-table">
+        <div style="overflow-x:auto">
+            <table class="data-table" style="min-width:560px">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th class="d-none d-md-table-cell">#</th>
                         <th>العنوان</th>
-                        <th>الصف المستهدف</th>
+                        <th class="d-none d-sm-table-cell">الصف المستهدف</th>
                         <th>الحالة</th>
-                        <th>تاريخ النشر</th>
+                        <th class="d-none d-md-table-cell">تاريخ النشر</th>
                         <th>إجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($announcements as $a)
                     <tr>
-                        <td>{{ $a->id }}</td>
+                        <td class="d-none d-md-table-cell">{{ $a->id }}</td>
                         <td>
                             <div class="fw-semibold">{{ $a->title }}</div>
                             <small class="text-muted">{{ Str::limit($a->body, 60) }}</small>
+                            <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $a->schoolClass?->name ?? 'عام' }}</div>
                         </td>
-                        <td>{{ $a->schoolClass?->name ?? '<span class="badge bg-secondary">عام</span>' }}</td>
+                        <td class="d-none d-sm-table-cell">{{ $a->schoolClass?->name ?? '<span class="badge bg-secondary">عام</span>' }}</td>
                         <td>
                             @if($a->is_active)
                                 <span class="badge bg-success">نشط</span>
@@ -55,7 +56,7 @@
                                 <span class="badge bg-secondary">معطل</span>
                             @endif
                         </td>
-                        <td>{{ $a->published_at?->format('Y-m-d') ?? $a->created_at->format('Y-m-d') }}</td>
+                        <td class="d-none d-md-table-cell">{{ $a->published_at?->format('Y-m-d') ?? $a->created_at->format('Y-m-d') }}</td>
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="{{ route('admin.announcements.edit', $a->id) }}" class="btn-outline-sm"><i class="bi bi-pencil"></i></a>
@@ -67,7 +68,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" class="text-center text-muted py-4">لا توجد إعلانات</td></tr>
+                    <tr><td colspan="3" class="text-center text-muted py-4">لا توجد إعلانات</td></tr>
                     @endforelse
                 </tbody>
             </table>

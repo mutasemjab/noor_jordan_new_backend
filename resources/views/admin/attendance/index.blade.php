@@ -72,16 +72,16 @@
                 </button>
             </div>
         </div>
-        <div class="panel-card-body p-0">
-            <table class="data-table">
+        <div class="panel-card-body p-0" style="overflow-x:auto">
+            <table class="data-table" style="min-width:560px">
                 <thead>
                     <tr>
                         <th>الطالب</th>
                         <th>حاضر</th>
                         <th>غائب</th>
-                        <th>متأخر</th>
-                        <th>بعذر</th>
-                        <th>ملاحظة</th>
+                        <th class="d-none d-sm-table-cell">متأخر</th>
+                        <th class="d-none d-sm-table-cell">بعذر</th>
+                        <th class="d-none d-md-table-cell">ملاحظة</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,16 +89,19 @@
                     @php $att = $attendance[$student->id] ?? null; @endphp
                     <tr>
                         <td style="font-weight:500">{{ $student->name }}</td>
-                        @foreach(['present' => 'حاضر', 'absent' => 'غائب', 'late' => 'متأخر', 'excused' => 'بعذر'] as $val => $label)
                         <td style="text-align:center">
-                            <input type="radio"
-                                   name="attendance[{{ $student->id }}]"
-                                   value="{{ $val }}"
-                                   class="form-check-input att-radio att-{{ $val }}"
-                                   @checked(($att?->status ?? 'present') === $val)>
+                            <input type="radio" name="attendance[{{ $student->id }}]" value="present" class="form-check-input att-radio att-present" @checked(($att?->status ?? 'present') === 'present')>
                         </td>
-                        @endforeach
-                        <td>
+                        <td style="text-align:center">
+                            <input type="radio" name="attendance[{{ $student->id }}]" value="absent" class="form-check-input att-radio att-absent" @checked(($att?->status ?? 'present') === 'absent')>
+                        </td>
+                        <td class="d-none d-sm-table-cell" style="text-align:center">
+                            <input type="radio" name="attendance[{{ $student->id }}]" value="late" class="form-check-input att-radio att-late" @checked(($att?->status ?? 'present') === 'late')>
+                        </td>
+                        <td class="d-none d-sm-table-cell" style="text-align:center">
+                            <input type="radio" name="attendance[{{ $student->id }}]" value="excused" class="form-check-input att-radio att-excused" @checked(($att?->status ?? 'present') === 'excused')>
+                        </td>
+                        <td class="d-none d-md-table-cell">
                             <input type="text" name="notes[{{ $student->id }}]"
                                    value="{{ $att?->notes }}"
                                    class="form-control form-control-sm"

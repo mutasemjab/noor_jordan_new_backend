@@ -36,14 +36,14 @@
 </div>
 
 <div class="panel-card">
-    <div class="panel-card-body p-0">
-        <table class="data-table">
+    <div class="panel-card-body p-0" style="overflow-x:auto">
+        <table class="data-table" style="min-width:520px">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th class="d-none d-md-table-cell">#</th>
                     <th>{{ __('messages.subject_ar') }}</th>
-                    <th>{{ __('messages.subject_en') }}</th>
-                    <th>{{ __('messages.full_path') }}</th>
+                    <th class="d-none d-sm-table-cell">{{ __('messages.subject_en') }}</th>
+                    <th class="d-none d-lg-table-cell">{{ __('messages.full_path') }}</th>
                     <th>{{ __('messages.Status') }}</th>
                     <th>{{ __('messages.Actions') }}</th>
                 </tr>
@@ -51,12 +51,13 @@
             <tbody>
                 @forelse($subjects as $subject)
                 <tr>
-                    <td style="color:var(--muted)">{{ $subject->id }}</td>
+                    <td class="d-none d-md-table-cell" style="color:var(--muted)">{{ $subject->id }}</td>
                     <td>
                         <div style="font-weight:600" dir="rtl">{{ $subject->name_ar }}</div>
+                        <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $subject->name_en ?: '' }}</div>
                     </td>
-                    <td>{{ $subject->name_en ?: '—' }}</td>
-                    <td style="color:var(--muted);font-size:.8rem">{{ $subject->full_path }}</td>
+                    <td class="d-none d-sm-table-cell">{{ $subject->name_en ?: '—' }}</td>
+                    <td class="d-none d-lg-table-cell" style="color:var(--muted);font-size:.8rem">{{ $subject->full_path }}</td>
                     <td>
                         <span class="pill {{ $subject->is_active ? 'pill-success' : 'pill-neutral' }}">
                             {{ $subject->is_active ? __('messages.Active') : __('messages.Inactive') }}
@@ -80,7 +81,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="text-center py-4" style="color:var(--muted)">
+                    <td colspan="3" class="text-center py-4" style="color:var(--muted)">
                         {{ __('messages.no_subjects_yet') }}
                     </td>
                 </tr>

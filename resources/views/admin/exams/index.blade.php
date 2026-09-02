@@ -42,23 +42,33 @@
 </div>
 
 <div class="panel-card">
-    <div class="panel-card-body p-0">
-        <table class="data-table">
+    <div class="panel-card-body p-0" style="overflow-x:auto">
+        <table class="data-table" style="min-width:560px">
             <thead>
-                <tr><th>#</th><th>{{ __('messages.exam') }}</th><th>{{ __('messages.type_label') }}</th><th>{{ __('messages.questions') }}</th><th>{{ __('messages.duration') }}</th><th>{{ __('messages.attempts') }}</th><th>{{ __('messages.Status') }}</th><th>{{ __('messages.Actions') }}</th></tr>
+                <tr>
+                    <th class="d-none d-md-table-cell">#</th>
+                    <th>{{ __('messages.exam') }}</th>
+                    <th class="d-none d-sm-table-cell">{{ __('messages.type_label') }}</th>
+                    <th class="d-none d-md-table-cell">{{ __('messages.questions') }}</th>
+                    <th class="d-none d-md-table-cell">{{ __('messages.duration') }}</th>
+                    <th class="d-none d-lg-table-cell">{{ __('messages.attempts') }}</th>
+                    <th>{{ __('messages.Status') }}</th>
+                    <th>{{ __('messages.Actions') }}</th>
+                </tr>
             </thead>
             <tbody>
                 @forelse($exams as $exam)
                 <tr>
-                    <td style="color:var(--muted)">{{ $exam->id }}</td>
+                    <td class="d-none d-md-table-cell" style="color:var(--muted)">{{ $exam->id }}</td>
                     <td>
                         <div style="font-weight:500">{{ Str::limit($exam->title_en ?: $exam->title_ar, 35) }}</div>
                         <div style="font-size:.75rem;color:var(--muted)">{{ $exam->subject?->name }}</div>
+                        <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ __('messages.'.$exam->exam_type) }}</div>
                     </td>
-                    <td><span class="pill pill-info">{{ __('messages.'.$exam->exam_type) }}</span></td>
-                    <td>{{ $exam->questions_count }}</td>
-                    <td>{{ $exam->duration_minutes }} {{ __('messages.min_label') }}</td>
-                    <td>{{ $exam->total_attempts }}</td>
+                    <td class="d-none d-sm-table-cell"><span class="pill pill-info">{{ __('messages.'.$exam->exam_type) }}</span></td>
+                    <td class="d-none d-md-table-cell">{{ $exam->questions_count }}</td>
+                    <td class="d-none d-md-table-cell">{{ $exam->duration_minutes }} {{ __('messages.min_label') }}</td>
+                    <td class="d-none d-lg-table-cell">{{ $exam->total_attempts }}</td>
                     <td><span class="pill {{ $exam->is_published ? 'pill-success' : 'pill-neutral' }}">{{ $exam->is_published ? __('messages.published') : __('messages.draft') }}</span></td>
                     <td>
                         <div class="d-flex gap-1">
@@ -72,7 +82,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="8" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_exams_found') }}</td></tr>
+                <tr><td colspan="3" class="text-center py-4" style="color:var(--muted)">{{ __('messages.no_exams_found') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

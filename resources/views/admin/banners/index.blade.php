@@ -21,35 +21,34 @@
 @endif
 
 <div class="panel-card">
-    <div class="panel-card-body p-0">
+    <div class="panel-card-body p-0" style="overflow-x:auto">
         @if($banners->isEmpty())
             <div class="text-center py-5 text-muted">
                 <i class="bi bi-image" style="font-size:2.5rem;opacity:.3"></i>
                 <p class="mt-2">لا توجد بانرات بعد</p>
             </div>
         @else
-        <div class="table-responsive">
-            <table class="data-table">
+        <table class="data-table" style="min-width:600px">
                 <thead>
                     <tr>
-                        <th style="width:60px">#</th>
+                        <th class="d-none d-md-table-cell" style="width:60px">#</th>
                         <th>الصورة</th>
-                        <th style="width:120px">الترتيب</th>
+                        <th class="d-none d-sm-table-cell" style="width:120px">الترتيب</th>
                         <th style="width:110px">الحالة</th>
-                        <th style="width:160px">تاريخ الإضافة</th>
+                        <th class="d-none d-md-table-cell" style="width:160px">تاريخ الإضافة</th>
                         <th style="width:130px">إجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($banners as $banner)
                     <tr>
-                        <td>{{ $banner->id }}</td>
+                        <td class="d-none d-md-table-cell">{{ $banner->id }}</td>
                         <td>
                             <img src="{{ asset('assets/uploads/banners/' . $banner->image) }}"
                                  alt="banner"
                                  style="height:60px;width:160px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0">
                         </td>
-                        <td>
+                        <td class="d-none d-sm-table-cell">
                             <span class="badge bg-secondary">{{ $banner->order_index }}</span>
                         </td>
                         <td>
@@ -62,7 +61,7 @@
                                 </button>
                             </form>
                         </td>
-                        <td>{{ $banner->created_at->format('Y-m-d') }}</td>
+                        <td class="d-none d-md-table-cell">{{ $banner->created_at->format('Y-m-d') }}</td>
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="{{ route('admin.banners.edit', $banner->id) }}" class="btn-outline-sm">
@@ -80,8 +79,7 @@
                     </tr>
                     @endforeach
                 </tbody>
-            </table>
-        </div>
+        </table>
         @endif
     </div>
 </div>

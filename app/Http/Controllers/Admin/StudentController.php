@@ -16,18 +16,26 @@ class StudentController extends Controller
 {
     public function index(Request $request)
     {
-        $students = Student::when($request->search, fn ($q, $s) => $q
-                ->where('name', 'like', "%{$s}%")
-                ->orWhere('email', 'like', "%{$s}%")
-            )
+        $classes = SchoolClass::orderBy('name')->get();
+
+        $students = Student::with('schoolClass')->when($request->search, function ($q, $s) {
+                $q->where(function ($q) use ($s) {
+                    $q->where('name', 'like', "%{$s}%")
+                      ->orWhere('email', 'like', "%{$s}%")
+                      ->orWhere('national_id', 'like', "%{$s}%");
+                });
+            })
             ->when($request->is_active !== null && $request->is_active !== '', fn ($q) =>
                 $q->where('is_active', $request->boolean('is_active'))
+            )
+            ->when($request->class_id, fn ($q, $id) =>
+                $q->where('class_id', $id)
             )
             ->latest()
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.students.index', compact('students'));
+        return view('admin.students.index', compact('students', 'classes'));
     }
 
     public function create()
