@@ -26,6 +26,7 @@ class EducationalNoteController extends Controller
 
         $notes = EducationalNote::with(['teacher', 'schoolClass'])
             ->where('class_id', $class->id)
+            ->where('teacher_id', $teacher->id)
             ->orderByDesc('date')
             ->paginate(20);
 
