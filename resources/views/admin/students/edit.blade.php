@@ -192,7 +192,14 @@
     search.addEventListener('input', function () {
         const q = normalizeAr(this.value);
         items.forEach(function (el) {
-            el.style.display = (!q || el.dataset.norm.includes(q)) ? '' : 'none';
+            // .sib-item also carries Bootstrap's .d-flex, which sets
+            // display:flex !important — a plain inline style can't override
+            // that, so force it with setProperty(..., 'important').
+            if (!q || el.dataset.norm.includes(q)) {
+                el.style.removeProperty('display');
+            } else {
+                el.style.setProperty('display', 'none', 'important');
+            }
         });
     });
 
