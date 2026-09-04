@@ -50,10 +50,7 @@
                         <label class="form-label">{{ __('messages.new_password') }}</label>
                         <input type="password" name="password" class="form-control" placeholder="{{ __('messages.leave_blank_password') }}">
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.confirm_password') }}</label>
-                        <input type="password" name="password_confirmation" class="form-control">
-                    </div>
+                  
                     <div class="col-md-4">
                         <label class="form-label">{{ __('messages.gender_label') }}</label>
                         <select name="gender" class="form-select select2">
