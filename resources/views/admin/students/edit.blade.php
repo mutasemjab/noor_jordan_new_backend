@@ -170,6 +170,22 @@
     const counter = document.getElementById('sib-count');
     const label   = document.getElementById('sib-selected-label');
 
+    // Normalize Arabic text so searches match regardless of hamza forms
+    // (أ/إ/آ vs ا), teh marbuta/heh, alef maksura/yeh, or diacritics.
+    function normalizeAr(s) {
+        return (s || '')
+            .replace(/[ً-ْٰـ]/g, '')
+            .replace(/[أإآٱ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .toLowerCase()
+            .trim();
+    }
+
+    items.forEach(function (el) {
+        el.dataset.norm = normalizeAr(el.dataset.name);
+    });
+
     function updateCount() {
         const n = document.querySelectorAll('.sib-cb:checked').length;
         counter.textContent = n;
@@ -177,9 +193,9 @@
     }
 
     search.addEventListener('input', function () {
-        const q = this.value.trim().toLowerCase();
+        const q = normalizeAr(this.value);
         items.forEach(function (el) {
-            el.style.display = (!q || el.dataset.name.includes(q)) ? '' : 'none';
+            el.style.display = (!q || el.dataset.norm.includes(q)) ? '' : 'none';
         });
     });
 
