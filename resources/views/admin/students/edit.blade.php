@@ -124,6 +124,7 @@
                 <input type="text" id="sib-search" class="form-control form-control-sm mb-2"
                        placeholder="ابحث باسم الطالب...">
 
+                       
                 {{-- Scrollable list --}}
                 <div id="sib-list" style="max-height:340px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px;padding:6px">
                     @forelse($allStudents as $s)
