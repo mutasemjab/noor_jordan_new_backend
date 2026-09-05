@@ -85,6 +85,7 @@
                         <th class="d-none d-md-table-cell">#</th>
                         <th class="d-none d-sm-table-cell">{{ __('messages.note_type') }}</th>
                         <th>{{ __('messages.title') }}</th>
+                        <th>{{ __('messages.descriptions') }}</th>
                         <th class="d-none d-md-table-cell">{{ __('messages.teacher') }}</th>
                         <th class="d-none d-sm-table-cell">{{ __('messages.class_label') }}</th>
                         <th class="d-none d-md-table-cell">{{ __('messages.subject') }}</th>
@@ -107,6 +108,9 @@
                         <td>
                             {{ $note->title }}
                             <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $note->schoolClass?->name ?? '' }}</div>
+                        </td>
+                        <td>
+                            {{ $note->description }}
                         </td>
                         <td class="d-none d-md-table-cell">{{ $note->teacher?->name ?? '—' }}</td>
                         <td class="d-none d-sm-table-cell">{{ $note->schoolClass?->name ?? '—' }}</td>
