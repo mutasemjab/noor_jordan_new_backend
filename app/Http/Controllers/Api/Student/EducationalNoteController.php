@@ -20,6 +20,7 @@ class EducationalNoteController extends Controller
         $student = $request->user();
 
         $query = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
+            ->whereDate('date', '<=', now())
             ->orderByDesc('date');
 
         // If student has a class assigned, filter by it; otherwise return all
@@ -58,6 +59,7 @@ class EducationalNoteController extends Controller
 
         $dates = EducationalNote::query()
             ->whereNotNull('subject_id')
+            ->whereDate('date', '<=', now())
             ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
             ->get(['date', 'type'])
             ->groupBy(fn ($note) => $note->date->format('Y-m-d'))
@@ -84,6 +86,7 @@ class EducationalNoteController extends Controller
 
         $notes = EducationalNote::query()
             ->whereDate('date', $request->date)
+            ->whereDate('date', '<=', now())
             ->whereNotNull('subject_id')
             ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
             ->get(['subject_id', 'type']);
@@ -122,6 +125,7 @@ class EducationalNoteController extends Controller
 
         $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
             ->whereDate('date', $request->date)
+            ->whereDate('date', '<=', now())
             ->where('subject_id', $request->subject_id)
             ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
             ->orderBy('type')
