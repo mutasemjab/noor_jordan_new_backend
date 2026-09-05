@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Student extends Authenticatable
 {
-    use HasApiTokens, Notifiable, SoftDeletes;
+    use HasApiTokens, Notifiable;
 
     protected $guard = 'student';
 
@@ -65,7 +64,7 @@ class Student extends Authenticatable
             'student_siblings',
             'student_id',
             'sibling_id'
-        )->withoutTrashed();
+        );
     }
 
     public function syncSiblings(array $siblingIds): void
