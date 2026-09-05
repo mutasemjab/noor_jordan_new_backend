@@ -48,6 +48,31 @@ class EducationalNoteController extends Controller
         ]);
     }
 
+    // GET /educational-notes/dates  [auth]
+    // Step 0 of the mobile flow: lists every date that has at least one
+    // note (with a subject) for the student's class, newest first, so the
+    // app can show a plain tappable list instead of a free date picker.
+    public function dates(Request $request): JsonResponse
+    {
+        $student = $request->user();
+
+        $dates = EducationalNote::query()
+            ->whereNotNull('subject_id')
+            ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
+            ->get(['date', 'type'])
+            ->groupBy(fn ($note) => $note->date->format('Y-m-d'))
+            ->map(fn ($notes, $date) => [
+                'date'           => $date,
+                'lessons_count'  => $notes->where('type', 'lesson')->count(),
+                'homework_count' => $notes->where('type', 'homework')->count(),
+            ])
+            ->values()
+            ->sortByDesc('date')
+            ->values();
+
+        return $this->success($dates);
+    }
+
     // GET /educational-notes/subjects?date=YYYY-MM-DD  [auth]
     // Step 1 of the mobile flow: student taps a date, this returns the
     // subjects that have a lesson/homework note on that date.
