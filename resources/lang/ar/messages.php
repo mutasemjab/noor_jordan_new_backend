@@ -226,6 +226,7 @@ return [
 'select_teacher' => 'اختر المعلم',
 'select_category' => 'اختر التصنيف',
 'subject' => 'المادة',
+'subject_filtered_hint' => 'تظهر المواد التي يدرّسها المعلم المختار في الصف المختار فقط.',
 'none' => 'بدون',
 'difficulty' => 'مستوى الصعوبة',
 'beginner' => 'مبتدئ',

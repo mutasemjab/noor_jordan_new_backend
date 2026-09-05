@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EducationalNote extends Model
 {
     protected $fillable = [
-        'teacher_id', 'class_id',
+        'teacher_id', 'class_id', 'subject_id',
         'type', 'title', 'description', 'attachment', 'date',
     ];
 
@@ -23,5 +23,10 @@ class EducationalNote extends Model
     public function schoolClass()
     {
         return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
     }
 }

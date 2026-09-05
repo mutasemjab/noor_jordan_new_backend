@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponse;
 use App\Models\EducationalNote;
+use App\Models\Subject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,7 @@ class EducationalNoteController extends Controller
     {
         $student = $request->user();
 
-        $query = EducationalNote::with(['teacher', 'schoolClass'])
+        $query = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
             ->orderByDesc('date');
 
         // If student has a class assigned, filter by it; otherwise return all
@@ -32,20 +33,7 @@ class EducationalNoteController extends Controller
 
         $paginated = $query->paginate(20);
 
-        $items = collect($paginated->items())->map(fn ($note) => [
-            'id'          => $note->id,
-            'title'       => $note->title,
-            'description' => $note->description,
-            'type'        => $note->type,
-            'date'        => $note->date?->format('Y-m-d'),
-            'attachment'  => $note->attachment ? asset('assets/uploads/educational_notes/' . $note->attachment) : null,
-            'teacher' => [
-                'id'     => $note->teacher?->id,
-                'name'   => $note->teacher?->name,
-                'avatar' => $note->teacher?->avatar ? asset('assets/uploads/teachers/' . $note->teacher->avatar) : null,
-            ],
-            'class' => $note->schoolClass?->name,
-        ]);
+        $items = collect($paginated->items())->map(fn ($note) => $this->noteCard($note));
 
         return response()->json([
             'status'     => true,
@@ -58,5 +46,84 @@ class EducationalNoteController extends Controller
                 'total'        => $paginated->total(),
             ],
         ]);
+    }
+
+    // GET /educational-notes/subjects?date=YYYY-MM-DD  [auth]
+    // Step 1 of the mobile flow: student taps a date, this returns the
+    // subjects that have a lesson/homework note on that date.
+    public function subjectsForDate(Request $request): JsonResponse
+    {
+        $request->validate(['date' => ['required', 'date']]);
+
+        $student = $request->user();
+
+        $notes = EducationalNote::query()
+            ->whereDate('date', $request->date)
+            ->whereNotNull('subject_id')
+            ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
+            ->get(['subject_id', 'type']);
+
+        $subjects = Subject::whereIn('id', $notes->pluck('subject_id')->unique())
+            ->active()
+            ->get()
+            ->map(function (Subject $subject) use ($notes) {
+                $forSubject = $notes->where('subject_id', $subject->id);
+
+                return [
+                    'id'              => $subject->id,
+                    'name'            => $subject->name,
+                    'icon'            => $subject->icon,
+                    'color_class'     => $subject->color_class,
+                    'lessons_count'   => $forSubject->where('type', 'lesson')->count(),
+                    'homework_count'  => $forSubject->where('type', 'homework')->count(),
+                ];
+            })
+            ->values();
+
+        return $this->success($subjects);
+    }
+
+    // GET /educational-notes/content?date=YYYY-MM-DD&subject_id=X  [auth]
+    // Step 2 of the mobile flow: student taps a subject from the list
+    // returned above, this returns the actual lesson/homework content.
+    public function content(Request $request): JsonResponse
+    {
+        $request->validate([
+            'date'       => ['required', 'date'],
+            'subject_id' => ['required', 'exists:subjects,id'],
+        ]);
+
+        $student = $request->user();
+
+        $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
+            ->whereDate('date', $request->date)
+            ->where('subject_id', $request->subject_id)
+            ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
+            ->orderBy('type')
+            ->get();
+
+        return $this->success($notes->map(fn ($note) => $this->noteCard($note))->values());
+    }
+
+    private function noteCard(EducationalNote $note): array
+    {
+        return [
+            'id'          => $note->id,
+            'title'       => $note->title,
+            'description' => $note->description,
+            'type'        => $note->type,
+            'date'        => $note->date?->format('Y-m-d'),
+            'attachment'  => $note->attachment ? asset('assets/uploads/educational_notes/' . $note->attachment) : null,
+            'teacher' => [
+                'id'     => $note->teacher?->id,
+                'name'   => $note->teacher?->name,
+                'avatar' => $note->teacher?->avatar ? asset('assets/uploads/teachers/' . $note->teacher->avatar) : null,
+            ],
+            'class'   => $note->schoolClass?->name,
+            'subject' => $note->subject ? [
+                'id'   => $note->subject->id,
+                'name' => $note->subject->name,
+            ] : null,
+        ];
     }
 }

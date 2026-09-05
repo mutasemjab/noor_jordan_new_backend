@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassSubject;
 use App\Models\EducationalNote;
 use App\Models\SchoolClass;
+use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 
@@ -14,15 +16,20 @@ class EducationalNoteController extends Controller
     {
         $teachers = Teacher::orderBy('name')->get();
         $classes  = SchoolClass::where('is_active', true)->orderBy('name')->get();
-        return compact('teachers', 'classes');
+        $subjects = Subject::active()->get();
+        // teacher/class -> subject options for the dependent subject dropdown (JS-filtered client-side).
+        $classSubjects = ClassSubject::select('teacher_id', 'class_id', 'subject_id')->get();
+
+        return compact('teachers', 'classes', 'subjects', 'classSubjects');
     }
 
     public function index(Request $request)
     {
-        $notes = EducationalNote::with(['teacher', 'schoolClass'])
+        $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
             ->when($request->filled('type'), fn ($q) => $q->where('type', $request->type))
             ->when($request->filled('teacher_id'), fn ($q) => $q->where('teacher_id', $request->teacher_id))
             ->when($request->filled('class_id'), fn ($q) => $q->where('class_id', $request->class_id))
+            ->when($request->filled('subject_id'), fn ($q) => $q->where('subject_id', $request->subject_id))
             ->when($request->filled('date_from'), fn ($q) => $q->whereDate('date', '>=', $request->date_from))
             ->when($request->filled('date_to'), fn ($q) => $q->whereDate('date', '<=', $request->date_to))
             ->latest('date')
@@ -31,13 +38,13 @@ class EducationalNoteController extends Controller
 
         extract($this->formData());
 
-        return view('admin.educational_notes.index', compact('notes', 'teachers', 'classes'));
+        return view('admin.educational_notes.index', compact('notes', 'teachers', 'classes', 'subjects'));
     }
 
     public function create()
     {
         extract($this->formData());
-        return view('admin.educational_notes.create', compact('teachers', 'classes'));
+        return view('admin.educational_notes.create', compact('teachers', 'classes', 'subjects', 'classSubjects'));
     }
 
     public function store(Request $request)
@@ -45,6 +52,7 @@ class EducationalNoteController extends Controller
         $request->validate([
             'teacher_id'  => 'nullable|exists:teachers,id',
             'class_id'    => 'nullable|exists:classes,id',
+            'subject_id'  => 'nullable|exists:subjects,id',
             'type'        => 'required|in:lesson,homework',
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -60,6 +68,7 @@ class EducationalNoteController extends Controller
         EducationalNote::create([
             'teacher_id'  => $request->teacher_id,
             'class_id'    => $request->class_id,
+            'subject_id'  => $request->subject_id,
             'type'        => $request->type,
             'title'       => $request->title,
             'description' => $request->description,
@@ -74,7 +83,7 @@ class EducationalNoteController extends Controller
     public function edit(EducationalNote $educationalNote)
     {
         extract($this->formData());
-        return view('admin.educational_notes.edit', compact('educationalNote', 'teachers', 'classes'));
+        return view('admin.educational_notes.edit', compact('educationalNote', 'teachers', 'classes', 'subjects', 'classSubjects'));
     }
 
     public function update(Request $request, EducationalNote $educationalNote)
@@ -82,6 +91,7 @@ class EducationalNoteController extends Controller
         $request->validate([
             'teacher_id'  => 'nullable|exists:teachers,id',
             'class_id'    => 'nullable|exists:classes,id',
+            'subject_id'  => 'nullable|exists:subjects,id',
             'type'        => 'required|in:lesson,homework',
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -92,6 +102,7 @@ class EducationalNoteController extends Controller
         $data = [
             'teacher_id'  => $request->teacher_id,
             'class_id'    => $request->class_id,
+            'subject_id'  => $request->subject_id,
             'type'        => $request->type,
             'title'       => $request->title,
             'description' => $request->description,

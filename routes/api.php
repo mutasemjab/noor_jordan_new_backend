@@ -120,6 +120,8 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
 
         // Educational notes
         Route::get('educational-notes', [EducationalNoteController::class, 'index']);
+        Route::get('educational-notes/subjects', [EducationalNoteController::class, 'subjectsForDate']);
+        Route::get('educational-notes/content',  [EducationalNoteController::class, 'content']);
 
         // Announcements
         Route::get('announcements',      [AnnouncementController::class, 'index']);

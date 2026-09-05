@@ -47,6 +47,15 @@
                     @endforeach
                 </select>
             </div>
+            <div class="col-md-3">
+                <label class="form-label">{{ __('messages.subject') }}</label>
+                <select name="subject_id" class="form-select select2">
+                    <option value="">— {{ __('messages.select_subject') }} —</option>
+                    @foreach($subjects as $subject)
+                        <option value="{{ $subject->id }}" @selected(request('subject_id') == $subject->id)>{{ $subject->name_ar }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="col-md-2">
                 <label class="form-label">{{ __('messages.date_from') }}</label>
                 <input type="date" name="date_from" value="{{ request('date_from') }}" class="form-control">
@@ -78,6 +87,7 @@
                         <th>{{ __('messages.title') }}</th>
                         <th class="d-none d-md-table-cell">{{ __('messages.teacher') }}</th>
                         <th class="d-none d-sm-table-cell">{{ __('messages.class_label') }}</th>
+                        <th class="d-none d-md-table-cell">{{ __('messages.subject') }}</th>
                         <th class="d-none d-lg-table-cell">{{ __('messages.date_label') }}</th>
                         <th class="d-none d-lg-table-cell">{{ __('messages.attachment_label') }}</th>
                         <th width="150">{{ __('messages.Actions') }}</th>
@@ -100,6 +110,7 @@
                         </td>
                         <td class="d-none d-md-table-cell">{{ $note->teacher?->name ?? '—' }}</td>
                         <td class="d-none d-sm-table-cell">{{ $note->schoolClass?->name ?? '—' }}</td>
+                        <td class="d-none d-md-table-cell">{{ $note->subject?->name_ar ?? '—' }}</td>
                         <td class="d-none d-lg-table-cell">{{ $note->date?->format('Y-m-d') }}</td>
                         <td class="d-none d-lg-table-cell">
                             @if($note->attachment)

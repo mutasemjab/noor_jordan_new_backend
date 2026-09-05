@@ -24,7 +24,7 @@ class EducationalNoteController extends Controller
             return $this->error('غير مصرح بالوصول لهذا الصف.', 403);
         }
 
-        $notes = EducationalNote::with(['teacher', 'schoolClass'])
+        $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
             ->where('class_id', $class->id)
             ->where('teacher_id', $teacher->id)
             ->orderByDesc('date')
@@ -50,6 +50,7 @@ class EducationalNoteController extends Controller
 
         $data = $request->validate([
             'class_id'    => ['required', 'exists:classes,id'],
+            'subject_id'  => ['required', 'exists:subjects,id'],
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'type'        => ['required', 'in:lesson,homework'],
@@ -63,6 +64,10 @@ class EducationalNoteController extends Controller
             return $this->error('غير مصرح بإضافة مفكرة لهذا الصف.', 403);
         }
 
+        if (! $this->teachesSubjectInClass($teacher, $class, $data['subject_id'])) {
+            return $this->error('غير مصرح بإضافة مفكرة لهذه المادة في هذا الصف.', 403);
+        }
+
         $attachment = null;
         if ($request->hasFile('attachment')) {
             $attachment = uploadImage('assets/uploads/educational_notes', $request->file('attachment'));
@@ -71,6 +76,7 @@ class EducationalNoteController extends Controller
         $note = EducationalNote::create([
             'teacher_id'  => $teacher->id,
             'class_id'    => $data['class_id'],
+            'subject_id'  => $data['subject_id'],
             'title'       => $data['title'],
             'description' => $data['description'] ?? null,
             'type'        => $data['type'],
@@ -81,7 +87,7 @@ class EducationalNoteController extends Controller
         return response()->json([
             'status'  => true,
             'message' => 'OK',
-            'data'    => $this->noteCard($note->load(['teacher', 'schoolClass'])),
+            'data'    => $this->noteCard($note->load(['teacher', 'schoolClass', 'subject'])),
         ], 201);
     }
 
@@ -95,12 +101,18 @@ class EducationalNoteController extends Controller
         }
 
         $data = $request->validate([
+            'subject_id'  => ['required', 'exists:subjects,id'],
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'type'        => ['required', 'in:lesson,homework'],
             'date'        => ['required', 'date'],
             'attachment'  => ['nullable', 'file', 'max:20480'],
         ]);
+
+        $class = $educationalNote->schoolClass;
+        if ($class && ! $this->teachesSubjectInClass($teacher, $class, $data['subject_id'])) {
+            return $this->error('غير مصرح بتعديل مفكرة لهذه المادة في هذا الصف.', 403);
+        }
 
         if ($request->hasFile('attachment')) {
             $data['attachment'] = uploadImage('assets/uploads/educational_notes', $request->file('attachment'));
@@ -111,7 +123,7 @@ class EducationalNoteController extends Controller
         return response()->json([
             'status'  => true,
             'message' => 'OK',
-            'data'    => $this->noteCard($educationalNote->fresh(['teacher', 'schoolClass'])),
+            'data'    => $this->noteCard($educationalNote->fresh(['teacher', 'schoolClass', 'subject'])),
         ]);
     }
 
@@ -135,6 +147,20 @@ class EducationalNoteController extends Controller
             || ClassSubject::where('class_id', $class->id)->where('teacher_id', $teacher->id)->exists();
     }
 
+    private function teachesSubjectInClass(Teacher $teacher, SchoolClass $class, int $subjectId): bool
+    {
+        // Homeroom teachers are trusted for any subject in their own class,
+        // same exception teachesClass() already makes.
+        if ($class->homeroom_teacher_id === $teacher->id) {
+            return true;
+        }
+
+        return ClassSubject::where('class_id', $class->id)
+            ->where('teacher_id', $teacher->id)
+            ->where('subject_id', $subjectId)
+            ->exists();
+    }
+
     private function ownsNote(Teacher $teacher, EducationalNote $note): bool
     {
         return (int) $note->teacher_id === (int) $teacher->id;
@@ -154,7 +180,11 @@ class EducationalNoteController extends Controller
                 'name'   => $note->teacher?->name,
                 'avatar' => $note->teacher?->avatar ? asset('assets/uploads/teachers/' . $note->teacher->avatar) : null,
             ],
-            'class' => $note->schoolClass?->name,
+            'class'   => $note->schoolClass?->name,
+            'subject' => $note->subject ? [
+                'id'   => $note->subject->id,
+                'name' => $note->subject->name,
+            ] : null,
         ];
     }
 }

@@ -60,7 +60,7 @@
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="form-label">{{ __('messages.teacher') }}</label>
-                            <select name="teacher_id" class="form-control select2">
+                            <select name="teacher_id" id="teacher_id" class="form-control select2">
                                 <option value="">— {{ __('messages.select_teacher') }} —</option>
                                 @foreach($teachers as $teacher)
                                     <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>{{ $teacher->name }}</option>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label">{{ __('messages.class_label') }}</label>
-                            <select name="class_id" class="form-control select2">
+                            <select name="class_id" id="class_id" class="form-control select2">
                                 <option value="">— {{ __('messages.select_class') }} —</option>
                                 @foreach($classes as $class)
                                     <option value="{{ $class->id }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>
@@ -77,6 +77,18 @@
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ __('messages.subject') }}</label>
+                            <select name="subject_id" id="subject_id" class="form-control select2">
+                                <option value="">— {{ __('messages.select_subject') }} —</option>
+                                @foreach($subjects as $subject)
+                                    <option value="{{ $subject->id }}" {{ old('subject_id') == $subject->id ? 'selected' : '' }}>
+                                        {{ $subject->name_ar }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted" style="font-size:.75rem">{{ __('messages.subject_filtered_hint') }}</small>
                         </div>
                         <div class="col-12">
                             <label class="form-label">{{ __('messages.date_label') }} <span class="text-danger">*</span></label>
@@ -96,5 +108,7 @@
         </div>
     </div>
 </form>
+
+@include('admin.educational_notes._subject_filter_script')
 
 @endsection

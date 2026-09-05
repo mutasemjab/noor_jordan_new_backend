@@ -226,6 +226,7 @@ return [
 'select_teacher' => 'Select Teacher',
 'select_category' => 'Select Category',
 'subject' => 'Subject',
+'subject_filtered_hint' => 'Only subjects the selected teacher teaches in the selected class are shown.',
 'none' => 'None',
 'difficulty' => 'Difficulty',
 'beginner' => 'Beginner',
