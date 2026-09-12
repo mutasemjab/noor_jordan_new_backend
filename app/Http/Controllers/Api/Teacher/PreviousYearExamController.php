@@ -152,7 +152,7 @@ class PreviousYearExamController extends Controller
             'title'     => $item->title,
             'year'      => $item->year,
             'pages'     => $item->pages,
-            'file_size' => $item->file_size,
+            'file_size' => (float) $item->file_size,
             'pdf_url'   => $item->pdf_file ? asset('assets/uploads/previousYearExam/' . $item->pdf_file) : null,
             'subject'   => ['id' => $item->subject?->id, 'name' => $item->subject?->name],
             'class'     => ['id' => $item->schoolClass?->id, 'name' => $item->schoolClass?->name],

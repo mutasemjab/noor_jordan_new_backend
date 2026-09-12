@@ -148,7 +148,7 @@ class QuestionBankController extends Controller
             'id'        => $item->id,
             'title'     => $item->title,
             'pages'     => $item->pages,
-            'file_size' => $item->file_size,
+            'file_size' => (float) $item->file_size,
             'pdf_url'   => $item->pdf_file ? asset('assets/uploads/questionBank/' . $item->pdf_file) : null,
             'subject'   => ['id' => $item->subject?->id, 'name' => $item->subject?->name],
             'class'     => ['id' => $item->schoolClass?->id, 'name' => $item->schoolClass?->name],
