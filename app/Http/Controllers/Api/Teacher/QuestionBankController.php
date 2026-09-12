@@ -64,7 +64,7 @@ class QuestionBankController extends Controller
             'subject_id' => $data['subject_id'],
             'class_id'   => $data['class_id'],
             'title_ar'   => $data['title'],
-            'title_en'   => null,
+            'title_en'   => $data['title'],
             'pdf_file'   => $pdf,
             'file_size'  => round($sizeBytes / 1024 / 1024, 2),
             'sort_order' => 0,
