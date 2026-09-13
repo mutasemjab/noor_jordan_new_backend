@@ -196,6 +196,39 @@
                 </a>
             </li>
 
+            {{-- Logs & Monitoring --}}
+            @php
+                $logsActive = request()->routeIs('admin.educational-note-logs.*') || request()->routeIs('admin.student-login-attempts.*');
+            @endphp
+            <li class="nav-item">
+                <a href="#logs-menu" class="nav-link" data-submenu="logs-menu"
+                    aria-expanded="{{ $logsActive ? 'true' : 'false' }}">
+                    <i class="nav-icon bi bi-shield-lock"></i>
+                    <span>{{ __('messages.logs_monitoring') }}</span>
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                </a>
+                <ul class="nav-submenu {{ $logsActive ? 'show' : '' }}" id="logs-menu">
+                    <li class="nav-item">
+                        <a href="{{ route('admin.educational-note-logs.teachers') }}"
+                            class="nav-link {{ request()->routeIs('admin.educational-note-logs.teachers') ? 'active' : '' }}">
+                            {{ __('messages.teacher_notes_log') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.educational-note-logs.admins') }}"
+                            class="nav-link {{ request()->routeIs('admin.educational-note-logs.admins') ? 'active' : '' }}">
+                            {{ __('messages.admin_notes_log') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.student-login-attempts.index') }}"
+                            class="nav-link {{ request()->routeIs('admin.student-login-attempts.*') ? 'active' : '' }}">
+                            {{ __('messages.student_login_attempts') }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
         </ul>
 
         <div class="nav-label">{{ __('messages.system') }}</div>

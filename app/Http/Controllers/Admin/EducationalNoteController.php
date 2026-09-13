@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClassSubject;
 use App\Models\EducationalNote;
+use App\Models\EducationalNoteLog;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -65,7 +66,7 @@ class EducationalNoteController extends Controller
             $attachment = uploadImage('assets/uploads/educational_notes', $request->file('attachment'));
         }
 
-        EducationalNote::create([
+        $note = EducationalNote::create([
             'teacher_id'  => $request->teacher_id,
             'class_id'    => $request->class_id,
             'subject_id'  => $request->subject_id,
@@ -75,6 +76,9 @@ class EducationalNoteController extends Controller
             'attachment'  => $attachment,
             'date'        => $request->date,
         ]);
+
+        $admin = auth('admin')->user();
+        EducationalNoteLog::record('admin', $admin->id, $admin->name, 'created', $note);
 
         return redirect()->route('admin.educational-notes.index')
             ->with('success', __('messages.created_successfully'));
@@ -113,7 +117,11 @@ class EducationalNoteController extends Controller
             $data['attachment'] = uploadImage('assets/uploads/educational_notes', $request->file('attachment'));
         }
 
+        $before = EducationalNoteLog::snapshot($educationalNote);
         $educationalNote->update($data);
+
+        $admin = auth('admin')->user();
+        EducationalNoteLog::record('admin', $admin->id, $admin->name, 'updated', $educationalNote->fresh(), $before);
 
         return redirect()->route('admin.educational-notes.index')
             ->with('success', __('messages.updated_successfully'));
@@ -121,7 +129,12 @@ class EducationalNoteController extends Controller
 
     public function destroy(EducationalNote $educationalNote)
     {
+        $before = EducationalNoteLog::snapshot($educationalNote);
         $educationalNote->delete();
+
+        $admin = auth('admin')->user();
+        EducationalNoteLog::record('admin', $admin->id, $admin->name, 'deleted', $educationalNote, $before);
+
         return redirect()->route('admin.educational-notes.index')
             ->with('success', __('messages.deleted_successfully'));
     }

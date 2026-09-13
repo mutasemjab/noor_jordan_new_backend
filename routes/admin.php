@@ -20,7 +20,9 @@ use App\Http\Controllers\Admin\PreviousYearExamController;
 use App\Http\Controllers\Admin\QuestionBankController;
 use App\Http\Controllers\Admin\WorksheetController;
 use App\Http\Controllers\Admin\EducationalNoteController;
+use App\Http\Controllers\Admin\EducationalNoteLogController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\StudentLoginAttemptController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -66,6 +68,12 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
 
         // ── Educational Notes ─────────────────────────────────────────
         Route::resource('educational-notes', EducationalNoteController::class, ['as' => 'admin']);
+        Route::get('educational-notes-logs/teachers', [EducationalNoteLogController::class, 'teachers'])->name('admin.educational-note-logs.teachers');
+        Route::get('educational-notes-logs/admins',   [EducationalNoteLogController::class, 'admins'])->name('admin.educational-note-logs.admins');
+
+        // ── Student login attempts (monitoring) ───────────────────────
+        Route::get('student-login-attempts',              [StudentLoginAttemptController::class, 'index'])->name('admin.student-login-attempts.index');
+        Route::delete('student-login-attempts/{nationalId}', [StudentLoginAttemptController::class, 'clear'])->name('admin.student-login-attempts.clear');
 
         // ── Teachers ──────────────────────────────────────────────────
         Route::get('teachers/export',  [TeacherController::class, 'export'])->name('admin.teachers.export');

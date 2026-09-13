@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponse;
 use App\Models\Student;
+use App\Models\StudentLoginAttempt;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,6 +25,11 @@ class AuthController extends Controller
         $student = Student::where('national_id', $request->national_id)->first();
 
         if (! $student || ! Hash::check($request->password, $student->password)) {
+            StudentLoginAttempt::create([
+                'national_id' => $request->national_id,
+                'ip_address'  => $request->ip(),
+            ]);
+
             return $this->error('الرقم الوطني أو كلمة المرور غير صحيحة', 401);
         }
 

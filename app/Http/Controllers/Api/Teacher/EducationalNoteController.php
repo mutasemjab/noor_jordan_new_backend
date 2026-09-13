@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponse;
 use App\Models\ClassSubject;
 use App\Models\EducationalNote;
+use App\Models\EducationalNoteLog;
 use App\Models\SchoolClass;
 use App\Models\Teacher;
 use Illuminate\Http\JsonResponse;
@@ -84,6 +85,8 @@ class EducationalNoteController extends Controller
             'attachment'  => $attachment,
         ]);
 
+        EducationalNoteLog::record('teacher', $teacher->id, $teacher->name, 'created', $note);
+
         return response()->json([
             'status'  => true,
             'message' => 'OK',
@@ -114,11 +117,15 @@ class EducationalNoteController extends Controller
             return $this->error('غير مصرح بتعديل مفكرة لهذه المادة في هذا الصف.', 403);
         }
 
+        $before = EducationalNoteLog::snapshot($educationalNote);
+
         if ($request->hasFile('attachment')) {
             $data['attachment'] = uploadImage('assets/uploads/educational_notes', $request->file('attachment'));
         }
 
         $educationalNote->update($data);
+
+        EducationalNoteLog::record('teacher', $teacher->id, $teacher->name, 'updated', $educationalNote->fresh(), $before);
 
         return response()->json([
             'status'  => true,
@@ -136,7 +143,9 @@ class EducationalNoteController extends Controller
             return $this->error('غير مصرح بحذف هذه المفكرة.', 403);
         }
 
+        $before = EducationalNoteLog::snapshot($educationalNote);
         $educationalNote->delete();
+        EducationalNoteLog::record('teacher', $teacher->id, $teacher->name, 'deleted', $educationalNote, $before);
 
         return $this->success(null, 'OK');
     }
