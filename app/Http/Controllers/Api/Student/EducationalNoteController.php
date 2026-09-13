@@ -20,14 +20,8 @@ class EducationalNoteController extends Controller
         $student = $request->user();
 
         $query = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
-        ->where(function ($q) {
-            $q->whereDate('date', '<', today())
-              ->orWhere(function ($q) {
-                  $q->whereDate('date', today())
-                    ->whereTime('date', '>=', '12:00:00');
-              });
-        })
-        ->orderByDesc('date');
+            ->whereDate('date', '<=', $this->visibleThroughDate())
+            ->orderByDesc('date');
 
         // If student has a class assigned, filter by it; otherwise return all
         if ($student->class_id) {
@@ -65,7 +59,7 @@ class EducationalNoteController extends Controller
 
         $dates = EducationalNote::query()
             ->whereNotNull('subject_id')
-            ->whereDate('date', '<=', now())
+            ->whereDate('date', '<=', $this->visibleThroughDate())
             ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
             ->get(['date', 'type'])
             ->groupBy(fn ($note) => $note->date->format('Y-m-d'))
@@ -92,7 +86,7 @@ class EducationalNoteController extends Controller
 
         $notes = EducationalNote::query()
             ->whereDate('date', $request->date)
-            ->whereDate('date', '<=', now())
+            ->whereDate('date', '<=', $this->visibleThroughDate())
             ->whereNotNull('subject_id')
             ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
             ->get(['subject_id', 'type']);
@@ -131,13 +125,25 @@ class EducationalNoteController extends Controller
 
         $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
             ->whereDate('date', $request->date)
-            ->whereDate('date', '<=', now())
+            ->whereDate('date', '<=', $this->visibleThroughDate())
             ->where('subject_id', $request->subject_id)
             ->when($student->class_id, fn ($q) => $q->where('class_id', $student->class_id))
             ->orderBy('type')
             ->get();
 
         return $this->success($notes->map(fn ($note) => $this->noteCard($note))->values());
+    }
+
+    // Notes dated today only become visible starting at noon (uploaded a
+    // week ahead, but each day's content is meant to release at midday).
+    // A DATE column has no time part, so this can't be a SQL time
+    // comparison on `date` itself - it has to be computed from the
+    // current wall-clock time and used as the cutoff date.
+    private function visibleThroughDate(): string
+    {
+        return now()->hour < 12
+            ? now()->subDay()->toDateString()
+            : now()->toDateString();
     }
 
     private function noteCard(EducationalNote $note): array
