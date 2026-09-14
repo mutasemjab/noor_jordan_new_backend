@@ -15,8 +15,14 @@ class QuestionBankController extends Controller
     // GET /question-banks
     public function index(Request $request): JsonResponse
     {
+        $student = $request->user();
+
         $query = QuestionBank::with(['subject', 'teacher'])
             ->where('status', 1)
+            ->when($student->class_id, fn ($q) => $q->where(fn ($q) => $q
+                ->whereNull('class_id')
+                ->orWhere('class_id', $student->class_id)
+            ))
             ->orderBy('sort_order');
 
         if ($request->filled('subject_id')) {
