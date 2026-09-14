@@ -67,16 +67,16 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
     Route::get('exams',      [ExamController::class, 'index']);
     Route::get('exams/{id}', [ExamController::class, 'show']);
 
-    // ── Files (public) ────────────────────────────────────────────────────
-    Route::get('previous-year-exams',      [PreviousYearExamController::class, 'index']);
-    Route::get('previous-year-exams/{id}', [PreviousYearExamController::class, 'show']);
-    Route::get('question-banks',           [QuestionBankController::class, 'index']);
-    Route::get('question-banks/{id}',      [QuestionBankController::class, 'show']);
-    Route::get('worksheets',               [WorksheetController::class, 'index']);
-    Route::get('worksheets/{id}',          [WorksheetController::class, 'show']);
-
     // ── Protected routes ──────────────────────────────────────────────────
     Route::middleware('auth:sanctum')->group(function () {
+
+        // Files (require auth so results can be scoped to the student's class)
+        Route::get('previous-year-exams',      [PreviousYearExamController::class, 'index']);
+        Route::get('previous-year-exams/{id}', [PreviousYearExamController::class, 'show']);
+        Route::get('question-banks',           [QuestionBankController::class, 'index']);
+        Route::get('question-banks/{id}',      [QuestionBankController::class, 'show']);
+        Route::get('worksheets',               [WorksheetController::class, 'index']);
+        Route::get('worksheets/{id}',          [WorksheetController::class, 'show']);
 
         // Auth
         Route::post('auth/logout',                   [AuthController::class, 'logout']);
