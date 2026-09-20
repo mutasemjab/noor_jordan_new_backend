@@ -106,6 +106,8 @@ class FCMController
 
         if (is_int($target)) {
             $query->where('class_id', $target);
+        } elseif (is_array($target)) {
+            $query->whereIn('id', $target);
         } elseif (is_string($target) && str_starts_with($target, 'student:')) {
             $studentId = (int) str_replace('student:', '', $target);
             $query->where('id', $studentId);

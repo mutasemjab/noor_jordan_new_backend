@@ -20,16 +20,17 @@ class NotificationController extends Controller
     public function send(Request $request)
     {
         $request->validate([
-            'title'      => 'required|string|max:255',
-            'body'       => 'required|string',
-            'target'     => 'required|in:all,class,student',
-            'class_id'   => 'required_if:target,class|nullable|exists:classes,id',
-            'student_id' => 'required_if:target,student|nullable|exists:students,id',
+            'title'        => 'required|string|max:255',
+            'body'         => 'required|string',
+            'target'       => 'required|in:all,class,student',
+            'class_id'     => 'required_if:target,class|nullable|exists:classes,id',
+            'student_ids'  => 'required_if:target,student|array|min:1',
+            'student_ids.*'=> 'exists:students,id',
         ]);
 
         $target = match ($request->target) {
             'class'   => (int) $request->class_id,
-            'student' => 'student:' . $request->student_id,
+            'student' => array_map('intval', $request->student_ids),
             default   => null,
         };
 

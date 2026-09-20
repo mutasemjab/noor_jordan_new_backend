@@ -49,7 +49,7 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="target" id="t_student" value="student"
                                @checked(old('target') === 'student') onchange="showTarget(this.value)">
-                        <label class="form-check-label" for="t_student">طالب محدد</label>
+                        <label class="form-check-label" for="t_student">طلاب محددون</label>
                     </div>
                 </div>
             </div>
@@ -66,16 +66,16 @@
             </div>
 
             <div class="col-12" id="student_select" style="{{ old('target') === 'student' ? '' : 'display:none' }}">
-                <label class="form-label">اختر الطالب</label>
-                <select name="student_id" class="form-select select2 @error('student_id') is-invalid @enderror">
-                    <option value="">— اختر —</option>
+                <label class="form-label">اختر الطلاب <span class="text-muted small">(يمكن اختيار أكثر من طالب)</span></label>
+                <select name="student_ids[]" multiple class="form-select select2-multiple @error('student_ids') is-invalid @enderror" style="height:auto">
                     @foreach($students as $student)
-                        <option value="{{ $student->id }}" @selected(old('student_id') == $student->id)>
+                        <option value="{{ $student->id }}"
+                            {{ in_array($student->id, old('student_ids', [])) ? 'selected' : '' }}>
                             {{ $student->name }} @if($student->national_id)({{ $student->national_id }})@endif
                         </option>
                     @endforeach
                 </select>
-                @error('student_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                @error('student_ids')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
             <div class="col-12">
@@ -109,5 +109,17 @@ function showTarget(val) {
     document.getElementById('class_select').style.display   = val === 'class'   ? '' : 'none';
     document.getElementById('student_select').style.display = val === 'student' ? '' : 'none';
 }
+
+$(document).ready(function () {
+    $('.select2-multiple').select2({
+        placeholder: '— ابحث أو اختر طلاباً —',
+        allowClear: true,
+        width: '100%',
+        language: {
+            noResults: function () { return 'لا توجد نتائج'; },
+            searching: function () { return 'جارٍ البحث...'; },
+        },
+    });
+});
 </script>
 @endpush
