@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClassSubject;
 use App\Models\EducationalNote;
+use App\Models\EducationalNoteImage;
 use App\Models\EducationalNoteLog;
 use App\Models\SchoolClass;
 use App\Models\Subject;
@@ -59,6 +60,8 @@ class EducationalNoteController extends Controller
             'description' => 'nullable|string',
             'attachment'  => 'nullable|file|max:20480',
             'date'        => 'required|date',
+            'images'      => 'nullable|array',
+            'images.*'    => 'image|max:5120',
         ]);
 
         $attachment = null;
@@ -77,6 +80,8 @@ class EducationalNoteController extends Controller
             'date'        => $request->date,
         ]);
 
+        $this->storeImages($note, $request->file('images', []));
+
         $admin = auth('admin')->user();
         EducationalNoteLog::record('admin', $admin->id, $admin->name, 'created', $note);
 
@@ -86,6 +91,7 @@ class EducationalNoteController extends Controller
 
     public function edit(EducationalNote $educationalNote)
     {
+        $educationalNote->load('images');
         extract($this->formData());
         return view('admin.educational_notes.edit', compact('educationalNote', 'teachers', 'classes', 'subjects', 'classSubjects'));
     }
@@ -101,6 +107,8 @@ class EducationalNoteController extends Controller
             'description' => 'nullable|string',
             'attachment'  => 'nullable|file|max:20480',
             'date'        => 'required|date',
+            'images'      => 'nullable|array',
+            'images.*'    => 'image|max:5120',
         ]);
 
         $data = [
@@ -119,6 +127,7 @@ class EducationalNoteController extends Controller
 
         $before = EducationalNoteLog::snapshot($educationalNote);
         $educationalNote->update($data);
+        $this->storeImages($educationalNote, $request->file('images', []));
 
         $admin = auth('admin')->user();
         EducationalNoteLog::record('admin', $admin->id, $admin->name, 'updated', $educationalNote->fresh(), $before);
@@ -137,5 +146,32 @@ class EducationalNoteController extends Controller
 
         return redirect()->route('admin.educational-notes.index')
             ->with('success', __('messages.deleted_successfully'));
+    }
+
+    public function destroyImage(EducationalNote $educationalNote, EducationalNoteImage $image)
+    {
+        abort_unless($image->educational_note_id === $educationalNote->id, 404);
+
+        $image->delete();
+
+        return redirect()->route('admin.educational-notes.edit', $educationalNote->id)
+            ->with('success', __('messages.deleted_successfully'));
+    }
+
+    private function storeImages(EducationalNote $note, array $files): void
+    {
+        if (empty($files)) {
+            return;
+        }
+
+        $nextOrder = (int) $note->images()->max('order_index');
+
+        foreach ($files as $file) {
+            $nextOrder++;
+            $note->images()->create([
+                'image'       => uploadImage('assets/uploads/educational_notes', $file),
+                'order_index' => $nextOrder,
+            ]);
+        }
     }
 }

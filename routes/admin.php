@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\QuestionBankController;
 use App\Http\Controllers\Admin\WorksheetController;
 use App\Http\Controllers\Admin\EducationalNoteController;
 use App\Http\Controllers\Admin\EducationalNoteLogController;
+use App\Http\Controllers\Admin\ExternalLinkController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StudentLoginAttemptController;
 use App\Http\Controllers\Admin\SiteSettingController;
@@ -68,8 +69,12 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
 
         // ── Educational Notes ─────────────────────────────────────────
         Route::resource('educational-notes', EducationalNoteController::class, ['as' => 'admin']);
+        Route::delete('educational-notes/{educationalNote}/images/{image}', [EducationalNoteController::class, 'destroyImage'])->name('admin.educational-notes.images.destroy');
         Route::get('educational-notes-logs/teachers', [EducationalNoteLogController::class, 'teachers'])->name('admin.educational-note-logs.teachers');
         Route::get('educational-notes-logs/admins',   [EducationalNoteLogController::class, 'admins'])->name('admin.educational-note-logs.admins');
+
+        // ── External Links ─────────────────────────────────────────────
+        Route::resource('external-links', ExternalLinkController::class, ['as' => 'admin']);
 
         // ── Student login attempts (monitoring) ───────────────────────
         Route::get('student-login-attempts',              [StudentLoginAttemptController::class, 'index'])->name('admin.student-login-attempts.index');

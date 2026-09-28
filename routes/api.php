@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Student\BannerController;
 use App\Http\Controllers\Api\Student\AuthController;
 use App\Http\Controllers\Api\Student\EducationalNoteController;
 use App\Http\Controllers\Api\Student\ExamController;
+use App\Http\Controllers\Api\Student\ExternalLinkController;
 use App\Http\Controllers\Api\Student\FirebaseTokenController as StudentFirebaseTokenController;
 use App\Http\Controllers\Api\Student\GradeController as StudentGradeController;
 use App\Http\Controllers\Api\Student\HomeController;
@@ -124,6 +125,9 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
         Route::get('educational-notes/subjects', [EducationalNoteController::class, 'subjectsForDate']);
         Route::get('educational-notes/content',  [EducationalNoteController::class, 'content']);
 
+        // External links
+        Route::get('external-links', [ExternalLinkController::class, 'index']);
+
         // Announcements
         Route::get('announcements',      [AnnouncementController::class, 'index']);
         Route::get('announcements/{id}', [AnnouncementController::class, 'show']);
@@ -186,6 +190,7 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         Route::post('educational-notes',                [TeacherEducationalNoteController::class, 'store']);
         Route::put('educational-notes/{educationalNote}', [TeacherEducationalNoteController::class, 'update']);
         Route::delete('educational-notes/{educationalNote}', [TeacherEducationalNoteController::class, 'destroy']);
+        Route::delete('educational-notes/{educationalNote}/images/{image}', [TeacherEducationalNoteController::class, 'destroyImage']);
 
         // Question banks
         Route::get('question-banks',                     [TeacherQuestionBankController::class, 'index']);

@@ -29,4 +29,9 @@ class EducationalNote extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(EducationalNoteImage::class)->orderBy('order_index');
+    }
 }

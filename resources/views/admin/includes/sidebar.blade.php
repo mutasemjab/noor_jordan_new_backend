@@ -196,6 +196,15 @@
                 </a>
             </li>
 
+            {{-- External Links --}}
+            <li class="nav-item">
+                <a href="{{ route('admin.external-links.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.external-links.*') ? 'active' : '' }}">
+                    <i class="nav-icon bi bi-link-45deg"></i>
+                    <span>{{ __('messages.external_links') }}</span>
+                </a>
+            </li>
+
             {{-- Logs & Monitoring --}}
             @php
                 $logsActive = request()->routeIs('admin.educational-note-logs.*') || request()->routeIs('admin.student-login-attempts.*');

@@ -105,6 +105,33 @@
                             @endif
                             <small class="text-muted" style="font-size:.75rem">{{ __('messages.leave_empty_keep_file') }}</small>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ __('messages.gallery_images') }}</label>
+
+                            @if($educationalNote->images->count())
+                                <div class="d-flex flex-wrap gap-2 mb-2">
+                                    @foreach($educationalNote->images as $image)
+                                        <div style="position:relative">
+                                            <img src="{{ asset('assets/uploads/educational_notes/'.$image->image) }}"
+                                                 style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb">
+                                            <button type="submit" form="delete-image-{{ $image->id }}"
+                                                    class="btn btn-danger btn-sm"
+                                                    style="position:absolute;top:-8px;left:-8px;padding:0 6px;border-radius:50%;line-height:1.6"
+                                                    onclick="return confirm('{{ __('messages.delete_confirm') }}')">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                        <form id="delete-image-{{ $image->id }}" method="POST"
+                                              action="{{ route('admin.educational-notes.images.destroy', [$educationalNote->id, $image->id]) }}">
+                                            @csrf @method('DELETE')
+                                        </form>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
+                            <small class="text-muted" style="font-size:.75rem">{{ __('messages.gallery_images_hint') }}</small>
+                        </div>
                     </div>
                 </div>
             </div>

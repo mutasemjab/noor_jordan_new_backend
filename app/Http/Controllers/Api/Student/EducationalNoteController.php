@@ -19,7 +19,7 @@ class EducationalNoteController extends Controller
     {
         $student = $request->user();
 
-        $query = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
+        $query = EducationalNote::with(['teacher', 'schoolClass', 'subject', 'images'])
             ->whereDate('date', '<=', $this->visibleThroughDate())
             ->orderByDesc('date');
 
@@ -123,7 +123,7 @@ class EducationalNoteController extends Controller
 
         $student = $request->user();
 
-        $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
+        $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject', 'images'])
             ->whereDate('date', $request->date)
             ->whereDate('date', '<=', $this->visibleThroughDate())
             ->where('subject_id', $request->subject_id)
@@ -155,6 +155,10 @@ class EducationalNoteController extends Controller
             'type'        => $note->type,
             'date'        => $note->date?->format('Y-m-d'),
             'attachment'  => $note->attachment ? asset('assets/uploads/educational_notes/' . $note->attachment) : null,
+            'images'      => $note->images->map(fn ($img) => [
+                'id'  => $img->id,
+                'url' => asset('assets/uploads/educational_notes/' . $img->image),
+            ])->values(),
             'teacher' => [
                 'id'     => $note->teacher?->id,
                 'name'   => $note->teacher?->name,

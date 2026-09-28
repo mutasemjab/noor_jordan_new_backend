@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponse;
 use App\Models\ClassSubject;
 use App\Models\EducationalNote;
+use App\Models\EducationalNoteImage;
 use App\Models\EducationalNoteLog;
 use App\Models\SchoolClass;
 use App\Models\Teacher;
@@ -25,7 +26,7 @@ class EducationalNoteController extends Controller
             return $this->error('غير مصرح بالوصول لهذا الصف.', 403);
         }
 
-        $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject'])
+        $notes = EducationalNote::with(['teacher', 'schoolClass', 'subject', 'images'])
             ->where('class_id', $class->id)
             ->where('teacher_id', $teacher->id)
             ->orderByDesc('date')
@@ -57,6 +58,8 @@ class EducationalNoteController extends Controller
             'type'        => ['required', 'in:lesson,homework'],
             'date'        => ['required', 'date'],
             'attachment'  => ['nullable', 'file', 'max:20480'],
+            'images'      => ['nullable', 'array'],
+            'images.*'    => ['image', 'max:5120'],
         ]);
 
         $class = SchoolClass::findOrFail($data['class_id']);
@@ -85,12 +88,14 @@ class EducationalNoteController extends Controller
             'attachment'  => $attachment,
         ]);
 
+        $this->storeImages($note, $request->file('images', []));
+
         EducationalNoteLog::record('teacher', $teacher->id, $teacher->name, 'created', $note);
 
         return response()->json([
             'status'  => true,
             'message' => 'OK',
-            'data'    => $this->noteCard($note->load(['teacher', 'schoolClass', 'subject'])),
+            'data'    => $this->noteCard($note->load(['teacher', 'schoolClass', 'subject', 'images'])),
         ], 201);
     }
 
@@ -110,6 +115,8 @@ class EducationalNoteController extends Controller
             'type'        => ['required', 'in:lesson,homework'],
             'date'        => ['required', 'date'],
             'attachment'  => ['nullable', 'file', 'max:20480'],
+            'images'      => ['nullable', 'array'],
+            'images.*'    => ['image', 'max:5120'],
         ]);
 
         $class = $educationalNote->schoolClass;
@@ -124,13 +131,14 @@ class EducationalNoteController extends Controller
         }
 
         $educationalNote->update($data);
+        $this->storeImages($educationalNote, $request->file('images', []));
 
         EducationalNoteLog::record('teacher', $teacher->id, $teacher->name, 'updated', $educationalNote->fresh(), $before);
 
         return response()->json([
             'status'  => true,
             'message' => 'OK',
-            'data'    => $this->noteCard($educationalNote->fresh(['teacher', 'schoolClass', 'subject'])),
+            'data'    => $this->noteCard($educationalNote->fresh(['teacher', 'schoolClass', 'subject', 'images'])),
         ]);
     }
 
@@ -146,6 +154,22 @@ class EducationalNoteController extends Controller
         $before = EducationalNoteLog::snapshot($educationalNote);
         $educationalNote->delete();
         EducationalNoteLog::record('teacher', $teacher->id, $teacher->name, 'deleted', $educationalNote, $before);
+
+        return $this->success(null, 'OK');
+    }
+
+    // DELETE /educational-notes/{educationalNote}/images/{image}
+    public function destroyImage(Request $request, EducationalNote $educationalNote, EducationalNoteImage $image): JsonResponse
+    {
+        $teacher = $request->user();
+
+        if (! $this->ownsNote($teacher, $educationalNote)) {
+            return $this->error('غير مصرح بتعديل هذه المفكرة.', 403);
+        }
+
+        abort_unless($image->educational_note_id === $educationalNote->id, 404);
+
+        $image->delete();
 
         return $this->success(null, 'OK');
     }
@@ -175,6 +199,23 @@ class EducationalNoteController extends Controller
         return (int) $note->teacher_id === (int) $teacher->id;
     }
 
+    private function storeImages(EducationalNote $note, array $files): void
+    {
+        if (empty($files)) {
+            return;
+        }
+
+        $nextOrder = (int) $note->images()->max('order_index');
+
+        foreach ($files as $file) {
+            $nextOrder++;
+            $note->images()->create([
+                'image'       => uploadImage('assets/uploads/educational_notes', $file),
+                'order_index' => $nextOrder,
+            ]);
+        }
+    }
+
     private function noteCard(EducationalNote $note): array
     {
         return [
@@ -184,6 +225,10 @@ class EducationalNoteController extends Controller
             'type'        => $note->type,
             'date'        => $note->date?->format('Y-m-d'),
             'attachment'  => $note->attachment ? asset('assets/uploads/educational_notes/' . $note->attachment) : null,
+            'images'      => $note->images->map(fn ($img) => [
+                'id'  => $img->id,
+                'url' => asset('assets/uploads/educational_notes/' . $img->image),
+            ])->values(),
             'teacher' => [
                 'id'     => $note->teacher?->id,
                 'name'   => $note->teacher?->name,

@@ -99,6 +99,11 @@
                             <input type="file" name="attachment" class="form-control">
                             <small class="text-muted" style="font-size:.75rem">{{ __('messages.attachment_hint') }}</small>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ __('messages.gallery_images') }}</label>
+                            <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
+                            <small class="text-muted" style="font-size:.75rem">{{ __('messages.gallery_images_hint') }}</small>
+                        </div>
                     </div>
                 </div>
             </div>
