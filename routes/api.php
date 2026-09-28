@@ -38,6 +38,7 @@ use App\Http\Controllers\Api\Teacher\ProfileController as TeacherProfileControll
 use App\Http\Controllers\Api\Teacher\QuestionBankController as TeacherQuestionBankController;
 use App\Http\Controllers\Api\Teacher\ScheduleController as TeacherScheduleController;
 use App\Http\Controllers\Api\Teacher\TripController as TeacherTripController;
+use App\Http\Controllers\Api\Teacher\ExternalLinkController as TeacherExternalLinkController;
 use App\Http\Controllers\Api\Teacher\WorksheetController as TeacherWorksheetController;
 
 use App\Http\Controllers\Api\Chat\MediaController as ChatMediaController;
@@ -209,6 +210,12 @@ Route::prefix('v1/teacher')->middleware('api.locale')->group(function () {
         Route::post('worksheets',                [TeacherWorksheetController::class, 'store']);
         Route::put('worksheets/{worksheet}',      [TeacherWorksheetController::class, 'update']);
         Route::delete('worksheets/{worksheet}',   [TeacherWorksheetController::class, 'destroy']);
+
+        // External links
+        Route::get('external-links',                    [TeacherExternalLinkController::class, 'index']);
+        Route::post('external-links',                   [TeacherExternalLinkController::class, 'store']);
+        Route::put('external-links/{externalLink}',     [TeacherExternalLinkController::class, 'update']);
+        Route::delete('external-links/{externalLink}',  [TeacherExternalLinkController::class, 'destroy']);
 
         // Exams
         Route::get('exams',           [TeacherExamController::class, 'index']);
