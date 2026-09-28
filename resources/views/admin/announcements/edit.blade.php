@@ -34,13 +34,13 @@
                 @error('body')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-6">
-                <label class="form-label">الصف المستهدف</label>
-                <select name="class_id" class="form-select select2">
-                    <option value="">— للجميع —</option>
+                <label class="form-label">الصفوف المستهدفة (اتركه فارغاً للجميع)</label>
+                <select name="class_ids[]" class="form-select select2" multiple data-placeholder="— للجميع —">
                     @foreach($classes as $class)
-                        <option value="{{ $class->id }}" @selected(old('class_id', $announcement->class_id) == $class->id)>{{ $class->name }}</option>
+                        <option value="{{ $class->id }}" @selected(in_array($class->id, (array) old('class_ids', $selectedClassIds)))>{{ $class->name }}</option>
                     @endforeach
                 </select>
+                <small class="text-muted" style="font-size:.75rem">تقدر تختار أكثر من صف، بيصله نفس الإعلان.</small>
             </div>
             <div class="col-md-6">
                 <label class="form-label">تاريخ النشر</label>

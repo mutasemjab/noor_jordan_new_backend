@@ -51,9 +51,7 @@ class AnnouncementController extends Controller
         $student = $request->user();
 
         $announcement = Announcement::active()
-            ->where(function ($q) use ($student) {
-                $q->whereNull('class_id')->orWhere('class_id', $student->class_id);
-            })
+            ->forStudent($student)
             ->findOrFail($id);
 
         return $this->success([

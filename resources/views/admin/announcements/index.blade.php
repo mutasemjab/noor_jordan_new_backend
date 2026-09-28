@@ -41,14 +41,27 @@
                 </thead>
                 <tbody>
                     @forelse($announcements as $a)
+                    @php
+                        $targetNames = $a->classes->pluck('name');
+                        if ($targetNames->isEmpty() && $a->schoolClass) {
+                            $targetNames = collect([$a->schoolClass->name]);
+                        }
+                        $targetLabel = $targetNames->isEmpty() ? 'عام' : $targetNames->implode('، ');
+                    @endphp
                     <tr>
                         <td class="d-none d-md-table-cell">{{ $a->id }}</td>
                         <td>
                             <div class="fw-semibold">{{ $a->title }}</div>
                             <small class="text-muted">{{ Str::limit($a->body, 60) }}</small>
-                            <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $a->schoolClass?->name ?? 'عام' }}</div>
+                            <div class="d-sm-none" style="font-size:.72rem;color:var(--muted)">{{ $targetLabel }}</div>
                         </td>
-                        <td class="d-none d-sm-table-cell">{{ $a->schoolClass?->name ?? '<span class="badge bg-secondary">عام</span>' }}</td>
+                        <td class="d-none d-sm-table-cell">
+                            @if($targetNames->isEmpty())
+                                <span class="badge bg-secondary">عام</span>
+                            @else
+                                {{ $targetLabel }}
+                            @endif
+                        </td>
                         <td>
                             @if($a->is_active)
                                 <span class="badge bg-success">نشط</span>

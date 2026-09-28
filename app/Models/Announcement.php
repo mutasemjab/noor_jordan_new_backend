@@ -20,6 +20,14 @@ class Announcement extends Model
         return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
+    // Full set of target classes for an announcement sent to more than one
+    // class. `class_id` (above) is kept in sync to the first of these purely
+    // so the student API response shape never has to change.
+    public function classes()
+    {
+        return $this->belongsToMany(SchoolClass::class, 'announcement_classes', 'announcement_id', 'class_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
@@ -29,7 +37,8 @@ class Announcement extends Model
     {
         return $query->where(function ($q) use ($student) {
             $q->whereNull('class_id')
-              ->orWhere('class_id', $student->class_id);
+              ->orWhere('class_id', $student->class_id)
+              ->orWhereHas('classes', fn ($q) => $q->where('classes.id', $student->class_id));
         });
     }
 }
