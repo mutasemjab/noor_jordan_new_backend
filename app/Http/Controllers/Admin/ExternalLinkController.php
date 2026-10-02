@@ -41,7 +41,7 @@ class ExternalLinkController extends Controller
     public function create()
     {
         extract($this->formData());
-        return view('admin.external_links.create', compact('classes', 'teachers', 'subjects'));
+        return view('admin.external_links.create', compact('classes', 'teachers', 'subjects', 'classSubjects'));
     }
 
     public function store(Request $request)
@@ -63,7 +63,7 @@ class ExternalLinkController extends Controller
     public function edit(ExternalLink $externalLink)
     {
         extract($this->formData());
-        return view('admin.external_links.edit', compact('externalLink', 'classes', 'teachers', 'subjects'));
+        return view('admin.external_links.edit', compact('externalLink', 'classes', 'teachers', 'subjects', 'classSubjects'));
     }
 
     public function update(Request $request, ExternalLink $externalLink)
