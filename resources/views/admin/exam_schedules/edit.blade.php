@@ -51,6 +51,16 @@
               @enderror
             </div>
 
+            <div class="mb-3">
+              <label class="form-label fw-semibold">الصف</label>
+              <select name="class_id" class="form-select">
+                <option value="">— عام (لكل الصفوف) —</option>
+                @foreach($classes as $class)
+                  <option value="{{ $class->id }}" @selected(old('class_id', $examSchedule->class_id) == $class->id)>{{ $class->name }}</option>
+                @endforeach
+              </select>
+            </div>
+
             <div class="mb-4">
               <label class="form-label fw-semibold">صورة الجدول (اترك فارغاً للإبقاء على الحالية)</label>
               <div id="dropZone"

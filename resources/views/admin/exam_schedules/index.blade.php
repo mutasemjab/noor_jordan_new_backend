@@ -49,6 +49,24 @@
           <form action="{{ route('admin.exam-schedules.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
+            @if($selectedClass)
+              <input type="hidden" name="class_id" value="{{ $selectedClass->id }}">
+              <div class="alert alert-info py-2 px-3 mb-3" style="font-size:13px">
+                <i class="bi bi-info-circle me-1"></i>
+                هذا الجدول رح يُحفظ خاص بصف <strong>{{ $selectedClass->name }}</strong> فقط.
+              </div>
+            @else
+              <div class="mb-3">
+                <label class="form-label fw-semibold">الصف</label>
+                <select name="class_id" class="form-select">
+                  <option value="">— عام (لكل الصفوف) —</option>
+                  @foreach($classes as $class)
+                    <option value="{{ $class->id }}" @selected(old('class_id') == $class->id)>{{ $class->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            @endif
+
             <div class="mb-3">
               <label class="form-label fw-semibold">اسم الجدول <span class="text-danger">*</span></label>
               <input type="text" name="name" value="{{ old('name') }}"
