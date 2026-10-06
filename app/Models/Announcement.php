@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Announcement extends Model
 {
     protected $fillable = [
-        'title', 'body', 'image', 'class_id', 'is_active', 'published_at',
+        'title', 'body', 'image', 'attachment_type', 'class_id', 'is_active', 'published_at',
     ];
 
     protected $casts = [

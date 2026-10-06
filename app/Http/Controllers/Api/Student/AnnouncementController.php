@@ -23,14 +23,13 @@ class AnnouncementController extends Controller
             ->orderByDesc('created_at')
             ->paginate(20);
 
-        $items = collect($announcements->items())->map(fn ($a) => [
+        $items = collect($announcements->items())->map(fn ($a) => array_merge([
             'id'           => $a->id,
             'title'        => $a->title,
             'body'         => $a->body,
-            'image'        => $a->image ? asset('assets/uploads/announcements/' . $a->image) : null,
             'class_id'     => $a->class_id,
             'published_at' => $a->published_at?->format('Y-m-d H:i') ?? $a->created_at->format('Y-m-d H:i'),
-        ]);
+        ], $this->attachment($a)));
 
         return response()->json([
             'status'     => true,
@@ -54,13 +53,26 @@ class AnnouncementController extends Controller
             ->forStudent($student)
             ->findOrFail($id);
 
-        return $this->success([
+        return $this->success(array_merge([
             'id'           => $announcement->id,
             'title'        => $announcement->title,
             'body'         => $announcement->body,
-            'image'        => $announcement->image ? asset('assets/uploads/announcements/' . $announcement->image) : null,
             'class_id'     => $announcement->class_id,
             'published_at' => $announcement->published_at?->format('Y-m-d H:i') ?? $announcement->created_at->format('Y-m-d H:i'),
-        ]);
+        ], $this->attachment($announcement)));
+    }
+
+    // `image` keeps its historical meaning exactly (every pre-existing row has
+    // attachment_type=null and is a real image, so null/'image' both count as
+    // an image) - `pdf_url` is new and only set for the new PDF case.
+    private function attachment(Announcement $a): array
+    {
+        $url = $a->image ? asset('assets/uploads/announcements/' . $a->image) : null;
+        $isPdf = $a->attachment_type === 'pdf';
+
+        return [
+            'image'   => $isPdf ? null : $url,
+            'pdf_url' => $isPdf ? $url : null,
+        ];
     }
 }

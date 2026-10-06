@@ -44,8 +44,9 @@
                 <input type="datetime-local" name="published_at" value="{{ old('published_at') }}" class="form-control">
             </div>
             <div class="col-12">
-                <label class="form-label">صورة (اختياري)</label>
-                <input type="file" name="image" accept="image/*" class="form-control">
+                <label class="form-label">صورة أو ملف PDF (اختياري)</label>
+                <input type="file" name="image" accept="image/*,.pdf" class="form-control">
+                <small class="text-muted" style="font-size:.75rem">لو رفعت صورة بتظهر كصورة، ولو رفعت PDF بيقدر الطالب يفتحه كملف.</small>
             </div>
             <div class="col-12">
                 <div class="form-check form-switch">

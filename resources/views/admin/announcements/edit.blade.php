@@ -50,13 +50,20 @@
             </div>
             @if($announcement->image)
             <div class="col-12">
-                <label class="form-label">الصورة الحالية</label><br>
-                <img src="{{ asset('assets/uploads/' . $announcement->image) }}" style="max-height:120px;border-radius:8px" class="mb-2">
+                <label class="form-label">{{ $announcement->attachment_type === 'pdf' ? 'ملف PDF الحالي' : 'الصورة الحالية' }}</label><br>
+                @if($announcement->attachment_type === 'pdf')
+                    <a href="{{ asset('assets/uploads/announcements/' . $announcement->image) }}" target="_blank" class="btn btn-outline-sm">
+                        <i class="bi bi-file-earmark-pdf text-danger"></i> عرض ملف الـ PDF
+                    </a>
+                @else
+                    <img src="{{ asset('assets/uploads/announcements/' . $announcement->image) }}" style="max-height:120px;border-radius:8px" class="mb-2">
+                @endif
             </div>
             @endif
             <div class="col-12">
-                <label class="form-label">{{ $announcement->image ? 'تغيير الصورة' : 'إضافة صورة (اختياري)' }}</label>
-                <input type="file" name="image" accept="image/*" class="form-control">
+                <label class="form-label">{{ $announcement->image ? 'تغيير الصورة أو الملف' : 'إضافة صورة أو ملف PDF (اختياري)' }}</label>
+                <input type="file" name="image" accept="image/*,.pdf" class="form-control">
+                <small class="text-muted" style="font-size:.75rem">لو رفعت صورة بتظهر كصورة، ولو رفعت PDF بيقدر الطالب يفتحه كملف.</small>
             </div>
             <div class="col-12">
                 <div class="form-check form-switch">

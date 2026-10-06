@@ -43,14 +43,16 @@ class AnnouncementController extends Controller
             'class_ids.*'  => 'exists:classes,id',
             'is_active'    => 'boolean',
             'published_at' => 'nullable|date',
-            'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image'        => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,pdf|max:20480',
         ]);
 
         $classIds = $data['class_ids'] ?? [];
         unset($data['class_ids']);
 
         if ($request->hasFile('image')) {
-            $data['image'] = uploadImage('assets/uploads/announcements', $request->file('image'));
+            $file = $request->file('image');
+            $data['image']           = uploadImage('assets/uploads/announcements', $file);
+            $data['attachment_type'] = $this->attachmentType($file);
         }
 
         $data['is_active']    = $request->boolean('is_active', true);
@@ -93,14 +95,16 @@ class AnnouncementController extends Controller
             'class_ids.*'  => 'exists:classes,id',
             'is_active'    => 'boolean',
             'published_at' => 'nullable|date',
-            'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image'        => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,pdf|max:20480',
         ]);
 
         $classIds = $data['class_ids'] ?? [];
         unset($data['class_ids']);
 
         if ($request->hasFile('image')) {
-            $data['image'] = uploadImage('assets/uploads/announcements', $request->file('image'));
+            $file = $request->file('image');
+            $data['image']           = uploadImage('assets/uploads/announcements', $file);
+            $data['attachment_type'] = $this->attachmentType($file);
         }
 
         $data['is_active'] = $request->boolean('is_active');
@@ -126,6 +130,11 @@ class AnnouncementController extends Controller
             ->whereIn('class_id', $classIds)
             ->pluck('id')
             ->all();
+    }
+
+    private function attachmentType($file): string
+    {
+        return strtolower($file->getClientOriginalExtension()) === 'pdf' ? 'pdf' : 'image';
     }
 
     public function destroy(Announcement $announcement)
