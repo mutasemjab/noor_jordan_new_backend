@@ -105,6 +105,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         Route::delete('classes/{class}/subjects/{subject}', [SchoolClassController::class, 'removeSubject'])->name('admin.classes.subjects.remove');
         Route::get('classes/{class}/schedule',              [SchoolClassController::class, 'schedule'])->name('admin.classes.schedule');
         Route::post('classes/{class}/schedule',             [SchoolClassController::class, 'updateSchedule'])->name('admin.classes.schedule.update');
+        Route::post('classes/{class}/periods',              [SchoolClassController::class, 'updatePeriods'])->name('admin.classes.periods.update');
         Route::get('classes/{class}/videos',                [ClassSubjectVideoController::class, 'index'])->name('admin.classes.videos');
         Route::post('classes/{class}/videos',               [ClassSubjectVideoController::class, 'store'])->name('admin.classes.videos.store');
         Route::delete('classes/{class}/videos/{video}',     [ClassSubjectVideoController::class, 'destroy'])->name('admin.classes.videos.destroy');

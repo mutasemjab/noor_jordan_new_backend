@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassSchedule;
 use App\Models\ClassSubject;
+use App\Models\PeriodSetting;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -119,7 +121,44 @@ class SchoolClassController extends Controller
 
     public function schedule(SchoolClass $class)
     {
-        return view('admin.classes.schedule', compact('class'));
+        $periods  = PeriodSetting::orderBy('period_number')->get();
+        $teachers = Teacher::where('is_active', true)->orderBy('name')->get();
+        $subjects = Subject::active()->get();
+
+        // Keyed by "day-period" for O(1) lookup in the grid view.
+        $slots = ClassSchedule::where('class_id', $class->id)
+            ->get()
+            ->keyBy(fn ($s) => $s->day . '-' . $s->period_number);
+
+        return view('admin.classes.schedule', compact('class', 'periods', 'teachers', 'subjects', 'slots'));
+    }
+
+    public function updatePeriods(Request $request, SchoolClass $class)
+    {
+        $days = array_keys(ClassSchedule::$dayNames);
+
+        foreach ($days as $day) {
+            foreach ($request->input("periods.$day", []) as $periodNumber => $cell) {
+                $subjectId = $cell['subject_id'] ?? null;
+                $teacherId = $cell['teacher_id'] ?? null;
+
+                if (empty($subjectId) && empty($teacherId)) {
+                    ClassSchedule::where('class_id', $class->id)
+                        ->where('day', $day)
+                        ->where('period_number', $periodNumber)
+                        ->delete();
+                    continue;
+                }
+
+                ClassSchedule::updateOrCreate(
+                    ['class_id' => $class->id, 'day' => $day, 'period_number' => $periodNumber],
+                    ['subject_id' => $subjectId ?: null, 'teacher_id' => $teacherId ?: null]
+                );
+            }
+        }
+
+        return redirect()->route('admin.classes.schedule', $class->id)
+            ->with('success', 'تم حفظ جدول الحصص بنجاح.');
     }
 
     public function updateSchedule(Request $request, SchoolClass $class)

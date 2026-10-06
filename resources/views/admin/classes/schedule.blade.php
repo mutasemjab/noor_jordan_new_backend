@@ -124,6 +124,83 @@
     </div>
 
   </div>
+
+  {{-- Structured weekly periods grid (used by the teacher app to show
+       "tomorrow's periods for this class" when entering the daily plan) --}}
+  <div class="row g-4 mt-1">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom fw-semibold py-3 d-flex align-items-center gap-2">
+          <i class="bi bi-grid-3x3-gap" style="color:#233a77;"></i>
+          جدول الحصص (أسبوعي ثابت)
+        </div>
+        <div class="card-body">
+          @if($periods->isEmpty())
+            <div class="text-center py-4">
+              <i class="bi bi-exclamation-circle" style="font-size:40px;color:#dee2e6;"></i>
+              <p class="text-muted mt-2 mb-2">لازم تضيف الحصص (أوقاتها) أولاً من إعدادات الحصص.</p>
+              <a href="{{ route('admin.period-settings.index') }}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-clock me-1"></i> إعدادات الحصص
+              </a>
+            </div>
+          @else
+            <form action="{{ route('admin.classes.periods.update', $class->id) }}" method="POST">
+              @csrf
+              <div style="overflow-x:auto">
+                <table class="table table-bordered align-middle mb-0" style="min-width:900px">
+                  <thead>
+                    <tr class="text-center">
+                      <th style="min-width:110px">الحصة</th>
+                      @foreach(\App\Models\ClassSchedule::$dayNames as $dayNum => $dayName)
+                        <th>{{ $dayName }}</th>
+                      @endforeach
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($periods as $period)
+                      <tr>
+                        <td class="text-center">
+                          <div class="fw-semibold">{{ $period->label }}</div>
+                          <small class="text-muted">
+                            {{ \Carbon\Carbon::parse($period->start_time)->format('H:i') }}
+                            -
+                            {{ \Carbon\Carbon::parse($period->end_time)->format('H:i') }}
+                          </small>
+                        </td>
+                        @foreach(\App\Models\ClassSchedule::$dayNames as $dayNum => $dayName)
+                          @php
+                            $slot = $slots->get($dayNum . '-' . $period->period_number);
+                          @endphp
+                          <td style="min-width:150px">
+                            <select name="periods[{{ $dayNum }}][{{ $period->period_number }}][subject_id]" class="form-select form-select-sm mb-1">
+                              <option value="">— مادة —</option>
+                              @foreach($subjects as $subject)
+                                <option value="{{ $subject->id }}" @selected($slot && $slot->subject_id == $subject->id)>{{ $subject->name_ar }}</option>
+                              @endforeach
+                            </select>
+                            <select name="periods[{{ $dayNum }}][{{ $period->period_number }}][teacher_id]" class="form-select form-select-sm">
+                              <option value="">— معلم —</option>
+                              @foreach($teachers as $teacher)
+                                <option value="{{ $teacher->id }}" @selected($slot && $slot->teacher_id == $teacher->id)>{{ $teacher->name }}</option>
+                              @endforeach
+                            </select>
+                          </td>
+                        @endforeach
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+              <button type="submit" class="btn mt-3 fw-bold px-4 py-2"
+                      style="background:linear-gradient(135deg,#233a77,#2d4d99);color:white;border:none;border-radius:10px;">
+                <i class="bi bi-save me-2"></i>حفظ جدول الحصص
+              </button>
+            </form>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>

@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Api\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponse;
+use App\Models\ClassSchedule;
 use App\Models\ClassSubject;
+use App\Models\PeriodSetting;
 use App\Models\SchoolClass;
 use App\Models\Student;
+use App\Models\Teacher;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -57,6 +61,56 @@ class ClassController extends Controller
         }
 
         return $this->success($subjects);
+    }
+
+    // GET /classes/{class}/day-schedule?date=YYYY-MM-DD
+    // This class's periods on the weekday that `date` falls on - meant to be
+    // shown as a reminder banner on the daily-plan entry screen ("tomorrow
+    // you have Religion period 1, Arabic period 2, ... for this class").
+    public function daySchedule(Request $request, SchoolClass $class): JsonResponse
+    {
+        $teacher = $request->user();
+
+        if (! $this->teachesClass($teacher, $class)) {
+            return $this->error('غير مصرح بالوصول لهذا الصف.', 403);
+        }
+
+        $request->validate(['date' => ['required', 'date']]);
+
+        $day = Carbon::parse($request->date)->dayOfWeek; // 0=Sun..6=Sat
+
+        if ($day > 4) {
+            return $this->success([]); // Friday/Saturday - no school
+        }
+
+        $periods = PeriodSetting::orderBy('period_number')->get();
+
+        $slots = ClassSchedule::where('class_id', $class->id)
+            ->where('day', $day)
+            ->with(['subject', 'teacher'])
+            ->orderBy('period_number')
+            ->get()
+            ->map(function ($slot) use ($periods) {
+                $period = $periods->firstWhere('period_number', $slot->period_number);
+
+                return [
+                    'period_number' => $slot->period_number,
+                    'label'         => $period?->label ?? ('الحصة ' . $slot->period_number),
+                    'start_time'    => $period ? Carbon::parse($period->start_time)->format('H:i') : null,
+                    'end_time'      => $period ? Carbon::parse($period->end_time)->format('H:i') : null,
+                    'subject'       => $slot->subject ? ['id' => $slot->subject->id, 'name' => $slot->subject->name] : null,
+                    'teacher'       => $slot->teacher ? ['id' => $slot->teacher->id, 'name' => $slot->teacher->name] : null,
+                ];
+            })
+            ->values();
+
+        return $this->success($slots);
+    }
+
+    private function teachesClass(Teacher $teacher, SchoolClass $class): bool
+    {
+        return $class->homeroom_teacher_id === $teacher->id
+            || ClassSubject::where('class_id', $class->id)->where('teacher_id', $teacher->id)->exists();
     }
 
     public function students(Request $request, SchoolClass $class): JsonResponse
