@@ -11,7 +11,13 @@ class EnsureTeacherApi
     public function handle(Request $request, Closure $next)
     {
         if (! ($request->user() instanceof Teacher)) {
-            return response()->json(['status' => false, 'message' => 'غير مصرح.'], 403);
+            $request->user()?->currentAccessToken()?->delete();
+
+            return response()->json([
+                'status'        => false,
+                'message'       => 'انتهت الجلسة، يرجى تسجيل الدخول مجدداً.',
+                'force_logout'  => true,
+            ], 401);
         }
 
         return $next($request);
