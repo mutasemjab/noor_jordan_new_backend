@@ -70,7 +70,7 @@ Route::prefix('v1/student')->middleware('api.locale')->group(function () {
     Route::get('exams/{id}', [ExamController::class, 'show']);
 
     // ── Protected routes ──────────────────────────────────────────────────
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'student.api'])->group(function () {
 
         // Files (require auth so results can be scoped to the student's class)
         Route::get('previous-year-exams',      [PreviousYearExamController::class, 'index']);
