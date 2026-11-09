@@ -6,6 +6,7 @@ use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\StudentNotification;
 use Google\Client as GoogleClient;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class FCMController
@@ -22,12 +23,16 @@ class FCMController
         }
 
         try {
-            $client = new GoogleClient();
-            $client->setAuthConfig($credentialsPath);
-            $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-            $client->fetchAccessTokenWithAssertion();
-            $tokenResponse  = $client->getAccessToken();
-            $accessToken    = $tokenResponse['access_token'];
+            // Google access tokens live ~60 minutes; reuse one instead of
+            // minting a fresh token for every device we push to.
+            $accessToken = Cache::remember('fcm_access_token', 3000, function () use ($credentialsPath) {
+                $client = new GoogleClient();
+                $client->setAuthConfig($credentialsPath);
+                $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+                $client->fetchAccessTokenWithAssertion();
+
+                return $client->getAccessToken()['access_token'];
+            });
 
             $payload = json_encode([
                 'message' => [
@@ -76,6 +81,11 @@ class FCMController
             }
 
             $response = json_decode($result, true);
+
+            // Cached access token was rejected — drop it so the next send re-mints one.
+            if (($response['error']['code'] ?? null) === 401) {
+                Cache::forget('fcm_access_token');
+            }
 
             if (isset($response['name'])) {
                 return true;

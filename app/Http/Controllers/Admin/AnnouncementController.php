@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Admin\FCMController;
 use App\Models\Announcement;
 use App\Models\SchoolClass;
-use App\Models\Student;
+use App\Services\StudentNotifier;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
@@ -65,10 +64,10 @@ class AnnouncementController extends Controller
         $announcement->classes()->sync($classIds);
 
         if ($announcement->is_active) {
-            FCMController::sendToStudents(
+            StudentNotifier::toClasses(
+                $classIds,
                 $announcement->title,
                 $announcement->body,
-                $this->fcmTarget($classIds),
                 'announcements'
             );
         }
@@ -115,21 +114,6 @@ class AnnouncementController extends Controller
 
         return redirect()->route('admin.announcements.index')
             ->with('success', 'تم تحديث الإعلان بنجاح.');
-    }
-
-    // Resolves the announcement's target class(es) into the concrete list of
-    // student IDs FCMController::sendToStudents() already knows how to
-    // handle (its array branch means "these student IDs", not class IDs).
-    private function fcmTarget(array $classIds): ?array
-    {
-        if (empty($classIds)) {
-            return null; // broadcast to everyone
-        }
-
-        return Student::where('is_active', true)
-            ->whereIn('class_id', $classIds)
-            ->pluck('id')
-            ->all();
     }
 
     private function attachmentType($file): string
