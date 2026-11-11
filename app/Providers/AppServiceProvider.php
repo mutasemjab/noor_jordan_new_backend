@@ -33,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
             \App\Models\ExamSchedule::class,
             \App\Models\Worksheet::class,
             \App\Models\Exam::class,
-            \App\Models\EducationalNote::class,
             \App\Models\ExternalLink::class,
             \App\Models\ClassSubjectVideo::class,
             \App\Models\PreviousYearExam::class,

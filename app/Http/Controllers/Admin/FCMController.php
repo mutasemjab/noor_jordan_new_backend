@@ -14,7 +14,7 @@ class FCMController
     /**
      * Send FCM push notification to a single device token.
      */
-    public static function sendToToken(string $title, string $body, string $fcmToken, string $screen = 'home'): bool
+    public static function sendToToken(string $title, string $body, string $fcmToken, string $screen = 'home', array $data = []): bool
     {
         $credentialsPath = base_path(env('FIREBASE_CREDENTIALS_PATH', ''));
         if (! $credentialsPath || ! is_file($credentialsPath)) {
@@ -34,17 +34,32 @@ class FCMController
                 return $client->getAccessToken()['access_token'];
             });
 
+            // Tells the app which page to open on tap. FCM requires every data
+            // value to be a string. `type` falls back to `screen` so the app
+            // can always route on `type`.
+            $dataPayload = [];
+            foreach (array_merge(['type' => $screen], $data, ['screen' => $screen, 'click_action' => 'FLUTTER_NOTIFICATION_CLICK']) as $k => $v) {
+                if (is_scalar($v)) {
+                    $dataPayload[$k] = (string) $v;
+                }
+            }
+
             $payload = json_encode([
                 'message' => [
                     'token'        => $fcmToken,
                     'notification' => ['title' => $title, 'body' => $body],
-                    'data'         => ['screen' => $screen, 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'],
+                    'data'         => $dataPayload,
                     'android'      => [
                         'priority'     => 'high',
                         'notification' => [
-                            'sound'        => 'custom_sound',
-                            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                            'channel_id'   => 'high_importance_channel',
+                            'sound'      => 'custom_sound',
+                            // No android click_action on purpose: with one set,
+                            // Android only opens the app on tap if the manifest
+                            // declares that exact intent action. Without it, the
+                            // tap always launches the app, and firebase_messaging
+                            // hands the data to onMessageOpenedApp/getInitialMessage.
+                            // Must match the channel the app creates in main.dart.
+                            'channel_id' => 'noor_custom_sound_channel',
                         ],
                     ],
                     'apns' => [

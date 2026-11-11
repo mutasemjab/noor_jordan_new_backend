@@ -47,11 +47,22 @@ class NotifyController extends Controller
         };
 
         if ($recipient->fcm_token) {
+            $senderIsTeacher = $sender instanceof Teacher;
+
             FCMController::sendToToken(
                 'رسالة جديدة من ' . $data['sender_name'],
                 $body,
                 $recipient->fcm_token,
-                'chat'
+                'chat',
+                // Lets the app open this exact conversation on tap.
+                [
+                    'sender_id'     => $sender->id,
+                    'sender_uid'    => ($senderIsTeacher ? 'teacher_' : 'student_') . $sender->id,
+                    'sender_name'   => $sender->name ?: $data['sender_name'],
+                    'sender_avatar' => $sender->avatar
+                        ? asset('assets/uploads/' . ($senderIsTeacher ? 'teachers/' : 'students/') . $sender->avatar)
+                        : '',
+                ]
             );
         }
 

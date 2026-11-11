@@ -47,7 +47,7 @@ class StudentRecordObserver
 
             $body = trim(($subject ? "{$subject} - " : '') . "{$grade->title}: {$score} من {$max}");
 
-            StudentNotifier::toStudent((int) $grade->student_id, $title, $body);
+            StudentNotifier::toStudent((int) $grade->student_id, $title, $body, 'grade', ['id' => $grade->getKey()]);
         } catch (\Throwable $e) {
             Log::error('StudentRecordObserver (grade): ' . $e->getMessage());
         }
@@ -62,7 +62,7 @@ class StudentRecordObserver
             $body = "تم تسجيلك ({$label}) بتاريخ {$date}"
                 . ($attendance->period ? " - الحصة {$attendance->period}" : '');
 
-            StudentNotifier::toStudent((int) $attendance->student_id, 'تسجيل الحضور', $body);
+            StudentNotifier::toStudent((int) $attendance->student_id, 'تسجيل الحضور', $body, 'attendance', ['id' => $attendance->getKey()]);
         } catch (\Throwable $e) {
             Log::error('StudentRecordObserver (attendance): ' . $e->getMessage());
         }

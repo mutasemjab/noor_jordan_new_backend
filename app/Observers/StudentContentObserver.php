@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\ClassSubjectVideo;
-use App\Models\EducationalNote;
 use App\Models\Exam;
 use App\Models\ExamSchedule;
 use App\Models\ExternalLink;
@@ -22,6 +21,12 @@ use Illuminate\Support\Facades\Log;
  * Content with a visibility flag (status / is_published) only notifies once
  * it is actually visible: on create if it's already visible, or later when
  * it is switched from hidden to visible.
+ *
+ * The educational notebook (EducationalNote / المفكرة) is intentionally NOT
+ * observed: the school doesn't want notifications for it.
+ *
+ * Each `type` below must have a matching case in the Flutter app's
+ * NotificationRouter so a tap opens the right page.
  */
 class StudentContentObserver
 {
@@ -33,7 +38,6 @@ class StudentContentObserver
         ExamSchedule::class      => null,
         Worksheet::class         => 'status',
         Exam::class              => 'is_published',
-        EducationalNote::class   => null,
         ExternalLink::class      => 'status',
         ClassSubjectVideo::class => null,
         PreviousYearExam::class  => 'status',
@@ -68,48 +72,52 @@ class StudentContentObserver
                 return;
             }
 
-            [$title, $body] = $message;
+            [$title, $body, $type] = $message;
+
+            $subjectName = $this->subjectName($model);
 
             StudentNotifier::toClass(
                 $model->class_id ? (int) $model->class_id : null,
                 $title,
-                $body
+                $body,
+                $type,
+                array_filter([
+                    'id'           => $model->getKey(),
+                    'subject_id'   => $model->subject_id ?? null,
+                    'subject_name' => $subjectName,
+                ], fn ($v) => ! is_null($v) && $v !== '')
             );
         } catch (\Throwable $e) {
             Log::error('StudentContentObserver: ' . $e->getMessage());
         }
     }
 
-    /** @return array{0:string,1:string}|null [title, body] */
+    /** @return array{0:string,1:string,2:string}|null [title, body, type] */
     protected function message(Model $model): ?array
     {
         $subject = $this->subjectName($model);
 
         switch (true) {
             case $model instanceof ExamSchedule:
-                return ['جدول امتحانات جديد', "تم نشر جدول الامتحانات: {$model->name}"];
+                return ['جدول امتحانات جديد', "تم نشر جدول الامتحانات: {$model->name}", 'exam_schedule'];
 
             case $model instanceof Worksheet:
-                return ['ورقة عمل جديدة', $this->line($subject, $model->title_ar)];
+                return ['ورقة عمل جديدة', $this->line($subject, $model->title_ar), 'worksheet'];
 
             case $model instanceof Exam:
-                return ['امتحان جديد', $this->line($subject, $model->title_ar)];
-
-            case $model instanceof EducationalNote:
-                $title = $model->type === 'homework' ? 'واجب جديد' : 'ملاحظة درس جديدة';
-                return [$title, $this->line($subject, $model->title)];
+                return ['امتحان جديد', $this->line($subject, $model->title_ar), 'exam'];
 
             case $model instanceof ExternalLink:
-                return ['رابط جديد', $subject ? "تمت إضافة رابط جديد لمادة {$subject}" : 'تمت إضافة رابط جديد'];
+                return ['رابط جديد', $subject ? "تمت إضافة رابط جديد لمادة {$subject}" : 'تمت إضافة رابط جديد', 'external_link'];
 
             case $model instanceof ClassSubjectVideo:
-                return ['فيديو جديد', $this->line($subject, $model->title)];
+                return ['فيديو جديد', $this->line($subject, $model->title), 'video'];
 
             case $model instanceof PreviousYearExam:
-                return ['امتحان سنوات سابقة جديد', $this->line($subject, trim($model->title_ar . ' ' . $model->year))];
+                return ['امتحان سنوات سابقة جديد', $this->line($subject, trim($model->title_ar . ' ' . $model->year)), 'previous_year_exam'];
 
             case $model instanceof QuestionBank:
-                return ['بنك أسئلة جديد', $this->line($subject, $model->title_ar)];
+                return ['بنك أسئلة جديد', $this->line($subject, $model->title_ar), 'question_bank'];
         }
 
         return null;

@@ -124,7 +124,12 @@ class ChatController extends Controller
             FirebaseAdminService::firestoreCreate("conversations/{$conversationId}/messages", $messageFields);
 
             if ($student->fcm_token) {
-                FCMController::sendToToken('رسالة من ' . $teacher->name, $previewText, $student->fcm_token, 'chat');
+                FCMController::sendToToken('رسالة من ' . $teacher->name, $previewText, $student->fcm_token, 'chat', [
+                    'sender_id'     => $teacher->id,
+                    'sender_uid'    => $teacherUid,
+                    'sender_name'   => $teacher->name,
+                    'sender_avatar' => $teacherParticipant['avatar'] ?? '',
+                ]);
             }
 
             $sentTo++;

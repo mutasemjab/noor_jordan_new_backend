@@ -68,7 +68,8 @@ class AnnouncementController extends Controller
                 $classIds,
                 $announcement->title,
                 $announcement->body,
-                'announcements'
+                'announcement',
+                ['id' => $announcement->id]
             );
         }
 
